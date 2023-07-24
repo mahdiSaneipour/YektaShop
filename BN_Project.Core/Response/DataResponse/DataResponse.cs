@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BN_Project.Core.Response.DataResponse
+﻿namespace BN_Project.Core.Response.DataResponse
 {
     public class DataResponse<T> where T : class
     {

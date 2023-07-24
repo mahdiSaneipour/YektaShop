@@ -14,7 +14,7 @@ namespace BN_Project.Domain.Entities
 
         public string Email { get; set; }
 
-        public int? PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         public string? Avatar { get; set; }
 
