@@ -1,0 +1,132 @@
+﻿@using BN_Project.Core.ExtraViewModels
+@model ConfirmEmailViewModel
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تایید ایمیل</title>
+</head>
+
+<style>
+    :root {
+        --background-color: #111111;
+        --main-color: #FFD700;
+        --light-color: #ebe6e6;
+        --green-color: #09df09;
+        --red-color: #ff0000;
+        --second-light-color: #ece4e4;
+        --orange-color: #FFA500;
+    }
+
+    body {
+        : var(--background-color);
+        direction: rtl;
+    }
+
+    .container {
+        width: 90%;
+        margin: auto;
+    }
+
+    .confirm-email {
+        padding: 50px 0;
+    }
+
+        .confirm-email #confirm-email {
+            width: 100%;
+        }
+
+            .confirm-email #confirm-email .title-name {
+                width: 100%;
+                text-align: right;
+            }
+
+                .confirm-email #confirm-email .title-name h1 {
+                    text-align: right;
+                    width: 200px;
+                    color: #fff;
+                    position: relative;
+                }
+
+                    .confirm-email #confirm-email .title-name h1::before {
+                        content: '';
+                        position: absolute;
+                        right: 0;
+                        bottom: 0;
+                        width: 100%;
+                        height: 1px;
+                        background-color: var(--main-color);
+                    }
+
+            .confirm-email #confirm-email .button-confirm {
+                width: 100%;
+                text-align: right;
+            }
+
+                .confirm-email #confirm-email .button-confirm p {
+                    color: #fff;
+                    text-align: center;
+                }
+
+                .confirm-email #confirm-email .button-confirm .confirm-box {
+                    width: 100%;
+                    text-align: center;
+                    margin-top: 20px;
+                    display: flex;
+                    justify-content: center;
+                }
+
+                    .confirm-email #confirm-email .button-confirm .confirm-box a {
+                        width: 200px;
+                        height: 50px;
+                        background-color: var(--main-color);
+                        color: var(--background-color);
+                        border-radius: 5px;
+                        -webkit-border-radius: 5px;
+                        -moz-border-radius: 5px;
+                        -ms-border-radius: 5px;
+                        -o-border-radius: 5px;
+                        text-align: center;
+                        display: block;
+                        line-height: 50px;
+                        text-decoration: none;
+                    }
+
+</style>
+
+<body>
+    <main>
+        <section class="confirm-email" style="background-color: #111111; padding: 50px 0">
+            <div class="container" style="width: 90%; margin: auto;">
+                <div id="confirm-email" style="width: 100%">
+                    <div class="title-name" style="width: 100%;">
+                        <h1 style="width: 100%; color: #fff; text-align: right; border-bottom: 1px solid #FFD700">سلام @Model.Name عزیز</h1>
+                    </div>
+                    <div class="button-confirm" style="width: 100%; text-align: right; justify-content: center;">
+                        <p style="text-align: center; color: #fff">برای تایید ایمیل خود روی دکمه زیر کلیک کنید</p>
+                        <div class="confirm-box" style="width: 100%; display: flex; margin-top:20px; text-align: right;">
+                            <a href="@Model.Url" style="width: 200px;
+                        height: 50px;
+                        background-color: #FFD700;
+                        color: #111111;
+                        font-size: 19px;
+                        border-radius: 5px;
+                        -webkit-border-radius: 5px;
+                        -moz-border-radius: 5px;
+                        -ms-border-radius: 5px;
+                        -o-border-radius: 5px;
+                        text-align: center;
+                        display: block;
+                        line-height: 50px;
+                        text-decoration: none;">تایید ایمیل</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
