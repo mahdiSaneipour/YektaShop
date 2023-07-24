@@ -11,8 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
 // Add services to the container.
-builder.Services.AddRazorPages();
-
+//builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
 
 #region Repositories
 
@@ -54,6 +54,7 @@ services.AddDbContext<BNContext>(options =>
 
 #endregion
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -71,7 +72,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapRazorPages();
+//app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "area",

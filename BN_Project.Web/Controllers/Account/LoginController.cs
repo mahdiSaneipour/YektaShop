@@ -77,5 +77,7 @@ namespace BN_Project.Web.Controllers.Account
                 return View("../Account/Login/Login");
             }
         }
+
+
     }
 }

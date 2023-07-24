@@ -1,16 +1,12 @@
 ﻿using BN_Project.Core.DTOs.User;
-using BN_Project.Core.IService.Account;
-using Microsoft.AspNetCore.Mvc;
-using BN_Project.Core.Response.Status;
-using System.Threading.Tasks;
 using BN_Project.Core.ExtraViewModels;
-using EP.Core.Tools.Senders;
-using Microsoft.AspNetCore.Identity;
-using Toplearn2.Application.Tools;
+using BN_Project.Core.IService.Account;
+using BN_Project.Core.Response.Status;
 using EP.Core.Tools.RenderViewToString;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using EP.Core.Tools.Senders;
 
 namespace BN_Project.Web.Controllers.Account
 {
@@ -24,7 +20,7 @@ namespace BN_Project.Web.Controllers.Account
             _accountServices = accountServices;
             _viewRenderService = viewRenderService;
         }
-
+        #region Register
         public async Task<IActionResult> Index()
         {
             return View("../Account/Register/Register");
@@ -33,10 +29,10 @@ namespace BN_Project.Web.Controllers.Account
         [HttpPost]
         public async Task<IActionResult> Index(RegisterUser register)
         {
-            
+
             var result = await _accountServices.CreateUser(register);
 
-            switch(result.Status)
+            switch (result.Status)
             {
                 case Status.AlreadyHave:
                 case Status.Error:
@@ -44,7 +40,7 @@ namespace BN_Project.Web.Controllers.Account
                     return View("../Account/Register/Register");
             }
 
-            if(result.Status == Status.Success)
+            if (result.Status == Status.Success)
             {
                 #region Send Email
 
@@ -62,21 +58,31 @@ namespace BN_Project.Web.Controllers.Account
                 return await Task.FromResult(Redirect("/Login"));
 
                 #endregion
-            } else
+            }
+            else
             {
                 ModelState.AddModelError("Email", "خطایی در سیستم رخ داده لطفا بعدا امتحان کنید");
                 return View("../Account/Register/Register");
             }
 
         }
-
-        public async Task<IActionResult> ConfirmEmail(string token)
+        #endregion
+        #region Confirmation
+        public IActionResult ConfirmEmail(string token)
         {
 
-            _accountServices.IsTokenTrue(token);
+             _accountServices.IsTokenTrue(token);
 
             return Redirect("/");
         }
+        #endregion
+        #region ResetPassWord
+        public async Task<IActionResult> ResetPassword()
+        {
+
+            return View();
+        }
+        #endregion
 
         public async Task<IActionResult> Logout()
         {
