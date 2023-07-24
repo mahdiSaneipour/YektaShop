@@ -14,7 +14,7 @@ namespace BN_Project.Core.IService.Account
     {
         public Task<DataResponse<UserEntity>> CreateUser(RegisterUser register);
 
-        public Task<BaseResponse> LoginUser(LoginUser login);
+        public Task<DataResponse<UserEntity>> LoginUser(LoginUser login);
 
         public Task<BaseResponse> IsTokenTrue(string token);
     }

@@ -8,6 +8,9 @@ using EP.Core.Tools.Senders;
 using Microsoft.AspNetCore.Identity;
 using Toplearn2.Application.Tools;
 using EP.Core.Tools.RenderViewToString;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace BN_Project.Web.Controllers.Account
 {
@@ -43,7 +46,6 @@ namespace BN_Project.Web.Controllers.Account
 
             if(result.Status == Status.Success)
             {
-
                 #region Send Email
 
                 var confirmLink = $"{this.Request.Scheme}://{this.Request.Host}/Register/ConfirmEmail?token={result.Data.ActivationCode}";
@@ -57,7 +59,7 @@ namespace BN_Project.Web.Controllers.Account
 
                 SendEmail.Send(result.Data.Email, "تایید ایمیل", html);
 
-                return await Task.FromResult(Redirect("/"));
+                return await Task.FromResult(Redirect("/Login"));
 
                 #endregion
             } else
@@ -75,5 +77,13 @@ namespace BN_Project.Web.Controllers.Account
 
             return Redirect("/");
         }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return Redirect("/Login");
+        }
+
     }
 }
