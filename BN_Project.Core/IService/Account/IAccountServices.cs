@@ -17,5 +17,9 @@ namespace BN_Project.Core.IService.Account
 
         public void Updateuser(UpdateUserInfoViewModel user);
         public Task<DataResponse<UserInformationViewModel>> GetUserInformationById(int Id);
+
+        public Task<DataResponse<UserEntity>> ForgotPassword(string email);
+
+        public Task<DataResponse<UserInformation>> GetUserByEmail(string email);
     }
 }

@@ -74,6 +74,24 @@ namespace BN_Project.Core.Service.Account
             return result;
         }
 
+        public async Task<DataResponse<UserEntity>> ForgotPassword(string email)
+        {
+            DataResponse<UserEntity> result = new DataResponse<UserEntity>();
+            var user = await _accountRepository.GetUserByEmail(email);
+
+            if(user != null)
+            {
+                result.Status = Response.Status.Status.NotValid;
+                result.Message = "ایمیل وارد شده معتبر نمیباشد";
+            }
+
+            result.Status = Response.Status.Status.Success;
+            result.Message = "کاربری با موفقیت پیدا شد";
+            result.Data = user;
+
+            return result;
+        }
+
         public async Task<BaseResponse> IsTokenTrue(string token)
         {
             BaseResponse result = new BaseResponse();
@@ -104,7 +122,15 @@ namespace BN_Project.Core.Service.Account
             if (user == null)
             {
                 result.Status = Response.Status.Status.NotFound;
-                result.Message = "کاربری با این ایمیل پیدا نشد";
+                result.Message = "ایمیل و رمز عبور با هم سازگار نیستند";
+
+                return result;
+            }
+
+            if (user.IsActive == false)
+            {
+                result.Status = Response.Status.Status.NotActive;
+                result.Message = "لطفا ابتدا ایمیل خود را تایید کنید";
 
                 return result;
             }

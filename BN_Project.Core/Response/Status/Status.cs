@@ -7,6 +7,7 @@
         NotFound,
         AlreadyHave,
         NotMatch,
+        NotActive,
         Error
     }
 }
