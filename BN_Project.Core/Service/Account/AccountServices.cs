@@ -79,7 +79,7 @@ namespace BN_Project.Core.Service.Account
             DataResponse<UserEntity> result = new DataResponse<UserEntity>();
             var user = await _accountRepository.GetUserByEmail(email);
 
-            if(user != null)
+            if (user != null)
             {
                 result.Status = Response.Status.Status.NotValid;
                 result.Message = "ایمیل وارد شده معتبر نمیباشد";
@@ -129,7 +129,7 @@ namespace BN_Project.Core.Service.Account
 
             if (user.IsActive == false)
             {
-                result.Status = Response.Status.Status.NotActive;
+                result.Status = Status.NotActive;
                 result.Message = "لطفا ابتدا ایمیل خود را تایید کنید";
 
                 return result;
@@ -152,14 +152,19 @@ namespace BN_Project.Core.Service.Account
             return result;
         }
 
-        public void Updateuser(UpdateUserInfoViewModel user)
+        public void UpdateUser(UpdateUserInfoViewModel user)
         {
             var userE = _accountRepository.GetUserById(user.Id).Result;
-            userE.Name = user.FirstName + " " + user.LastName;
+            userE.Name = user.FullName;
             userE.PhoneNumber = user.PhoneNumber;
             _accountRepository.UpdateUser(userE);
 
             _accountRepository.SaveChanges();
+        }
+
+        public Task<DataResponse<UserInformationViewModel>> GetUserByEmail(string email)
+        {
+            throw new NotImplementedException();
         }
     }
 }

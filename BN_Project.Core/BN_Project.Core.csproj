@@ -14,8 +14,4 @@
     <ProjectReference Include="..\BN_Project.Domain\BN_Project.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-  </ItemGroup>
-
 </Project>

@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
 // Add services to the container.
-//builder.Services.AddRazorPages();
+builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
 
@@ -76,7 +76,7 @@ app.UseAuthorization();
 app.UseAuthentication();
 
 
-//app.MapRazorPages();
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "area",
