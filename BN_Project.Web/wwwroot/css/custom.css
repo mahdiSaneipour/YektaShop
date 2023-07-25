@@ -1,5 +1,10 @@
 /* Write your code here */
 .form-control {
-    text-align: right
+    text-align: right;
 }
+
+.field-validation-error {
+    color: red;
+}
+
 /*# sourceMappingURL=custom.css.map */

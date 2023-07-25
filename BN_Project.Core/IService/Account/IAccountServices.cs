@@ -17,5 +17,7 @@ namespace BN_Project.Core.IService.Account
         public Task<DataResponse<UserEntity>> LoginUser(LoginUser login);
 
         public Task<BaseResponse> IsTokenTrue(string token);
+
+        public Task<DataResponse<UserEntity>> ForgotPassword(string email);
     }
 }

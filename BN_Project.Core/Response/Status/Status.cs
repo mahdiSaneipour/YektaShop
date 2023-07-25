@@ -13,6 +13,7 @@ namespace BN_Project.Core.Response.Status
         NotFound,
         AlreadyHave,
         NotMatch,
+        NotActive,
         Error
     }
 }
