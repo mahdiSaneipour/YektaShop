@@ -5,6 +5,7 @@ using BN_Project.Data.Repository;
 using BN_Project.Domain.IRepository;
 using EP.Core.Tools.RenderViewToString;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,23 @@ builder.Services.AddControllersWithViews();
 
 #region Repositories
 
-services.AddTransient<IAccountRepository, AccountRepository>();
+services.AddScoped<IAccountRepository, AccountRepository>();
+
+#endregion
+
+#region Authentication
+
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    option.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+}).AddCookie(option =>
+{
+    option.LoginPath = "/Login";
+    option.LogoutPath = "/Logout";
+    option.ExpireTimeSpan = TimeSpan.FromMinutes(43200);
+});
 
 #endregion
 

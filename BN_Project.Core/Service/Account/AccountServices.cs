@@ -6,6 +6,7 @@ using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Response.Status;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,9 +107,9 @@ namespace BN_Project.Core.Service.Account
             return result;
         }
 
-        public async Task<BaseResponse> LoginUser(LoginUser login)
+        public async Task<DataResponse<UserEntity>> LoginUser(LoginUser login)
         {
-            BaseResponse result = new BaseResponse();
+            DataResponse<UserEntity> result = new DataResponse<UserEntity>();
 
             var user = await _accountRepository.GetUserByEmail(login.Email);
 
@@ -132,6 +133,7 @@ namespace BN_Project.Core.Service.Account
 
             result.Message = "ورود با موفقیت انجام شد";
             result.Status = Response.Status.Status.Success;
+            result.Data = user;
 
             return result;
         }
