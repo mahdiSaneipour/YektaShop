@@ -1,12 +1,12 @@
-﻿using BN_Project.Core.DTOs.User;
-using BN_Project.Core.ExtraViewModels;
+﻿using BN_Project.Core.ExtraViewModels;
 using BN_Project.Core.IService.Account;
 using BN_Project.Core.Response.Status;
+using BN_Project.Domain.ViewModel.Account;
 using EP.Core.Tools.RenderViewToString;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
 using EP.Core.Tools.Senders;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BN_Project.Web.Controllers.Account
 {
@@ -27,7 +27,7 @@ namespace BN_Project.Web.Controllers.Account
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(RegisterUser register)
+        public async Task<IActionResult> Index(RegisterUserViewModel register)
         {
 
             var result = await _accountServices.CreateUser(register);

@@ -1,17 +1,12 @@
-﻿using BN_Project.Core.DTOs.User;
-using BN_Project.Core.DTOs.UserProfile;
-using BN_Project.Core.IService.Account;
+﻿using BN_Project.Core.IService.Account;
 using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Response.Status;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BN_Project.Domain.ViewModel.Account;
+using BN_Project.Domain.ViewModel.UserProdile;
+using BN_Project.Domain.ViewModel.UserProfile;
 using Toplearn2.Application.Tools;
 
 namespace BN_Project.Core.Service.Account
@@ -25,7 +20,7 @@ namespace BN_Project.Core.Service.Account
             _accountRepository = accountRepository;
         }
 
-        public async Task<DataResponse<UserEntity>> CreateUser(RegisterUser register)
+        public async Task<DataResponse<UserEntity>> CreateUser(RegisterUserViewModel register)
         {
             DataResponse<UserEntity> result = new DataResponse<UserEntity>();
 
@@ -50,14 +45,6 @@ namespace BN_Project.Core.Service.Account
             user = await _accountRepository.RegisterUsere(userEntity);
             await _accountRepository.SaveChanges();
 
-            /*if (user.Id == 0)
-            {
-                result.Status = Response.Status.Status.Error;
-                result.Message = "خطایی رخ داده, لطفا بعدا امتحان کنید";
-
-                return result;
-            }*/
-
             result.Status = Response.Status.Status.Success;
             result.Message = "ورود با موفقیت انجام شد";
             result.Data = user;
@@ -65,10 +52,11 @@ namespace BN_Project.Core.Service.Account
             return result;
         }
 
-        public async Task<DataResponse<UserInformation>> GetUserByEmail(string email)
+        public async Task<DataResponse<UserInformationViewModel>> GetUserInformationById(int Id)
         {
-            DataResponse<UserInformation> result = new DataResponse<UserInformation>();
-            var user = await _accountRepository.GetUserByEmail(email);
+            DataResponse<UserInformationViewModel> result = new DataResponse<UserInformationViewModel>();
+            var user = _accountRepository.GetUserById(Id).Result;
+            result.Data = new UserInformationViewModel();
 
             if (user != null)
             {
@@ -107,7 +95,7 @@ namespace BN_Project.Core.Service.Account
             return result;
         }
 
-        public async Task<DataResponse<UserEntity>> LoginUser(LoginUser login)
+        public async Task<DataResponse<UserEntity>> LoginUser(LoginUserViewModel login)
         {
             DataResponse<UserEntity> result = new DataResponse<UserEntity>();
 
@@ -136,6 +124,16 @@ namespace BN_Project.Core.Service.Account
             result.Data = user;
 
             return result;
+        }
+
+        public void Updateuser(UpdateUserInfoViewModel user)
+        {
+            var userE = _accountRepository.GetUserById(user.Id).Result;
+            userE.Name = user.FirstName + " " + user.LastName;
+            userE.PhoneNumber = user.PhoneNumber;
+            _accountRepository.UpdateUser(userE);
+
+            _accountRepository.SaveChanges();
         }
     }
 }

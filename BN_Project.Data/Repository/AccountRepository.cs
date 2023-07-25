@@ -14,10 +14,16 @@ namespace BN_Project.Data.Repository
             _context = context;
         }
 
+
         public async Task<UserEntity> GetUserByEmail(string email)
         {
             var result = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             return result;
+        }
+
+        public async Task<UserEntity> GetUserById(int id)
+        {
+            return await _context.Users.SingleOrDefaultAsync(n => n.Id == id);
         }
 
         public async Task<UserEntity> GetUserByToken(string token)
@@ -38,6 +44,11 @@ namespace BN_Project.Data.Repository
             _context.SaveChangesAsync();
 
             return Task.CompletedTask;
+        }
+
+        public void UpdateUser(UserEntity user)
+        {
+            _context.Users.Update(user);
         }
     }
 }

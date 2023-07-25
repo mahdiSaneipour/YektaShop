@@ -1,10 +1,10 @@
-﻿using BN_Project.Core.DTOs.User;
-using BN_Project.Core.IService.Account;
-using Microsoft.AspNetCore.Mvc;
+﻿using BN_Project.Core.IService.Account;
 using BN_Project.Core.Response.Status;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using BN_Project.Domain.ViewModel.Account;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BN_Project.Web.Controllers.Account
 {
@@ -28,7 +28,7 @@ namespace BN_Project.Web.Controllers.Account
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(LoginUser login)
+        public async Task<IActionResult> Index(LoginUserViewModel login)
         {
             if (User.Identity.IsAuthenticated)
             {

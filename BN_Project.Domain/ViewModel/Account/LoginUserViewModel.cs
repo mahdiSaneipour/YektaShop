@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BN_Project.Core.DTOs.User
+namespace BN_Project.Domain.ViewModel.Account
 {
-    public class LoginUser
+    public class LoginUserViewModel
     {
         [DisplayName("ایمیل")]
         [Required(ErrorMessage = "{0} نمیتواند خالی باشد")]

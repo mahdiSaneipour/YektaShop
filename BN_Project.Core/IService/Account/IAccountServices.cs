@@ -1,18 +1,21 @@
-﻿using BN_Project.Core.DTOs.User;
-using BN_Project.Core.DTOs.UserProfile;
-using BN_Project.Core.Response;
+﻿using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
 using BN_Project.Domain.Entities;
+using BN_Project.Domain.ViewModel.Account;
+using BN_Project.Domain.ViewModel.UserProdile;
+using BN_Project.Domain.ViewModel.UserProfile;
 
 namespace BN_Project.Core.IService.Account
 {
     public interface IAccountServices
     {
-        public Task<DataResponse<UserEntity>> CreateUser(RegisterUser register);
+        public Task<DataResponse<UserEntity>> CreateUser(RegisterUserViewModel register);
 
-        public Task<DataResponse<UserEntity>> LoginUser(LoginUser login);
+        public Task<DataResponse<UserEntity>> LoginUser(LoginUserViewModel login);
 
         public Task<BaseResponse> IsTokenTrue(string token);
-        public Task<DataResponse<UserInformation>> GetUserByEmail(string email);
+
+        public void Updateuser(UpdateUserInfoViewModel user);
+        public Task<DataResponse<UserInformationViewModel>> GetUserInformationById(int Id);
     }
 }

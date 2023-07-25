@@ -1,4 +1,4 @@
-﻿@model UserInformation
+﻿@model UserInformationViewModel
 
 <div class="ui-box bg-white mb-5">
     <div class="ui-box-title">اطلاعات شخصی</div>
@@ -13,7 +13,7 @@
                             <i class="ri-ball-pen-fill"></i>
                         </button>
                     </div>
-                    <div class="fs-6 fw-bold text-muted">جلال بهرامی راد</div>
+                    <div class="fs-6 fw-bold text-muted">@Model.FullName</div>
                 </div>
             </div>
             <div class="col-lg-6 mb-3">
@@ -25,7 +25,7 @@
                             <i class="ri-ball-pen-fill"></i>
                         </button>
                     </div>
-                    <div class="fs-6 fw-bold text-muted">09xxxxxxxxx</div>
+                    <div class="fs-6 fw-bold text-muted">@Model.PhoneNumber</div>
                 </div>
             </div>
             <div class="col-lg-6 mb-3">
@@ -37,7 +37,7 @@
                             <i class="ri-ball-pen-fill"></i>
                         </button>
                     </div>
-                    <div class="fs-6 fw-bold text-muted">example@example.com</div>
+                    <div class="fs-6 fw-bold text-muted">@Model.Email</div>
                 </div>
             </div>
             <div class="col-lg-6 mb-3">

@@ -1,5 +1,5 @@
-﻿@using BN_Project.Core.DTOs.UserProfile;
-@model UserInformation
+﻿@using BN_Project.Domain.ViewModel.UserProdile;
+@model UserInformationViewModel
 
 <div class="page-wrapper">
     <main class="page-content">
@@ -168,21 +168,22 @@
         </div>
         <!-- end of personal-info-national-id-modal -->
         <!-- start of personal-info-phone-number-modal -->
-        <div class="remodal remodal-xs" data-remodal-id="personal-info-phone-number-modal"
-             data-remodal-options="hashTracking: false">
+        <form class="remodal remodal-xs" data-remodal-id="personal-info-phone-number-modal"
+              data-remodal-options="hashTracking: false" asp-controller="UserProfile" asp-action="UpdatePhoneNumber">
             <div class="remodal-header">
                 <div class="remodal-title">شماره موبایل</div>
                 <button data-remodal-action="close" class="remodal-close"></button>
             </div>
             <div class="remodal-content">
                 <div class="form-element-row mb-3">
-                    <input type="text" class="form-control" placeholder="">
+                    <input type="text" class="form-control" placeholder="" asp-for="@Model.PhoneNumber">
                 </div>
+                <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
             </div>
             <div class="remodal-footer">
-                <button class="btn btn-sm btn-primary px-3">دریافت کد تایید و تغییر شماره</button>
+                <button class="btn btn-sm btn-primary px-3" onclick="is_delete(this)">دریافت کد تایید و تغییر شماره</button>
             </div>
-        </div>
+        </form>
         <!-- end of personal-info-phone-number-modal -->
         <!-- start of personal-info-email-modal -->
         <div class="remodal remodal-xs" data-remodal-id="personal-info-email-modal"
@@ -201,54 +202,6 @@
             </div>
         </div>
         <!-- end of personal-info-email-modal -->
-        <!-- start of personal-info-birth-modal -->
-        <div class="remodal remodal-xs" data-remodal-id="personal-info-birth-modal"
-             data-remodal-options="hashTracking: false">
-            <div class="remodal-header">
-                <div class="remodal-title">تولد</div>
-                <button data-remodal-action="close" class="remodal-close"></button>
-            </div>
-            <div class="remodal-content">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-element-row">
-                            <label class="label fs-7">سال</label>
-                            <input type="text" class="form-control" placeholder="">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-element-row">
-                            <label class="label fs-7">ماه</label>
-                            <select class="select2" name="month" id="month">
-                                <option value="0">ماه</option>
-                                <option value="0">فروردین</option>
-                                <option value="0">اردیبهشت</option>
-                                <option value="0">خرداد</option>
-                                <option value="0">تیر</option>
-                                <option value="0">مرداد</option>
-                                <option value="0">شهریور</option>
-                                <option value="0">مهر</option>
-                                <option value="0">آبان</option>
-                                <option value="0">آ‌ذر</option>
-                                <option value="0">دی</option>
-                                <option value="0">بهمن</option>
-                                <option value="0">اسفند</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-element-row">
-                            <label class="label fs-7">روز</label>
-                            <input type="text" class="form-control" placeholder="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="remodal-footer">
-                <button class="btn btn-sm btn-primary px-3">ثبت تاریخ تولد</button>
-            </div>
-        </div>
-        <!-- end of personal-info-birth-modal -->
         <!-- start of personal-info-returned-modal -->
         <div class="remodal remodal-xs" data-remodal-id="personal-info-returned-modal"
              data-remodal-options="hashTracking: false">

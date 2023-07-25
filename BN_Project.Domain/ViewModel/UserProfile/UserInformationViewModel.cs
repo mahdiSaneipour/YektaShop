@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
-namespace BN_Project.Core.DTOs.UserProfile
+namespace BN_Project.Domain.ViewModel.UserProdile
 {
-    public class UserInformation
+    public class UserInformationViewModel
     {
         [Required(ErrorMessage = "این فیلد ضروری می باشد!")]
         [Display(Name = "نام و نام خانوادگی")]
@@ -11,6 +12,7 @@ namespace BN_Project.Core.DTOs.UserProfile
         [Display(Name = "شماره تلفن")]
         public string PhoneNumber { get; set; }
         [Required(ErrorMessage = "این فیلد ضروری می باشد!")]
+        [EmailAddress(ErrorMessage = "فرمت معتبر نمیباشد, لطفا از فرمت درست استفاده کنید")]
         [Display(Name = "ایمیل")]
         public string Email { get; set; }
     }

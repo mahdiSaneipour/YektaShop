@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace BN_Project.Core.DTOs.User
+namespace BN_Project.Domain.ViewModel.Account
 {
-    public class RegisterUser
+    public class RegisterUserViewModel
     {
         [DisplayName("ایمیل")]
         [Required(ErrorMessage = "{0} نمیتواند خالی باشد")]

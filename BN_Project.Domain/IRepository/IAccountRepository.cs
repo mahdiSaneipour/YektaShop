@@ -10,6 +10,10 @@ namespace BN_Project.Domain.IRepository
 
         public Task<UserEntity> GetUserByToken(string token);
 
+        public Task<UserEntity> GetUserById(int id);
+
+        public void UpdateUser(UserEntity user);
+
         public Task SaveChanges();
     }
 }
