@@ -1,7 +1,9 @@
 ﻿using BN_Project.Core.DTOs.User;
+using BN_Project.Core.DTOs.UserProfile;
 using BN_Project.Core.IService.Account;
 using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
+using BN_Project.Core.Response.Status;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +31,7 @@ namespace BN_Project.Core.Service.Account
 
             var user = await _accountRepository.GetUserByEmail(register.Email);
 
-            if(user != null)
+            if (user != null)
             {
                 result.Status = Response.Status.Status.AlreadyHave;
                 result.Message = "این ایمیل قبلا استفاده شده";
@@ -60,6 +62,27 @@ namespace BN_Project.Core.Service.Account
             result.Message = "ورود با موفقیت انجام شد";
             result.Data = user;
 
+            return result;
+        }
+
+        public async Task<DataResponse<UserInformation>> GetUserByEmail(string email)
+        {
+            DataResponse<UserInformation> result = new DataResponse<UserInformation>();
+            var user = await _accountRepository.GetUserByEmail(email);
+
+            if (user != null)
+            {
+                result.Data.FullName = user.Name;
+                result.Data.PhoneNumber = user.PhoneNumber;
+                result.Data.Email = user.Email;
+                result.Message = "با موفقیت انجام شد!";
+                result.Status = Status.Success;
+            }
+            else
+            {
+                result.Message = "با شکست مواجه شد!";
+                result.Status = Status.NotFound;
+            }
             return result;
         }
 
@@ -97,7 +120,7 @@ namespace BN_Project.Core.Service.Account
 
             user.IsActive = true;
 
-            _accountRepository.SaveChanges();
+            await _accountRepository.SaveChanges();
 
             return result;
         }

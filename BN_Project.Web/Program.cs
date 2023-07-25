@@ -4,6 +4,7 @@ using BN_Project.Data.Context;
 using BN_Project.Data.Repository;
 using BN_Project.Domain.IRepository;
 using EP.Core.Tools.RenderViewToString;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ var services = builder.Services;
 // Add services to the container.
 //builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
+
 
 #region Repositories
 
@@ -71,6 +73,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
+
 
 //app.MapRazorPages();
 
