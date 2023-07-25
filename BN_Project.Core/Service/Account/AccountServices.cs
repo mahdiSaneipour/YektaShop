@@ -89,7 +89,7 @@ namespace BN_Project.Core.Service.Account
         public async Task<DataResponse<UserEntity>> ForgotPassword(string email)
         {
             DataResponse<UserEntity> result = new DataResponse<UserEntity>();
-            var user = _accountRepository.GetUserByEmail(email);
+            var user = await _accountRepository.GetUserByEmail(email);
 
             if(user != null)
             {
