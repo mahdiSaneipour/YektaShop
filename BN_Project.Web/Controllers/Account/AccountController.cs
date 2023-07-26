@@ -132,10 +132,18 @@ namespace BN_Project.Web.Controllers.Account
 
                 model.Name = result.Data.Email;
                 model.Url = confirmLink;
-
                 string html = _viewRenderService.RenderToStringAsync("ExternalView/Email/ConfirmEmailView", model);
 
-                SendEmail.Send(result.Data.Email, "تایید ایمیل", html);
+                try
+                {
+                    SendEmail.Send(result.Data.Email, "تایید ایمیل", html);
+                }
+                catch (Exception e)
+                {
+                    await Console.Out.WriteLineAsync("Error : " + e.Message);
+                    ModelState.AddModelError("Email", "ایمیل وارد شده معتبر نمیباشد");
+                    return View();
+                }
 
                 return await Task.FromResult(RedirectToAction("Login"));
 
@@ -160,14 +168,6 @@ namespace BN_Project.Web.Controllers.Account
         }
         #endregion
 
-        #region ResetPassWord
-        public async Task<IActionResult> ResetPassword()
-        {
-
-            return View();
-        }
-        #endregion
-
         #region Logout
 
         public async Task<IActionResult> Logout()
@@ -187,9 +187,9 @@ namespace BN_Project.Web.Controllers.Account
         }
 
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotPassword)
         {
-            var result = await _accountServices.ForgotPassword(email);
+            var result = await _accountServices.ForgotPassword(forgotPassword.Email);
 
             switch (result.Status)
             {
@@ -200,26 +200,73 @@ namespace BN_Project.Web.Controllers.Account
 
             if (result.Status == Status.Success)
             {
+                #region SendEmail
 
+                var confirmLink = $"{this.Request.Scheme}://{this.Request.Host}/Account/ResetPassword?token={result.Data.ActivationCode}";
+
+                ConfirmEmailViewModel model = new ConfirmEmailViewModel();
+
+                model.Name = result.Data.Email;
+                model.Url = confirmLink;
+                string html = _viewRenderService.RenderToStringAsync("ExternalView/Email/ConfirmEmailView", model);
+
+
+                try
+                {
+                    SendEmail.Send(result.Data.Email, "فراموشی رمز عبور", html);
+
+                }
+                catch (Exception e)
+                {
+                    await Console.Out.WriteLineAsync("Error : " + e.Message);
+
+                    ModelState.AddModelError("Email", "ایمیل وارد شده معتبر نمیباشد");
+                    return View();
+                }
+
+
+                #endregion
+
+                return await Task.FromResult(Redirect("/"));
             }
             else
             {
                 ModelState.AddModelError("Email", "خطایی در سیستم رخ داده است, لطفا بعدا تلاش کنید");
                 return View();
             }
+        }
 
-            var confirmLink = $"{this.Request.Scheme}://{this.Request.Host}/Register/ResetPassword?token={result.Data.ActivationCode}";
+        #endregion
 
-            ConfirmEmailViewModel model = new ConfirmEmailViewModel();
+        #region ResetPassword
 
-            model.Name = result.Data.Email;
-            model.Url = confirmLink;
+        public async Task<IActionResult> ResetPassword(string token)
+        {
+            var result = await _accountServices.IsTokenTrue(token);
 
-            string html = _viewRenderService.RenderToStringAsync("ExternalView/Email/ConfirmEmailView", model);
+            if (result.Status == Status.Success) {
+                ResetPasswordViewModel model = new ResetPasswordViewModel()
+                {
+                    Token = token
+                };
 
-            SendEmail.Send(result.Data.Email, "فراموشی رمز عبور", html);
+                return View();
+            }
 
-            return await Task.FromResult(RedirectToAction("Login"));
+            return RedirectToAction("Login");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPassword)
+        {
+            var result = await _accountServices.ResetPassword(resetPassword);
+
+            if(!result)
+            {
+                return Redirect("/");
+            }
+
+            return RedirectToAction("Login");
         }
 
         #endregion
