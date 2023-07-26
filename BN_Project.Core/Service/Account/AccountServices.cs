@@ -5,7 +5,6 @@ using BN_Project.Core.Response.Status;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Account;
-using BN_Project.Domain.ViewModel.UserProdile;
 using BN_Project.Domain.ViewModel.UserProfile;
 using Toplearn2.Application.Tools;
 
@@ -55,7 +54,7 @@ namespace BN_Project.Core.Service.Account
         public async Task<DataResponse<UserInformationViewModel>> GetUserInformationById(int Id)
         {
             DataResponse<UserInformationViewModel> result = new DataResponse<UserInformationViewModel>();
-            var user = _accountRepository.GetUserById(Id).Result;
+            var user = await _accountRepository.GetUserById(Id);
             result.Data = new UserInformationViewModel();
 
             if (user != null)
@@ -154,19 +153,22 @@ namespace BN_Project.Core.Service.Account
             return result;
         }
 
-        public void UpdateUser(UpdateUserInfoViewModel user)
-        {
-            var userE = _accountRepository.GetUserById(user.Id).Result;
-            userE.Name = user.FullName;
-            userE.PhoneNumber = user.PhoneNumber;
-            _accountRepository.UpdateUser(userE);
-
-            _accountRepository.SaveChanges();
-        }
 
         public Task<DataResponse<UserInformationViewModel>> GetUserByEmail(string email)
         {
             throw new NotImplementedException();
+        }
+
+        async void IAccountServices.UpdateUser(UpdateUserInfoViewModel user)
+        {
+            UserEntity userE = new UserEntity();
+
+            userE = _accountRepository.GetUserById(user.Id).Result;
+            userE.Name = user.FullName;
+            userE.PhoneNumber = user.PhoneNumber;
+            _accountRepository.UpdateUser(userE);
+
+            await _accountRepository.SaveChanges();
         }
 
         public async Task<bool> CheckPassword(int id, string password)
@@ -178,7 +180,7 @@ namespace BN_Project.Core.Service.Account
                 return false;
             }
 
-            if(password.EncodePasswordMd5() != user.Password)
+            if (password.EncodePasswordMd5() != user.Password)
             {
                 return false;
             }
