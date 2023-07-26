@@ -2,6 +2,10 @@
 
 <div class="ui-box bg-white mb-5">
     <div class="ui-box-title">اطلاعات شخصی</div>
+    @if (ViewData["PasssWordError"] != null)
+    {
+        <p class="alert alert-danger">@ViewData["PasssWordError"]</p>
+    }
     <div class="ui-box-content">
         <div class="row">
             <div class="col-lg-6 mb-3">
@@ -49,5 +53,12 @@
                 </div>
             </div>
         </div>
+        <form asp-controller="UserProfile" asp-action="DeleteUserAccount"  id="deleteAccountForm">
+            <p class="alert alert-warning">
+                برای حذف حساب کاربری
+                <input class="alert-link mx-1 text-danger bg-transparent border-0" onclick="is_delete(this)" type="submit" value="اینجا" />
+                کلیک کنید!
+            </p>
+        </form>
     </div>
 </div>

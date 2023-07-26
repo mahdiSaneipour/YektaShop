@@ -23,5 +23,6 @@ namespace BN_Project.Core.IService.Account
         public Task<DataResponse<UserInformationViewModel>> GetUserByEmail(string email);
 
         public Task<bool> CheckPassword(int id, string password);
+        public void DeleteAccount(int Id);
     }
 }

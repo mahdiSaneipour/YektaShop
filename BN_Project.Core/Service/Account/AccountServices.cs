@@ -59,6 +59,7 @@ namespace BN_Project.Core.Service.Account
 
             if (user != null)
             {
+                result.Data.Password = user.Password;
                 result.Data.FullName = user.Name;
                 result.Data.PhoneNumber = user.PhoneNumber;
                 result.Data.Email = user.Email;
@@ -162,6 +163,7 @@ namespace BN_Project.Core.Service.Account
             userE = _accountRepository.GetUserById(user.Id).Result;
             userE.Name = user.FullName;
             userE.PhoneNumber = user.PhoneNumber;
+            userE.Password = user.Password;
             _accountRepository.UpdateUser(userE);
 
             await _accountRepository.SaveChanges();
@@ -187,6 +189,13 @@ namespace BN_Project.Core.Service.Account
         public void Updateuser(UpdateUserInfoViewModel user)
         {
             throw new NotImplementedException();
+        }
+
+        public async void DeleteAccount(int Id)
+        {
+            _accountRepository.DeleteUser(Id);
+
+            await _accountRepository.SaveChanges();
         }
     }
 }

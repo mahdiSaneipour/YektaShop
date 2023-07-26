@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BN_Project.Domain.ViewModel.UserProfile
 {
@@ -15,5 +14,6 @@ namespace BN_Project.Domain.ViewModel.UserProfile
         [EmailAddress(ErrorMessage = "فرمت معتبر نمیباشد, لطفا از فرمت درست استفاده کنید")]
         [Display(Name = "ایمیل")]
         public string Email { get; set; }
+        public string Password { get; set; }
     }
 }
