@@ -8,6 +8,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using BN_Project.Core.ExtraViewModels;
+using EP.Core.Tools.RenderViewToString;
+using EP.Core.Tools.Senders;
+using BN_Project.Core.IService.Account;
+using BN_Project.Domain.ViewModel.Account;
 
 namespace BN_Project.Web.Controllers.Account
 {

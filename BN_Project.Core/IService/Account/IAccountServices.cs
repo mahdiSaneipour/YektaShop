@@ -15,10 +15,13 @@ namespace BN_Project.Core.IService.Account
         public Task<BaseResponse> IsTokenTrue(string token);
 
         public void UpdateUser(UpdateUserInfoViewModel user);
+
         public Task<DataResponse<UserInformationViewModel>> GetUserInformationById(int Id);
 
         public Task<DataResponse<UserEntity>> ForgotPassword(string email);
 
         public Task<DataResponse<UserInformationViewModel>> GetUserByEmail(string email);
+
+        public Task<bool> CheckPassword(int id, string password);
     }
 }

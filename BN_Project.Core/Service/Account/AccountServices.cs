@@ -54,7 +54,7 @@ namespace BN_Project.Core.Service.Account
         public async Task<DataResponse<UserInformationViewModel>> GetUserInformationById(int Id)
         {
             DataResponse<UserInformationViewModel> result = new DataResponse<UserInformationViewModel>();
-            var user =await _accountRepository.GetUserById(Id);
+            var user = await _accountRepository.GetUserById(Id);
             result.Data = new UserInformationViewModel();
 
             if (user != null)
@@ -134,9 +134,7 @@ namespace BN_Project.Core.Service.Account
                 return result;
             }
 
-            string password = Tools.EncodePasswordMd5(login.Password);
-
-            if (user.Password != password)
+            if (CheckPassword(user.Id, login.Password).Result)
             {
                 result.Status = Response.Status.Status.NotMatch;
                 result.Message = "ایمیل و رمز عبور با هم سازگار نیستند";
@@ -167,6 +165,28 @@ namespace BN_Project.Core.Service.Account
             _accountRepository.UpdateUser(userE);
 
             await _accountRepository.SaveChanges();
+        }
+
+        public async Task<bool> CheckPassword(int id, string password)
+        {
+            var user = await _accountRepository.GetUserById(id);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (password.EncodePasswordMd5() != user.Password)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public void Updateuser(UpdateUserInfoViewModel user)
+        {
+            throw new NotImplementedException();
         }
     }
 }
