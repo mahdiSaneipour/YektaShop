@@ -2,7 +2,6 @@
 using BN_Project.Core.Response.DataResponse;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.ViewModel.Account;
-using BN_Project.Domain.ViewModel.UserProdile;
 using BN_Project.Domain.ViewModel.UserProfile;
 
 namespace BN_Project.Core.IService.Account

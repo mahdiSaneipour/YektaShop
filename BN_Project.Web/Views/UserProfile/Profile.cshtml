@@ -1,5 +1,5 @@
-﻿@using BN_Project.Domain.ViewModel.UserProdile;
-@model UserInformationViewModel
+﻿@using BN_Project.Domain.ViewModel.UserProfile;
+@model UserProfileViewModel
 
 <div class="page-wrapper">
     <main class="page-content">
@@ -116,57 +116,29 @@
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <partial name="_UserInformationParial" model="@Model" />
+                    <partial name="_UserInformationParial" model="@Model.UserInformationVM" />
                 </div>
             </div>
         </div>
         <!-- start of personal-info-fullname-modal -->
-        <div class="remodal remodal-xs" data-remodal-id="personal-info-fullname-modal"
-             data-remodal-options="hashTracking: false">
+        <form asp-controller="UserProfile" asp-action="UpdateFullName" class="remodal remodal-xs" data-remodal-id="personal-info-fullname-modal"
+              data-remodal-options="hashTracking: false">
             <div class="remodal-header">
                 <div class="remodal-title">نام و نام خانوادگی</div>
                 <button data-remodal-action="close" class="remodal-close"></button>
             </div>
             <div class="remodal-content">
                 <div class="form-element-row mb-3">
-                    <label class="label fs-7">نام</label>
-                    <input type="text" class="form-control" placeholder="نام">
+                    <label class="label fs-7">نام و نام خانوادگی</label>
+                    <input type="text" class="form-control" placeholder="نام و نام خانوادگی" asp-for="@Model.UserInformationVM.FullName">
                 </div>
-                <div class="form-element-row">
-                    <label class="label fs-7">نام خانوادگی</label>
-                    <input type="text" class="form-control" placeholder="نام خانوادگی">
-                </div>
+                <span asp-validation-for="@Model.UserInformationVM"></span>
             </div>
             <div class="remodal-footer">
                 <button class="btn btn-sm btn-primary px-3">ثبت اطلاعات</button>
             </div>
-        </div>
+        </form>
         <!-- end of personal-info-fullname-modal -->
-        <!-- start of personal-info-national-id-modal -->
-        <div class="remodal remodal-xs" data-remodal-id="personal-info-national-id-modal"
-             data-remodal-options="hashTracking: false">
-            <div class="remodal-header">
-                <div class="remodal-title">کد ملی</div>
-                <button data-remodal-action="close" class="remodal-close"></button>
-            </div>
-            <div class="remodal-content">
-                <div class="form-element-row mb-3">
-                    <input type="text" class="form-control" placeholder="">
-                </div>
-                <div class="form-element-row">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="foreigner">
-                        <label class="form-check-label fs-7 fw-bold" for="foreigner">
-                            تبعه غیر‌ایرانی فاقد کد ملی هستم.
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="remodal-footer">
-                <button class="btn btn-sm btn-primary px-3">ثبت اطلاعات</button>
-            </div>
-        </div>
-        <!-- end of personal-info-national-id-modal -->
         <!-- start of personal-info-phone-number-modal -->
         <form class="remodal remodal-xs" data-remodal-id="personal-info-phone-number-modal"
               data-remodal-options="hashTracking: false" asp-controller="UserProfile" asp-action="UpdatePhoneNumber">
@@ -176,12 +148,12 @@
             </div>
             <div class="remodal-content">
                 <div class="form-element-row mb-3">
-                    <input type="text" class="form-control" placeholder="" asp-for="@Model.PhoneNumber">
+                    <input type="text" class="form-control" placeholder="" asp-for="@Model.UserInformationVM.PhoneNumber">
                 </div>
-                <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                <span asp-validation-for="@Model.UserInformationVM.PhoneNumber" class="text-danger"></span>
             </div>
             <div class="remodal-footer">
-                <button class="btn btn-sm btn-primary px-3" onclick="is_delete(this)">دریافت کد تایید و تغییر شماره</button>
+                <button class="btn btn-sm btn-primary px-3" onclick="is_delete(this)">تغییر شماره همراه</button>
             </div>
         </form>
         <!-- end of personal-info-phone-number-modal -->

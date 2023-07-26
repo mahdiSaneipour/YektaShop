@@ -39,14 +39,12 @@ namespace BN_Project.Data.Repository
             return register;
         }
 
-        public Task SaveChanges()
+        public async Task SaveChanges()
         {
-            _context.SaveChangesAsync();
-
-            return Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateUser(UserEntity user)
+        void IAccountRepository.UpdateUser(UserEntity user)
         {
             _context.Users.Update(user);
         }

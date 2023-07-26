@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace BN_Project.Domain.ViewModel.UserProdile
+namespace BN_Project.Domain.ViewModel.UserProfile
 {
     public class UserInformationViewModel
     {
