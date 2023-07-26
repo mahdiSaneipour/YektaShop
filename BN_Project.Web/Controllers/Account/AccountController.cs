@@ -1,5 +1,4 @@
-﻿using BN_Project.Core.DTOs.User;
-using BN_Project.Core.Response.Status;
+﻿using BN_Project.Core.Response.Status;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +7,7 @@ using BN_Project.Core.ExtraViewModels;
 using EP.Core.Tools.RenderViewToString;
 using EP.Core.Tools.Senders;
 using BN_Project.Core.IService.Account;
+using BN_Project.Domain.ViewModel.Account;
 
 namespace BN_Project.Web.Controllers.Account
 {
@@ -35,7 +35,7 @@ namespace BN_Project.Web.Controllers.Account
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginUser login)
+        public async Task<IActionResult> Login(LoginUserViewModel login)
         {
             /*if (ModelState.IsValid)
             {
@@ -104,7 +104,7 @@ namespace BN_Project.Web.Controllers.Account
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterUser register)
+        public async Task<IActionResult> Register(RegisterUserViewModel register)
         {
 
             var result = await _accountServices.CreateUser(register);

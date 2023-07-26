@@ -47,7 +47,7 @@ namespace BN_Project.Web.Controllers.UserProfile
                 UpdateUserInfoViewModel updateUserVM = new UpdateUserInfoViewModel();
                 string phoneNumber = UserInfo.PhoneNumber;
                 updateUserVM.PhoneNumber = phoneNumber;
-                updateUserVM.
+/*                updateUserVM.*/
 
 
                 return View("~/Views/UserProfile/Profile.cshtml", phoneNumber);

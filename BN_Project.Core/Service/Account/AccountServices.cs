@@ -155,11 +155,21 @@ namespace BN_Project.Core.Service.Account
         public void Updateuser(UpdateUserInfoViewModel user)
         {
             var userE = _accountRepository.GetUserById(user.Id).Result;
-            userE.Name = user.FirstName + " " + user.LastName;
+            userE.Name = user.FirstName + " " + user.FirstName;
             userE.PhoneNumber = user.PhoneNumber;
             _accountRepository.UpdateUser(userE);
 
             _accountRepository.SaveChanges();
+        }
+
+        public Task<DataResponse<UserInformationViewModel>> GetUserByEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> CheckPassword(int id, string password)
+        {
+            throw new NotImplementedException();
         }
     }
 }
