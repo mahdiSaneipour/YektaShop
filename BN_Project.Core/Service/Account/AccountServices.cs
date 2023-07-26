@@ -135,9 +135,7 @@ namespace BN_Project.Core.Service.Account
                 return result;
             }
 
-            string password = Tools.EncodePasswordMd5(login.Password);
-
-            if (user.Password != password)
+            if (CheckPassword(user.Id, login.Password).Result)
             {
                 result.Status = Response.Status.Status.NotMatch;
                 result.Message = "ایمیل و رمز عبور با هم سازگار نیستند";
@@ -167,7 +165,24 @@ namespace BN_Project.Core.Service.Account
             throw new NotImplementedException();
         }
 
-        public Task<bool> CheckPassword(int id, string password)
+        public async Task<bool> CheckPassword(int id, string password)
+        {
+            var user = await _accountRepository.GetUserById(id);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            if(password.EncodePasswordMd5() != user.Password)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public void Updateuser(UpdateUserInfoViewModel user)
         {
             throw new NotImplementedException();
         }
