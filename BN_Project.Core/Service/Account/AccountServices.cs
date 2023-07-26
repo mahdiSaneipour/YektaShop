@@ -79,10 +79,12 @@ namespace BN_Project.Core.Service.Account
             DataResponse<UserEntity> result = new DataResponse<UserEntity>();
             var user = await _accountRepository.GetUserByEmail(email);
 
-            if (user != null)
+            if (user == null)
             {
                 result.Status = Response.Status.Status.NotValid;
                 result.Message = "ایمیل وارد شده معتبر نمیباشد";
+
+                return result;
             }
 
             result.Status = Response.Status.Status.Success;
@@ -107,6 +109,8 @@ namespace BN_Project.Core.Service.Account
             }
 
             user.IsActive = true;
+
+            ChangeActivationCode(user);
 
             await _accountRepository.SaveChanges();
 
@@ -135,7 +139,7 @@ namespace BN_Project.Core.Service.Account
                 return result;
             }
 
-            if (CheckPassword(user.Id, login.Password).Result)
+            if (CheckPassword(user.Id, login.Password).Result == false)
             {
                 result.Status = Response.Status.Status.NotMatch;
                 result.Message = "ایمیل و رمز عبور با هم سازگار نیستند";
@@ -186,9 +190,41 @@ namespace BN_Project.Core.Service.Account
             return true;
         }
 
-        public void Updateuser(UpdateUserInfoViewModel user)
+        public async Task<bool> CheckToken(string token)
         {
-            throw new NotImplementedException();
+            var user = await _accountRepository.GetUserByToken(token);
+
+            if (user != null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> ResetPassword(ResetPasswordViewModel resetPassword)
+        {
+            var user = await _accountRepository.GetUserByToken(resetPassword.Token);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.Password = resetPassword.Password.EncodePasswordMd5();
+
+            _accountRepository.UpdateUser(user);
+            ChangeActivationCode(user);
+
+            return true;
+        }
+
+        public void ChangeActivationCode(UserEntity user)
+        {
+            user.ActivationCode = Tools.GenerateUniqCode();
+
+            _accountRepository.UpdateUser(user);
+            _accountRepository.SaveChanges();
         }
 
         public async void DeleteAccount(int Id)

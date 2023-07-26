@@ -12,7 +12,7 @@ namespace EP.Core.Tools.Senders
         {
             MailMessage mail = new MailMessage();
             SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-            mail.From = new MailAddress("barnamen24@gmail.com", "برنامه نویسان");
+            mail.From = new MailAddress("yektakala1402@gmail.com", "برنامه نویسان");
             mail.To.Add(to);
             mail.Subject = subject;
             mail.Body = body;
@@ -23,7 +23,7 @@ namespace EP.Core.Tools.Senders
             // mail.Attachments.Add(attachment);
 
             SmtpServer.Port = 587;
-            SmtpServer.Credentials = new System.Net.NetworkCredential("barnamen24@gmail.com", "dywgcjstrwywpmag");
+            SmtpServer.Credentials = new System.Net.NetworkCredential("yektakala1402@gmail.com", "iabxkvnlpjpbcxyu");
             SmtpServer.EnableSsl = true;
 
             SmtpServer.Send(mail);
