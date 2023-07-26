@@ -31,8 +31,8 @@ builder.Services.AddAuthentication(option =>
     option.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 }).AddCookie(option =>
 {
-    option.LoginPath = "/Login";
-    option.LogoutPath = "/Logout";
+    option.LoginPath = "Account/Login";
+    option.LogoutPath = "Account/Logout";
     option.ExpireTimeSpan = TimeSpan.FromMinutes(43200);
 });
 
