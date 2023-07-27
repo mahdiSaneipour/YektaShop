@@ -1,5 +1,7 @@
 using BN_Project.Core.IService.Account;
+using BN_Project.Core.IService.Admin;
 using BN_Project.Core.Service.Account;
+using BN_Project.Core.Service.Admin;
 using BN_Project.Data.Context;
 using BN_Project.Data.Repository;
 using BN_Project.Domain.IRepository;
@@ -18,6 +20,7 @@ builder.Services.AddControllersWithViews();
 #region Repositories
 
 services.AddScoped<IAccountRepository, AccountRepository>();
+services.AddScoped<IUserRepository, UserRepository>();
 
 #endregion
 
@@ -40,6 +43,7 @@ builder.Services.AddAuthentication(option =>
 #region Services
 
 services.AddScoped<IAccountServices, AccountServices>();
+services.AddScoped<IAdminServices, AdminServices>();
 services.AddScoped<IViewRenderService, RenderViewToString>();
 
 #endregion

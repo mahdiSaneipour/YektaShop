@@ -7,4 +7,22 @@
     color: red;
 }
 
+td, th {
+    text-align: center;
+}
+
+    td i {
+        margin-top: 6px;
+        font-size: 17px !important;
+    }
+
+    td span {
+        display: block;
+        margin-top: 5px;
+        font-size: 15px !important;
+    }
+
+table {
+    margin-top: 15px;
+}
 /*# sourceMappingURL=custom.css.map */

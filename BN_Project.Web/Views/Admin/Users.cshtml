@@ -1,0 +1,106 @@
+﻿@model IReadOnlyList<UserListViewModel>
+@{
+    Layout = "Admin/_AdminLayout";
+    ViewData["Title"] = "کاربران";
+}
+
+
+<div class="well with-header  with-footer">
+    <a href="javascript:void(0);" class="btn btn-success">افزودن کاربر جدید</a>
+    <br />
+    <table class="table table-hover table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    نام کاربر
+                </th>
+                <th>
+                    ایمیل کاربر
+                </th>
+                <th>
+                    شماره کاربر
+                </th>
+                <th>
+                    وضعیت کاربر
+                </th>
+                <th>
+                    عملیات
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(var i = 1; i <= Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <span>
+                            @i
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            @Model[i-1].Name
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            @Model[i-1].Email
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            @Model[i-1].PhoneNumber
+                        </span>
+                    </td>
+                    <td>
+                        <i class="fa fa-check success" aria-hidden="true"></i>
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" href="javascript:void(0);"><i class="fa fa-times"></i> حذف</a>
+                        <a class="btn btn-yellow" href="javascript:void(0);"><i class="fa fa-pencil" aria-hidden="true"></i> ویرایش</a>
+
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+@section breadcrumb {
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a asp-action="Index">خانه</a>
+            </li>
+            <li class="active">کاربران</li>
+        </ul>
+    </div>
+}
+
+@section pageHeader {
+    <div class="page-header position-relative">
+        <div class="header-title">
+            <h1>
+                کاربران
+            </h1>
+        </div>
+        <!--Header Buttons-->
+        <div class="header-buttons">
+            <a class="sidebar-toggler" href="#">
+                <i class="fa fa-arrows-h"></i>
+            </a>
+            <a class="refresh" id="refresh-toggler" href="">
+                <i class="glyphicon glyphicon-refresh"></i>
+            </a>
+            <a class="fullscreen" id="fullscreen-toggler" href="#">
+                <i class="glyphicon glyphicon-fullscreen"></i>
+            </a>
+        </div>
+        <!--Header Buttons End-->
+    </div>
+}
