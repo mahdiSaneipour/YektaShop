@@ -22,5 +22,25 @@ namespace BN_Project.Data.Repository
         {
             return _context.Users;
         }
+
+        public async Task<bool> IsEmailExist(string email)
+        {
+            return _context.Users.Any(u => u.Email == email);
+        }
+
+        public async Task<bool> IsPhoneNumberExist(string phoneNumber)
+        {
+            return _context.Users.Any(u => u.PhoneNumber == phoneNumber);
+        }
+
+        async Task IUserRepository.AddUserFromAdmin(UserEntity user)
+        {
+            _context.Users.Add(user);
+        }
+
+        async Task IUserRepository.SaveChanges()
+        {
+            _context.SaveChangesAsync();
+        }
     }
 }

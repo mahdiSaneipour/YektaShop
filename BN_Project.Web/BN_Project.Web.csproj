@@ -362,4 +362,9 @@
     <ProjectReference Include="..\BN_Project.Domain\BN_Project.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\avatar\thumb\" />
+    <Folder Include="wwwroot\images\avatar\normal\" />
+  </ItemGroup>
+
 </Project>

@@ -2,11 +2,11 @@
 using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Response.Status;
+using BN_Project.Core.Tools;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Account;
 using BN_Project.Domain.ViewModel.UserProfile;
-using Toplearn2.Application.Tools;
 
 namespace BN_Project.Core.Service.Account
 {
@@ -37,8 +37,8 @@ namespace BN_Project.Core.Service.Account
             {
                 Email = register.Email,
                 Create = DateTime.Now,
-                ActivationCode = Tools.GenerateUniqCode(),
-                Password = Tools.EncodePasswordMd5(register.Password)
+                ActivationCode = Tools.Tools.GenerateUniqCode(),
+                Password = Tools.Tools.EncodePasswordMd5(register.Password)
             };
 
             user = await _accountRepository.RegisterUsere(userEntity);
@@ -219,7 +219,7 @@ namespace BN_Project.Core.Service.Account
 
         public void ChangeActivationCode(UserEntity user)
         {
-            user.ActivationCode = Tools.GenerateUniqCode();
+            user.ActivationCode = Tools.Tools.GenerateUniqCode();
 
             _accountRepository.UpdateUser(user);
             _accountRepository.SaveChanges();
