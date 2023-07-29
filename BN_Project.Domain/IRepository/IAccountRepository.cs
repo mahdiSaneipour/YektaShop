@@ -13,7 +13,7 @@ namespace BN_Project.Domain.IRepository
         public Task<UserEntity> GetUserById(int id);
 
         public void UpdateUser(UserEntity user);
-
+        public void DeleteUser(int Id);
         public Task SaveChanges();
     }
 }

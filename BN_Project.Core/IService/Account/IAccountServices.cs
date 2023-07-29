@@ -27,5 +27,6 @@ namespace BN_Project.Core.IService.Account
         public void ChangeActivationCode(UserEntity user);
 
         public Task<bool> CheckPassword(int id, string password);
+        public void DeleteAccount(int Id);
     }
 }

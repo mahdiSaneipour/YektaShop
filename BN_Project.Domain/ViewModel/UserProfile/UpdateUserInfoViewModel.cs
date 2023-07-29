@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BN_Project.Domain.ViewModel.UserProfile
 {
@@ -19,5 +14,6 @@ namespace BN_Project.Domain.ViewModel.UserProfile
         [Required(ErrorMessage = "این فیلد ضروری می باشد!")]
         [Display(Name = "شماره موبایل")]
         public string PhoneNumber { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -2,8 +2,20 @@
 
 <div class="ui-box bg-white mb-5">
     <div class="ui-box-title">اطلاعات شخصی</div>
+    @if (ViewData["PasssWordError"] != null)
+    {
+        <p class="alert alert-danger">@ViewData["PasssWordError"]</p>
+    }
     <div class="ui-box-content">
         <div class="row">
+            <div class="col-lg-6 mb-3">
+                <div class="border-bottom py-2">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="fs-7 fw-bold text-dark">پست الکترونیک</div>
+                    </div>
+                    <div class="fs-6 fw-bold text-muted">@Model.Email</div>
+                </div>
+            </div>
             <div class="col-lg-6 mb-3">
                 <div class="border-bottom py-2">
                     <div class="d-flex align-items-center justify-content-between">
@@ -26,26 +38,6 @@
                         </button>
                     </div>
                     <div class="fs-6 fw-bold text-muted">@Model.PhoneNumber</div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-3">
-                <div class="border-bottom py-2">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="fs-7 fw-bold text-dark">پست الکترونیک</div>
-                    </div>
-                    <div class="fs-6 fw-bold text-muted">@Model.Email</div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-3">
-                <div class="border-bottom py-2">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="fs-7 fw-bold text-dark">رمز عبور</div>
-                        <button class="btn btn-circle btn-outline-light"
-                                data-remodal-target="personal-info-change-password-modal">
-                            <i class="ri-ball-pen-fill"></i>
-                        </button>
-                    </div>
-                    <div class="fs-6 fw-bold text-muted">-</div>
                 </div>
             </div>
         </div>

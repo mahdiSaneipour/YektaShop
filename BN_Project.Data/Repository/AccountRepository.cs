@@ -14,6 +14,11 @@ namespace BN_Project.Data.Repository
             _context = context;
         }
 
+        public void DeleteUser(int Id)
+        {
+            var user = GetUserById(Id).Result;
+            _context.Users.Remove(user);
+        }
 
         public async Task<UserEntity> GetUserByEmail(string email)
         {
@@ -29,7 +34,6 @@ namespace BN_Project.Data.Repository
         public async Task<UserEntity> GetUserByToken(string token)
         {
             var result = await _context.Users.FirstOrDefaultAsync(u => u.ActivationCode == token);
-
             return result;
         }
 

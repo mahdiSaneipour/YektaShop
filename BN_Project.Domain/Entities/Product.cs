@@ -1,15 +1,15 @@
-﻿using System;
+﻿using BN_Project.Domain.Entities.Common;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BN_Project.Domain.Entities
 {
-    public class Product
+    public class Product : BaseEntity
     {
-        public int Id { get; set; }
-
         public string Image { get; set; }
 
         public string Features { get; set; }
@@ -20,6 +20,7 @@ namespace BN_Project.Domain.Entities
 
         public int CategoryId { get; set; }
 
-
+        [ForeignKey(nameof(CategoryId))]
+        public Category Category { get; set; }
     }
 }
