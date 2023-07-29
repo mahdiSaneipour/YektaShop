@@ -5,6 +5,7 @@ namespace BN_Project.Domain.ViewModel.UserProfile
 {
     public class UserLoginInformationViewModel
     {
+        public int UserId { get; set; }
         [DisplayName("رمز عبور")]
         [Required(ErrorMessage = "{0} نمیتواند خالی باشد")]
         [MinLength(8, ErrorMessage = "حداقل حروف رمز 8 رقم میباشد")]

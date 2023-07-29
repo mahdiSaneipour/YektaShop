@@ -164,7 +164,7 @@ namespace BN_Project.Core.Service.Account
         {
             UserEntity userE = new UserEntity();
 
-            userE = _accountRepository.GetUserById(user.Id).Result;
+            userE = await _accountRepository.GetUserById(user.Id);
             userE.Name = user.FullName;
             userE.PhoneNumber = user.PhoneNumber;
             userE.Password = user.Password;
@@ -232,6 +232,33 @@ namespace BN_Project.Core.Service.Account
             _accountRepository.DeleteUser(Id);
 
             await _accountRepository.SaveChanges();
+        }
+
+        public async Task<bool> ChangeUserPassword(UserLoginInformationViewModel user)
+        {
+            if (user.Password != null && user.NewPass != null && user.ConfirmNewPass != null)
+            {
+                var currentUser = await _accountRepository.GetUserById(user.UserId);
+
+                string EncodedPassword = user.Password.EncodePasswordMd5();
+                if (EncodedPassword == currentUser.Password)
+                {
+                    currentUser.Password = user.NewPass.EncodePasswordMd5();
+
+                    _accountRepository.UpdateUser(currentUser);
+                    await _accountRepository.SaveChanges();
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

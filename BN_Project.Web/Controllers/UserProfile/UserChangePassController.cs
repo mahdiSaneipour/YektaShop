@@ -16,15 +16,12 @@ namespace BN_Project.Web.Controllers.UserProfile
             _accountService = AccountService;
         }
 
-        private DataResponse<UserInformationViewModel> GetCurrentUser()
+        private int GetCurrentUserId()
         {
             int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-            var user = _accountService.GetUserInformationById(UserId).Result;
-            return user;
+            return UserId;
         }
 
-        [BindProperty]
-        public UserLoginInformationViewModel UserLoginInfoVM { get; set; }
 
         public IActionResult Index()
         {
@@ -32,35 +29,17 @@ namespace BN_Project.Web.Controllers.UserProfile
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeUserPassword()
+        public async Task<IActionResult> ChangeUserPassword(UserLoginInformationViewModel userLoginInfoVM)
         {
-            if (UserLoginInfoVM.Password != null && UserLoginInfoVM.NewPass != null && UserLoginInfoVM.ConfirmNewPass != null)
+            userLoginInfoVM.UserId = GetCurrentUserId();
+            if (await _accountService.ChangeUserPassword(userLoginInfoVM))
             {
-                UpdateUserInfoViewModel updateUserVM = new UpdateUserInfoViewModel();
-
-                var user = GetCurrentUser();
-                string EncodedPassword = UserLoginInfoVM.Password.EncodePasswordMd5();
-                if (EncodedPassword == user.Data.Password)
-                {
-                    string EncodedNewPassword = UserLoginInfoVM.NewPass.EncodePasswordMd5();
-                    updateUserVM.Password = EncodedNewPassword;
-                    updateUserVM.FullName = user.Data.FullName;
-                    updateUserVM.PhoneNumber = user.Data.PhoneNumber;
-                    updateUserVM.Id = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-
-                    _accountService.UpdateUser(updateUserVM);
-
-                    return RedirectToAction("Logout", "Account");
-                }
-                else
-                {
-                    ViewData["ChangePassWordError"] = "رمز ورود اشتباه است!";
-                    return View("~/Views/UserChangePass/ChangePassword.cshtml");
-                }
+                return RedirectToAction("Logout", "Account");
             }
             else
             {
-                return NotFound();
+                ViewData["ChangePassWordError"] = "رمز ورود اشتباه است!";
+                return View("~/Views/UserChangePass/ChangePassword.cshtml");
             }
         }
     }
