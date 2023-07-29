@@ -19,5 +19,6 @@ namespace BN_Project.Core.IService.Admin
         public Task<DataResponse<IReadOnlyList<ProductListViewModel>>> GetProducts(int pageId = 1);
 
         #endregion
+        public Task<bool> RemoveUserById(int Id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BN_Project.Core.IService.Admin;
+using BN_Project.Core.Response.Status;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,32 +34,51 @@ namespace BN_Project.Web.Controllers.Admin
         [HttpPost]
         public async Task<IActionResult> AddUser(AddUserViewModel addUser)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View();
             }
 
             var result = await _adminServices.AddUserFromAdmin(addUser);
 
-            switch(result.Status)
+            switch (result.Status)
             {
-                case Core.Response.Status.Status.AlreadyHave:
+                case Status.AlreadyHave:
                     ModelState.AddModelError("Email", result.Message);
                     return View();
 
-                case Core.Response.Status.Status.AlreadyHavePhoneNumber:
+                case Status.AlreadyHavePhoneNumber:
                     ModelState.AddModelError("PhoneNumber", result.Message);
                     return View();
             }
 
-            if(result.Status == Core.Response.Status.Status.Success)
+            if (result.Status == Status.Success)
             {
                 return RedirectToAction("Users");
-            } else
+            }
+            else
             {
                 ModelState.AddModelError("Email", "خطایی در سیستم رخ داده لطفا بعدا امتحان کنید");
                 return View();
             }
         }
+
+        public async Task<IActionResult> RemoveUser(int Id)
+        {
+            if (await _adminServices.RemoveUserById(Id))
+            {
+                return RedirectToAction("Users", "Admin");
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        public async Task<IActionResult> EditUser(int Id)
+        {
+            return View();
+        }
+
     }
 }
