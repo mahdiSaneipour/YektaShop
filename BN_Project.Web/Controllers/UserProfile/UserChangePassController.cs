@@ -16,14 +16,12 @@ namespace BN_Project.Web.Controllers.UserProfile
             _accountService = AccountService;
         }
 
-        private DataResponse<UserInformationViewModel> GetCurrentUser()
+        private int GetCurrentUserId()
         {
             int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-            var user = _accountService.GetUserInformationById(UserId).Result;
-            return user;
+            return UserId;
         }
 
-        public UserLoginInformationViewModel UserLoginInfoVM { get; set; }
 
         public IActionResult Index()
         {

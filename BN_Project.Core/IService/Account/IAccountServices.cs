@@ -13,6 +13,7 @@ namespace BN_Project.Core.IService.Account
         public Task<DataResponse<UserEntity>> LoginUser(LoginUserViewModel login);
 
         public Task<BaseResponse> IsTokenTrue(string token);
+        public Task<bool> ChangeUserPassword(UserLoginInformationViewModel user);
 
         public void UpdateUser(UpdateUserInfoViewModel user);
 
