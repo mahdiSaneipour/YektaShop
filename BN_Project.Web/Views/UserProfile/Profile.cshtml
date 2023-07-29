@@ -1,5 +1,5 @@
 ﻿@using BN_Project.Domain.ViewModel.UserProfile;
-@model UserProfileViewModel
+@model UserInformationViewModel
 
 <div class="page-wrapper">
     <main class="page-content">
@@ -99,6 +99,12 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link" asp-controller="UserChangePass" asp-action="Index">
+                                        <i class="nav-link-icon ri-user-line"></i>
+                                        تغییر رمز عبور
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" href="#">
                                         <i class="nav-link-icon ri-logout-box-r-line"></i>
                                         خروج
@@ -116,7 +122,7 @@
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <partial name="_UserInformationParial" model="@Model.UserInformationVM" />
+                    <partial name="_UserInformationParial" model="Model" />
                 </div>
             </div>
         </div>
@@ -130,9 +136,9 @@
             <div class="remodal-content">
                 <div class="form-element-row mb-3">
                     <label class="label fs-7">نام و نام خانوادگی</label>
-                    <input type="text" class="form-control" placeholder="نام و نام خانوادگی" asp-for="@Model.UserInformationVM.FullName">
+                    <input type="text" class="form-control" placeholder="نام و نام خانوادگی" asp-for="FullName">
                 </div>
-                <span asp-validation-for="@Model.UserInformationVM"></span>
+                <span asp-validation-for="FullName"></span>
             </div>
             <div class="remodal-footer">
                 <button class="btn btn-sm btn-primary px-3">ثبت اطلاعات</button>
@@ -148,64 +154,14 @@
             </div>
             <div class="remodal-content">
                 <div class="form-element-row mb-3">
-                    <input type="text" class="form-control" placeholder="" asp-for="@Model.UserInformationVM.PhoneNumber">
+                    <input type="text" class="form-control" placeholder="" asp-for="PhoneNumber">
                 </div>
-                <span asp-validation-for="@Model.UserInformationVM.PhoneNumber" class="text-danger"></span>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
             <div class="remodal-footer">
-                <button class="btn btn-sm btn-primary px-3" onclick="is_delete(this)">تغییر شماره همراه</button>
+                <button class="btn btn-sm btn-primary px-3">تغییر شماره همراه</button>
             </div>
         </form>
         <!-- end of personal-info-phone-number-modal -->
-        <form asp-controller="UserProfile" asp-action="ChangeUserPassword" class="remodal remodal-xs" data-remodal-id="personal-info-change-password-modal"
-              data-remodal-options="hashTracking: false">
-
-            <div class="remodal-header">
-                <div class="remodal-title">ویرایش رمز عبور</div>
-                <button data-remodal-action="close" class="remodal-close"></button>
-            </div>
-
-            <div class="remodal-content">
-                <div class="form-element-row mb-3">
-                    <label class="label fs-7">رمز عبور فعلی</label>
-                    <input type="text" class="form-control" placeholder="" asp-for="@Model.UserLoginInfoVM.Password">
-                </div>
-                <span asp-validation-for="@Model.UserLoginInfoVM.Password"></span>
-
-                <div class="form-element-row mb-3">
-                    <label class="label fs-7">رمز عبور جدید</label>
-                    <input type="text" class="form-control" placeholder="" asp-for="@Model.UserLoginInfoVM.NewPass">
-                </div>
-                <span asp-validation-for="@Model.UserLoginInfoVM.NewPass"></span>
-
-                <div class="form-element-row mb-3">
-                    <label class="label fs-7">تکرار رمز عبور جدید</label>
-                    <input type="text" class="form-control" placeholder="" asp-for="@Model.UserLoginInfoVM.ConfirmNewPass">
-                </div>
-                <span asp-validation-for="@Model.UserLoginInfoVM.ConfirmNewPass"></span>
-            </div>
-            <div class="remodal-footer">
-                <button class="btn btn-sm btn-primary px-3">ثبت</button>
-            </div>
-        </form>
     </main>
 </div>
-
-@section Scripts {
-    <script>
-        function is_delete(e) {
-            event.preventDefault();
-            swal({
-                title: 'آیا مطمئن هستید؟',
-                text: 'حساب شما برای همیشه پاک خواهد شد!',
-                showCancelButton: true,
-            }).then((willDelete) => {
-                console.log(willDelete);
-                if (willDelete) {
-
-                    $("#deleteAccountForm").submit();
-                }
-            });
-        }
-    </script>
-                }

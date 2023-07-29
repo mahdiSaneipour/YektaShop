@@ -11,6 +11,14 @@
             <div class="col-lg-6 mb-3">
                 <div class="border-bottom py-2">
                     <div class="d-flex align-items-center justify-content-between">
+                        <div class="fs-7 fw-bold text-dark">پست الکترونیک</div>
+                    </div>
+                    <div class="fs-6 fw-bold text-muted">@Model.Email</div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <div class="border-bottom py-2">
+                    <div class="d-flex align-items-center justify-content-between">
                         <div class="fs-7 fw-bold text-dark">نام و نام خانوادگی</div>
                         <button class="btn btn-circle btn-outline-light"
                                 data-remodal-target="personal-info-fullname-modal">
@@ -32,33 +40,6 @@
                     <div class="fs-6 fw-bold text-muted">@Model.PhoneNumber</div>
                 </div>
             </div>
-            <div class="col-lg-6 mb-3">
-                <div class="border-bottom py-2">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="fs-7 fw-bold text-dark">پست الکترونیک</div>
-                    </div>
-                    <div class="fs-6 fw-bold text-muted">@Model.Email</div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-3">
-                <div class="border-bottom py-2">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="fs-7 fw-bold text-dark">رمز عبور</div>
-                        <button class="btn btn-circle btn-outline-light"
-                                data-remodal-target="personal-info-change-password-modal">
-                            <i class="ri-ball-pen-fill"></i>
-                        </button>
-                    </div>
-                    <div class="fs-6 fw-bold text-muted">-</div>
-                </div>
-            </div>
         </div>
-        <form asp-controller="UserProfile" asp-action="DeleteUserAccount"  id="deleteAccountForm">
-            <p class="alert alert-warning">
-                برای حذف حساب کاربری
-                <input class="alert-link mx-1 text-danger bg-transparent border-0" onclick="is_delete(this)" type="submit" value="اینجا" />
-                کلیک کنید!
-            </p>
-        </form>
     </div>
 </div>

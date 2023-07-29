@@ -12,9 +12,25 @@ namespace BN_Project.Data.Context
     {
         public BNContext(DbContextOptions<BNContext> options) : base(options)
         {
-            
-        }
 
+        }
         public DbSet<UserEntity> Users { get; set; }
+        public DbSet<CatagoryEntity> Catagories { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            var cascadeFKs = modelBuilder
+                            .Model
+                            .GetEntityTypes()
+                            .SelectMany(t => t.GetForeignKeys())
+                            .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
+
+            foreach (var fk in cascadeFKs)
+            {
+                fk.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+        }
     }
 }

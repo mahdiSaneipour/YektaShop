@@ -18,7 +18,7 @@ namespace BN_Project.Web.Controllers.UserProfile
         }
 
         [BindProperty]
-        public UserProfileViewModel UserProfileVM { get; set; }
+        public UserInformationViewModel UserInformationVM { get; set; }
 
         private DataResponse<UserInformationViewModel> GetCurrentUser()
         {
@@ -37,22 +37,21 @@ namespace BN_Project.Web.Controllers.UserProfile
         public IActionResult Profile()
         {
             var user = GetCurrentUser();
-            UserProfileVM = new UserProfileViewModel();
-            UserProfileVM.UserLoginInfoVM = new UserLoginInformationViewModel();
-            UserProfileVM.UserInformationVM = user.Data;
+            UserInformationVM = new UserInformationViewModel();
+            UserInformationVM = user.Data;
 
-            return View("~/Views/UserProfile/Profile.cshtml", UserProfileVM);
+            return View("~/Views/UserProfile/Profile.cshtml", UserInformationVM);
         }
 
         public IActionResult UpdatePhoneNumber()
         {
-            if (UserProfileVM.UserInformationVM.PhoneNumber != null)
+            if (UserInformationVM.PhoneNumber != null)
             {
                 UpdateUserInfoViewModel updateUserVM = new UpdateUserInfoViewModel();
 
                 var user = GetCurrentUser();
 
-                updateUserVM.PhoneNumber = UserProfileVM.UserInformationVM.PhoneNumber;
+                updateUserVM.PhoneNumber = UserInformationVM.PhoneNumber;
                 updateUserVM.FullName = user.Data.FullName;
                 updateUserVM.Id = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
                 updateUserVM.Password = user.Data.Password;
@@ -60,9 +59,9 @@ namespace BN_Project.Web.Controllers.UserProfile
                 _accountService.UpdateUser(updateUserVM);
 
                 user.Data.PhoneNumber = updateUserVM.PhoneNumber;
-                UserProfileVM.UserInformationVM = user.Data;
+                UserInformationVM = user.Data;
 
-                return View("~/Views/UserProfile/Profile.cshtml", UserProfileVM);
+                return View("~/Views/UserProfile/Profile.cshtml", UserInformationVM);
             }
             else
             {
@@ -72,13 +71,13 @@ namespace BN_Project.Web.Controllers.UserProfile
 
         public IActionResult UpdateFullName()
         {
-            if (UserProfileVM.UserInformationVM.FullName != null)
+            if (UserInformationVM.FullName != null)
             {
                 UpdateUserInfoViewModel updateUserVM = new UpdateUserInfoViewModel();
 
                 var user = GetCurrentUser();
 
-                updateUserVM.FullName = UserProfileVM.UserInformationVM.FullName;
+                updateUserVM.FullName = UserInformationVM.FullName;
                 updateUserVM.PhoneNumber = user.Data.PhoneNumber;
                 updateUserVM.Id = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
                 updateUserVM.Password = user.Data.Password;
@@ -86,61 +85,14 @@ namespace BN_Project.Web.Controllers.UserProfile
                 _accountService.UpdateUser(updateUserVM);
 
                 user.Data.FullName = updateUserVM.FullName;
-                UserProfileVM.UserInformationVM = user.Data;
+                UserInformationVM = user.Data;
 
-                return View("~/Views/UserProfile/Profile.cshtml", UserProfileVM);
+                return View("~/Views/UserProfile/Profile.cshtml", UserInformationVM);
             }
             else
             {
                 return NotFound();
             }
-        }
-
-        public async Task<IActionResult> ChangeUserPassword()
-        {
-            if (UserProfileVM.UserLoginInfoVM.Password != null && UserProfileVM.UserLoginInfoVM.NewPass != null && UserProfileVM.UserLoginInfoVM.ConfirmNewPass != null)
-            {
-                UpdateUserInfoViewModel updateUserVM = new UpdateUserInfoViewModel();
-
-                var user = GetCurrentUser();
-                string EncodedPassword = UserProfileVM.UserLoginInfoVM.Password.EncodePasswordMd5();
-                if (EncodedPassword == user.Data.Password)
-                {
-                    string EncodedNewPassword = UserProfileVM.UserLoginInfoVM.NewPass.EncodePasswordMd5();
-                    updateUserVM.Password = EncodedNewPassword;
-                    updateUserVM.FullName = user.Data.FullName;
-                    updateUserVM.PhoneNumber = user.Data.PhoneNumber;
-                    updateUserVM.Id = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-
-                    _accountService.UpdateUser(updateUserVM);
-
-                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-                    return Redirect("/Account/Login");
-                }
-                else
-                {
-                    UserProfileVM = new UserProfileViewModel();
-                    ViewData["PasssWordError"] = "رمز ورود اشتباه است!";
-                    UserProfileVM.UserInformationVM = user.Data;
-                    return View("~/Views/UserProfile/Profile.cshtml", UserProfileVM);
-                }
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
-        public async Task<IActionResult> DeleteUserAccount()
-        {
-            int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            _accountService.DeleteAccount(UserId);
-
-
-            return Redirect("/Account/Login");
         }
     }
 }
