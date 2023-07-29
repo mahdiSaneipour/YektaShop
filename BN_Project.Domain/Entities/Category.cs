@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BN_Project.Domain.Entities
 {
-    public class CatagoryEntity : BaseEntity
+    public class Category : BaseEntity
     {
         public string Title { get; set; }
         public int ParentId { get; set; }
         [ForeignKey("ParentId")]
-        public CatagoryEntity Catagory { get; set; }
+        public Category category { get; set; }
     }
 }

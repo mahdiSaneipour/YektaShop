@@ -15,7 +15,7 @@ namespace BN_Project.Data.Context
 
         }
         public DbSet<UserEntity> Users { get; set; }
-        public DbSet<CatagoryEntity> Catagories { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using BN_Project.Core.IService.Account;
 using BN_Project.Core.Response.DataResponse;
-using Toplearn2.Application.Tools;
+using BN_Project.Core.Tools;
 
 namespace BN_Project.Web.Controllers.UserProfile
 {
@@ -23,6 +23,7 @@ namespace BN_Project.Web.Controllers.UserProfile
             return user;
         }
 
+        [BindProperty]
         public UserLoginInformationViewModel UserLoginInfoVM { get; set; }
 
         public IActionResult Index()
@@ -30,6 +31,7 @@ namespace BN_Project.Web.Controllers.UserProfile
             return View("~/Views/UserChangePass/ChangePassword.cshtml");
         }
 
+        [HttpPost]
         public async Task<IActionResult> ChangeUserPassword()
         {
             if (UserLoginInfoVM.Password != null && UserLoginInfoVM.NewPass != null && UserLoginInfoVM.ConfirmNewPass != null)
@@ -48,14 +50,12 @@ namespace BN_Project.Web.Controllers.UserProfile
 
                     _accountService.UpdateUser(updateUserVM);
 
-                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-                    return Redirect("/Account/Login");
+                    return RedirectToAction("Logout", "Account");
                 }
                 else
                 {
-                    ViewData["PasssWordError"] = "رمز ورود اشتباه است!";
-                    return View();
+                    ViewData["ChangePassWordError"] = "رمز ورود اشتباه است!";
+                    return View("~/Views/UserChangePass/ChangePassword.cshtml");
                 }
             }
             else
