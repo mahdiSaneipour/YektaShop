@@ -51,7 +51,6 @@ namespace BN_Project.Web.Controllers.UserProfile
                 updateUserVM.PhoneNumber = UserInformationVM.PhoneNumber;
                 updateUserVM.FullName = user.Data.FullName;
                 updateUserVM.Id = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-                updateUserVM.Password = user.Data.Password;
 
                 _accountService.UpdateUser(updateUserVM);
 
@@ -77,7 +76,6 @@ namespace BN_Project.Web.Controllers.UserProfile
                 updateUserVM.FullName = UserInformationVM.FullName;
                 updateUserVM.PhoneNumber = user.Data.PhoneNumber;
                 updateUserVM.Id = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-                updateUserVM.Password = user.Data.Password;
 
                 _accountService.UpdateUser(updateUserVM);
 

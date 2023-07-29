@@ -16,10 +16,12 @@ namespace BN_Project.Data.Context
         }
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
-
+        public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<UserEntity>().HasQueryFilter(u => !u.IsDelete);
 
             var cascadeFKs = modelBuilder
                             .Model
@@ -31,6 +33,8 @@ namespace BN_Project.Data.Context
             {
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

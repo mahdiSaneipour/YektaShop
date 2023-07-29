@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <partial name="_Meta" />
+    <partial name="_CSS" />
+    <title>YektaKala | home v1</title>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <!-- start of page-header -->
+        <partial name="_Header" />
+        <!-- end of page-header -->
+        <partial name="_HeadBanner" />
+        <!-- start of page-content -->
+        <main class="page-content">
+            <div class="page-wrapper">
+                <main class="page-content">
+                    <div class="container">
+                        <div class="row mb-5">
+                            <partial name="Profile/_PSideBar"/>
+                            @RenderBody();
+                        </div>
+                    </div>
+                </main>
+            </div>
+                    
+        </main>
+    </div>
+            <!-- start of quick-view-modal -->
+            <partial name="_Remodal" />
+            <!-- end of quick-view-modal -->
+        </main>
+        <!-- end of page-content -->
+        <partial name="_Footer" />
+    </div>
+
+    <partial name="_JS" />
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>

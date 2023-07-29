@@ -27,20 +27,5 @@ namespace BN_Project.Web.Controllers.UserProfile
         {
             return View("~/Views/UserChangePass/ChangePassword.cshtml");
         }
-
-        [HttpPost]
-        public async Task<IActionResult> ChangeUserPassword(UserLoginInformationViewModel userLoginInfoVM)
-        {
-            userLoginInfoVM.UserId = GetCurrentUserId();
-            if (await _accountService.ChangeUserPassword(userLoginInfoVM))
-            {
-                return RedirectToAction("Logout", "Account");
-            }
-            else
-            {
-                ViewData["ChangePassWordError"] = "رمز ورود اشتباه است!";
-                return View("~/Views/UserChangePass/ChangePassword.cshtml");
-            }
-        }
     }
 }

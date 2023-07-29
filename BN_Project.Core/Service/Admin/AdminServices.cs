@@ -73,7 +73,7 @@ namespace BN_Project.Core.Service.Admin
             int take = 10;
             int skip = (pageId - 1) * take;
 
-            var lUsers = users.ToList().Skip(skip).Take(take).ToList();
+            var lUsers = users.ToList().Skip(skip).Take(take).OrderByDescending(u => u.Id).ToList();
 
             foreach (var user in lUsers)
             {

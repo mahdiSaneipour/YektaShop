@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/BN_Project.Web/wwwroot/images/avatar/normal
+/BN_Project.Web/wwwroot/images/avatar/thumb
