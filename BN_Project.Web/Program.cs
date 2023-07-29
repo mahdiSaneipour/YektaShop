@@ -21,6 +21,7 @@ builder.Services.AddControllersWithViews();
 
 services.AddScoped<IAccountRepository, AccountRepository>();
 services.AddScoped<IUserRepository, UserRepository>();
+services.AddScoped<IProductRepository, ProductRepository>();
 
 #endregion
 

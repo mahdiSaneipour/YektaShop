@@ -10,6 +10,8 @@ namespace BN_Project.Domain.Entities
 {
     public class Product : BaseEntity
     {
+        public string Name { get; set; }
+
         public string Image { get; set; }
 
         public string Features { get; set; }
