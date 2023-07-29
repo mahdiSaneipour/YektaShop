@@ -24,13 +24,14 @@ namespace BN_Project.Core.Service.Admin
         {
             var result = new BaseResponse();
 
-            if(_userRepository.IsEmailExist(addUser.Email).Result)
+            if (_userRepository.IsEmailExist(addUser.Email).Result)
             {
                 result.Status = Response.Status.Status.AlreadyHave;
                 result.Message = "کاربری با این ایمیل موجد است";
 
                 return result;
-            } else if (_userRepository.IsPhoneNumberExist(addUser.PhoneNumber).Result)
+            }
+            else if (_userRepository.IsPhoneNumberExist(addUser.PhoneNumber).Result)
             {
                 result.Status = Response.Status.Status.AlreadyHavePhoneNumber;
                 result.Message = "کاربری با این شماره موبایل موجد است";
@@ -87,6 +88,18 @@ namespace BN_Project.Core.Service.Admin
             }
 
             return result.AsReadOnly();
+        }
+
+        public async Task<bool> RemoveUserById(int Id)
+        {
+            var user = await _userRepository.GetUserById(Id);
+            if (user == null)
+                return false;
+            _userRepository.RemoveUser(user);
+
+            await _userRepository.SaveChanges();
+
+            return true;
         }
 
         #endregion

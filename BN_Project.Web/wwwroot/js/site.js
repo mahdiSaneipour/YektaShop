@@ -1,4 +1,14 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function is_delete(e) {
+    event.preventDefault();
+    swal({
+        title: 'آیا مطمئن هستید؟',
+        text: 'این داده برای همیشه حذف خواهد شد!',
+        showCancelButton: true,
+    }).then((willDelete) => {
+        console.log(willDelete);
+        if (willDelete) {
 
-// Write your JavaScript code.
+            window.location = e.href;
+        }
+    });
+}

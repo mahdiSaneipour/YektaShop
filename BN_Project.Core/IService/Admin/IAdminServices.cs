@@ -8,5 +8,6 @@ namespace BN_Project.Core.IService.Admin
         public Task<IReadOnlyList<UserListViewModel>> GetUsersForAdmin(int pageId);
 
         public Task<BaseResponse> AddUserFromAdmin(AddUserViewModel addUser);
+        public Task<bool> RemoveUserById(int Id);
     }
 }

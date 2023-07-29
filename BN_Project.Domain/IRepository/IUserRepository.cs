@@ -1,9 +1,4 @@
 ﻿using BN_Project.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BN_Project.Domain.IRepository
 {
@@ -16,6 +11,9 @@ namespace BN_Project.Domain.IRepository
         public Task<bool> IsPhoneNumberExist(string phoneNumber);
 
         public Task AddUserFromAdmin(UserEntity user);
+
+        public Task<UserEntity> GetUserById(int Id);
+        public void RemoveUser(UserEntity user);
 
         public Task SaveChanges();
     }

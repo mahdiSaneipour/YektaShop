@@ -1,6 +1,7 @@
 ﻿using BN_Project.Data.Context;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,11 @@ namespace BN_Project.Data.Repository
             return _context.Users;
         }
 
+        public async Task<UserEntity> GetUserById(int Id)
+        {
+            return await _context.Users.SingleOrDefaultAsync(n => n.Id == Id);
+        }
+
         public async Task<bool> IsEmailExist(string email)
         {
             return _context.Users.Any(u => u.Email == email);
@@ -31,6 +37,11 @@ namespace BN_Project.Data.Repository
         public async Task<bool> IsPhoneNumberExist(string phoneNumber)
         {
             return _context.Users.Any(u => u.PhoneNumber == phoneNumber);
+        }
+
+        public void RemoveUser(UserEntity user)
+        {
+            _context.Remove(user);
         }
 
         async Task IUserRepository.AddUserFromAdmin(UserEntity user)

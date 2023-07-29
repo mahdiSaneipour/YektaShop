@@ -4,7 +4,6 @@
     ViewData["Title"] = "کاربران";
 }
 
-
 <div class="well with-header  with-footer">
     <a asp-action="AddUser" class="btn btn-success">افزودن کاربر جدید</a>
     <br />
@@ -32,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-            @for(var i = 1; i <= Model.Count; i++)
+            @for (var i = 1; i <= Model.Count; i++)
             {
                 <tr>
                     <td>
@@ -59,8 +58,14 @@
                         <i class="fa fa-check success" aria-hidden="true"></i>
                     </td>
                     <td>
-                        <a class="btn btn-danger" href="javascript:void(0);"><i class="fa fa-times"></i> حذف</a>
-                        <a class="btn btn-yellow" href="javascript:void(0);"><i class="fa fa-pencil" aria-hidden="true"></i> ویرایش</a>
+                        <a class="btn btn-danger" asp-controller="Admin" asp-action="RemoveUser" onclick="is_delete(this)" asp-route-Id="@Model[i-1].Id">
+                            <i class="fa fa-times"></i>
+                            حذف
+                        </a>
+                        <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditUser">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            ویرایش
+                        </a>
 
                     </td>
                 </tr>
@@ -103,4 +108,8 @@
         </div>
         <!--Header Buttons End-->
     </div>
+}
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
 }
