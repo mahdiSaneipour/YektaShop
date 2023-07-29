@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /BN_Project.Web/wwwroot/images/avatar/normal
 /BN_Project.Web/wwwroot/images/avatar/thumb
+
+/BN_Project.Web/wwwroot/images/products/normal
+/BN_Project.Web/wwwroot/images/products/thumb

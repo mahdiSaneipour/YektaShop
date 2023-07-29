@@ -8,6 +8,8 @@ namespace BN_Project.Domain.ViewModel.Admin
 {
     public class ProductListViewModel
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string Category { get; set; }

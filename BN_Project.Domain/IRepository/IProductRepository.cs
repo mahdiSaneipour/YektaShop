@@ -11,5 +11,9 @@ namespace BN_Project.Domain.IRepository
     public interface IProductRepository
     {
         public Task<IQueryable<Product>> GetProducts();
+
+        public Task<int> InsertProduct(Product product);
+
+        public Task SaveChanges();
     }
 }

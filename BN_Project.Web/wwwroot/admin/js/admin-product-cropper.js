@@ -65,7 +65,7 @@ saveProfile.addEventListener("click", function () {
         var xhr = new XMLHttpRequest();
 
         xhr.responseType = 'json';
-        xhr.open('POST', '/Api/AdminApi/UploadAvatarImage', true);
+        xhr.open('POST', '/Api/AdminApi/UploadProductImage', true);
         xhr.send(avatarModel);
 
         xhr.onreadystatechange = async function () {
@@ -76,7 +76,7 @@ saveProfile.addEventListener("click", function () {
 
                 previousBanner.value = this.response.name;
 
-                image.src = "../../../images/avatar/normal/" + this.response.name;
+                image.src = "../../../images/products/normal/" + this.response.name;
 
                 cropper.destroy();
 

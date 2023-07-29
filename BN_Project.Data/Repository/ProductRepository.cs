@@ -22,5 +22,16 @@ namespace BN_Project.Data.Repository
         {
             return _context.Products;
         }
+
+        public async Task<int> InsertProduct(Product product)
+        {
+            _context.Products.Add(product);
+            return product.Id;
+        }
+
+        public async Task SaveChanges()
+        {
+            _context.SaveChangesAsync();
+        }
     }
 }

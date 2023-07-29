@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>1c78746e-d7f5-4087-9e3b-cbc72b4036b6</UserSecretsId>
   </PropertyGroup>
@@ -365,6 +365,8 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\avatar\thumb\" />
     <Folder Include="wwwroot\images\avatar\normal\" />
+    <Folder Include="wwwroot\images\products\normal\" />
+    <Folder Include="wwwroot\images\products\thumb\" />
   </ItemGroup>
 
 </Project>

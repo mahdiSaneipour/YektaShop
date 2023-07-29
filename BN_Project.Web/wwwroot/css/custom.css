@@ -25,4 +25,8 @@ td, th {
 table {
     margin-top: 15px;
 }
+
+select {
+    width : 100%;
+}
 /*# sourceMappingURL=custom.css.map */
