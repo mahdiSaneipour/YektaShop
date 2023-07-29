@@ -1,119 +1,12 @@
 ﻿@using BN_Project.Domain.ViewModel.UserProfile;
+
+@{
+    Layout = "Profile/_ProfileLayout";
+}
+
 @model UserInformationViewModel
 
-<div class="page-wrapper">
-    <main class="page-content">
-        <div class="container">
-            <div class="row mb-5">
-                <div class="col-xl-3 col-lg-4 col-md-5 mb-md-0 mb-4">
-                    <div class="ui-sticky ui-sticky-top">
-                        <div class="profile-user-info py-3 ui-box bg-white">
-                            <div class="profile-detail">
-                                <div class="d-flex align-items-center">
-                                    <div class="profile-avatar me-3">
-                                        <img src="./theme-assets/images/avatar/default.png" alt="avatar">
-                                    </div>
-                                    <div class="profile-info">
-                                        <a href="#" class="text-decoration-none text-dark fw-bold mb-2">
-                                            جلال بهرامی
-                                            راد
-                                        </a>
-                                        <div class="text-muted fs-7 fw-bold">۰۹xxxxxxxxx</div>
-                                    </div>
-                                </div>
-                                <div class="user-options">
-                                    <ul>
-                                        <li>
-                                            <span class="label">کیف پول</span>
-                                            <span class="detail">
-                                                <span class="d-block">
-                                                    ۰ <span class="currency fs-7 fw-bold">تومان</span>
-                                                </span>
-                                                <a href="#"
-                                                   class="link border-bottom-0 text-info fs-7 fw-bold">
-                                                    افزایش
-                                                    موجودی <i class="ri-arrow-left-s-line"></i>
-                                                </a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="label">باشگاه مشتریان</span>
-                                            <span class="detail">
-                                                <span class="d-block">
-                                                    ۰ <span class="score text-muted fs-7">امتیاز</span>
-                                                </span>
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <ul class="nav nav-items-with-icon flex-column">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">
-                                        <i class="nav-link-icon ri-file-list-3-line"></i>
-                                        سفارش
-                                        های من
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">
-                                        <i class="nav-link-icon ri-heart-3-line"></i> لیست
-                                        ها
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">
-                                        <i class="nav-link-icon ri-chat-1-line"></i>
-                                        نظرات
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">
-                                        <i class="nav-link-icon ri-map-pin-line"></i> نشانی
-                                        ها
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">
-                                        <i class="nav-link-icon ri-gift-line"></i> کارت های
-                                        هدیه
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">
-                                        <i class="nav-link-icon ri-notification-line"></i>
-                                        پیغام ها
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">
-                                        <i class="nav-link-icon ri-time-line"></i> بازدید
-                                        های
-                                        اخیر
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">
-                                        <i class="nav-link-icon ri-user-line"></i> اطلاعات
-                                        حساب
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="UserChangePass" asp-action="Index">
-                                        <i class="nav-link-icon ri-user-line"></i>
-                                        تغییر رمز عبور
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">
-                                        <i class="nav-link-icon ri-logout-box-r-line"></i>
-                                        خروج
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="col-xl-9 col-lg-8 col-md-7">
                     <div class="alert alert-warning alert-dismissible fade show mb-5" role="alert">
                         <div>
@@ -123,45 +16,42 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <partial name="_UserInformationParial" model="Model" />
+
+                    <!-- start of personal-info-fullname-modal -->
+                    <form asp-controller="UserProfile" asp-action="UpdateFullName" class="remodal remodal-xs" data-remodal-id="personal-info-fullname-modal"
+                          data-remodal-options="hashTracking: false">
+                        <div class="remodal-header">
+                            <div class="remodal-title">نام و نام خانوادگی</div>
+                            <button data-remodal-action="close" class="remodal-close"></button>
+                        </div>
+                        <div class="remodal-content">
+                            <div class="form-element-row mb-3">
+                                <label class="label fs-7">نام و نام خانوادگی</label>
+                                <input type="text" class="form-control" placeholder="نام و نام خانوادگی" asp-for="FullName">
+                            </div>
+                            <span asp-validation-for="FullName"></span>
+                        </div>
+                        <div class="remodal-footer">
+                            <button class="btn btn-sm btn-primary px-3">ثبت اطلاعات</button>
+                        </div>
+                    </form>
+                    <!-- end of personal-info-fullname-modal -->
+                    <!-- start of personal-info-phone-number-modal -->
+                    <form class="remodal remodal-xs" data-remodal-id="personal-info-phone-number-modal"
+                          data-remodal-options="hashTracking: false" asp-controller="UserProfile" asp-action="UpdatePhoneNumber">
+                        <div class="remodal-header">
+                            <div class="remodal-title">شماره موبایل</div>
+                            <button data-remodal-action="close" class="remodal-close"></button>
+                        </div>
+                        <div class="remodal-content">
+                            <div class="form-element-row mb-3">
+                                <input type="text" class="form-control" placeholder="" asp-for="PhoneNumber">
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="remodal-footer">
+                            <button class="btn btn-sm btn-primary px-3">تغییر شماره همراه</button>
+                        </div>
+                    </form>
+                    <!-- end of personal-info-phone-number-modal -->
                 </div>
-            </div>
-        </div>
-        <!-- start of personal-info-fullname-modal -->
-        <form asp-controller="UserProfile" asp-action="UpdateFullName" class="remodal remodal-xs" data-remodal-id="personal-info-fullname-modal"
-              data-remodal-options="hashTracking: false">
-            <div class="remodal-header">
-                <div class="remodal-title">نام و نام خانوادگی</div>
-                <button data-remodal-action="close" class="remodal-close"></button>
-            </div>
-            <div class="remodal-content">
-                <div class="form-element-row mb-3">
-                    <label class="label fs-7">نام و نام خانوادگی</label>
-                    <input type="text" class="form-control" placeholder="نام و نام خانوادگی" asp-for="FullName">
-                </div>
-                <span asp-validation-for="FullName"></span>
-            </div>
-            <div class="remodal-footer">
-                <button class="btn btn-sm btn-primary px-3">ثبت اطلاعات</button>
-            </div>
-        </form>
-        <!-- end of personal-info-fullname-modal -->
-        <!-- start of personal-info-phone-number-modal -->
-        <form class="remodal remodal-xs" data-remodal-id="personal-info-phone-number-modal"
-              data-remodal-options="hashTracking: false" asp-controller="UserProfile" asp-action="UpdatePhoneNumber">
-            <div class="remodal-header">
-                <div class="remodal-title">شماره موبایل</div>
-                <button data-remodal-action="close" class="remodal-close"></button>
-            </div>
-            <div class="remodal-content">
-                <div class="form-element-row mb-3">
-                    <input type="text" class="form-control" placeholder="" asp-for="PhoneNumber">
-                </div>
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="remodal-footer">
-                <button class="btn btn-sm btn-primary px-3">تغییر شماره همراه</button>
-            </div>
-        </form>
-        <!-- end of personal-info-phone-number-modal -->
-    </main>
-</div>
