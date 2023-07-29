@@ -1,5 +1,4 @@
-﻿
-
+﻿@using System.Drawing;
 <!DOCTYPE html>
 <!--
 BeyondAdmin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.6
@@ -11,15 +10,10 @@ Purchase: https://wrapbootstrap.com/theme/beyondadmin-adminapp-angularjs-mvc-WB0
 <!-- Head -->
 <head>
     <meta charset="utf-8" />
-    <title>Dashboard</title>
+    <title>داشبورد</title>
 
-    
-    <partial name="Admin/_AdminMeta" />
-
-    <partial name="Admin/_AdminCSS" />
-
-    <!--Skin Script: Place this script in head to load scripts for skins and rtl support-->
-    <script src="~/admin/js/skins.min.js"></script>
+    <partial name="Admin/_AdminMeta">
+    <partial name="Admin/_AdminCSS"/>
 </head>
 <!-- /Head -->
 <!-- Body -->
@@ -30,7 +24,7 @@ Purchase: https://wrapbootstrap.com/theme/beyondadmin-adminapp-angularjs-mvc-WB0
     </div>
     <!--  /Loading Container -->
     <!-- Navbar -->
-    <partial name="Admin/_AdminNavbar" />
+    <partial name="Admin/_AdminNavbar"/>
     <!-- /Navbar -->
     <!-- Main Container -->
     <div class="main-container container-fluid">
@@ -40,22 +34,22 @@ Purchase: https://wrapbootstrap.com/theme/beyondadmin-adminapp-angularjs-mvc-WB0
             <partial name="Admin/_AdminSidebar"/>
             <!-- /Page Sidebar -->
             <!-- Chat Bar -->
-            <partial name="Admin/_AdminChatBar" />
+            <partial name="Admin/_AdminChatBar"/>
             <!-- /Chat Bar -->
             <!-- Page Content -->
             <div class="page-content">
                 <!-- Page Breadcrumb -->
-                <partial name="Admin/_AdminBreadCrumbs" />
+
+                @RenderSection("breadcrumb", true)
                 <!-- /Page Breadcrumb -->
                 <!-- Page Header -->
-                <partial name="Admin/_AdminPageHeader" />
+                @RenderSection("pageHeader", true)
                 <!-- /Page Header -->
                 <!-- Page Body -->
                 @RenderBody()
                 <!-- /Page Body -->
             </div>
             <!-- /Page Content -->
-
         </div>
         <!-- /Page Container -->
         <!-- Main Container -->
@@ -63,6 +57,8 @@ Purchase: https://wrapbootstrap.com/theme/beyondadmin-adminapp-angularjs-mvc-WB0
     </div>
 
     <partial name="Admin/_AdminJS"/>
+    @RenderSection("scripts", false)
+    
 </body>
 <!--  /Body -->
 </html>

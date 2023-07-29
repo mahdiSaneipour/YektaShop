@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Toplearn2.Application.Tools
+namespace BN_Project.Core.Tools
 {
     public static class Tools
     {

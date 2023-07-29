@@ -1,4 +1,11 @@
 ﻿/*#region Animations*/
+@font-face {
+    font-family: 'WYekan';
+    src: url('/admin/fonts/BYekan.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 @-webkit-keyframes borderPulse {
   15% {
     opacity: 1;
