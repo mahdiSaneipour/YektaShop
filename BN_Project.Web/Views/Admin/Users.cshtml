@@ -62,11 +62,10 @@
                             <i class="fa fa-times"></i>
                             حذف
                         </a>
-                        <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditUser">
+                        <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditUser" asp-route-Id="@Model[i-1].Id">
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                             ویرایش
                         </a>
-
                     </td>
                 </tr>
             }

@@ -17,7 +17,7 @@ namespace BN_Project.Core.Tools
 
         public static string GenerateUniqCode()
         {
-            return Guid.NewGuid().ToString().Replace("-","");
+            return Guid.NewGuid().ToString().Replace("-", "");
         }
 
         public static string ConvertToShamsi(this DateTime value)
@@ -39,6 +39,14 @@ namespace BN_Project.Core.Tools
             encodedBytes = md5.ComputeHash(originalBytes);
             //Convert encoded bytes back to a 'readable' string   
             return BitConverter.ToString(encodedBytes);
+        }
+
+        public static void RemoveFile(this string Path)
+        {
+            if (Directory.Exists(Path))
+            {
+                Directory.Delete(Path);
+            }
         }
     }
 }

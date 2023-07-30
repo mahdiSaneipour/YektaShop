@@ -8,6 +8,6 @@ namespace BN_Project.Domain.Entities
         public string Title { get; set; }
         public int? ParentId { get; set; }
         [ForeignKey("ParentId")]
-        public Category Category { get; set; }
+        public Category SubCategory { get; set; }
     }
 }
