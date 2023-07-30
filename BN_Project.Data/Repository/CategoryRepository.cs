@@ -14,10 +14,10 @@ namespace BN_Project.Data.Repository
             _context = context;
         }
 
-        public async void Delete(int Id)
+        public async void Delete(int id)
         {
-            var item = await GetById(Id);
-            Delete(Id);
+            var item = await GetById(id);
+            Delete(item);
         }
 
         public void Delete(Category category)
@@ -40,6 +40,11 @@ namespace BN_Project.Data.Repository
         public async Task<Category> GetById(int Id)
         {
             return await _context.Categories.SingleOrDefaultAsync(n => n.Id == Id);
+        }
+
+        public async Task<string> GetNameById(int id)
+        {
+            return _context.Categories.FirstOrDefaultAsync(c => c.Id == id).Result.Title.ToString();
         }
 
         public void Insert(Category category)

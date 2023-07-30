@@ -19,11 +19,18 @@ namespace BN_Project.Web.Controllers.Admin
             return View();
         }
 
+        #region Users
+
         public async Task<IActionResult> Users(int pageId = 1)
         {
-            var users = await _adminServices.GetUsersForAdmin(pageId);
+            var result = await _adminServices.GetUsersForAdmin(pageId);
 
-            return View(users);
+            if(result.Status == Status.Success || result.Status == Status.NotFound)
+            {
+                return View(result.Data);
+            }
+
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> AddUser()
@@ -89,7 +96,7 @@ namespace BN_Project.Web.Controllers.Admin
                 return View();
             }
 
-            var result = await _adminServices.EditUser(user);
+            var result = await _adminServices.EditUsers(user);
 
             switch (result.Status)
             {
@@ -113,5 +120,60 @@ namespace BN_Project.Web.Controllers.Admin
             }
         }
 
+        #endregion
+
+        #region Products
+
+        public async Task<IActionResult> Products()
+        {
+            var result = await _adminServices.GetProducts();
+
+            if (result.Status == Status.Success || result.Status == Status.NotFound)
+            {
+                return View(result.Data);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> AddProduct()
+        {
+            var categories = await _adminServices.GetParentCategories();
+            ViewData["Categories"] = categories;
+
+            ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.FirstOrDefault().Value));
+            
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct(AddProductViewModel addProduct)
+        {
+            if(!ModelState.IsValid)
+            {
+                var categories = await _adminServices.GetParentCategories();
+                ViewData["Categories"] = categories;
+
+                ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.FirstOrDefault().Value));
+
+                return View();
+            }
+
+            var result = await _adminServices.AddProduct(addProduct);
+
+            if(result.Status != Status.Success)
+            {
+                var categories = await _adminServices.GetParentCategories();
+                ViewData["Categories"] = categories;
+
+                ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.FirstOrDefault().Value));
+
+                return View();
+            }
+
+            return RedirectToAction("Products");
+        }
+
+        #endregion
     }
 }

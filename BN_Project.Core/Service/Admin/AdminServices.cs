@@ -1,9 +1,11 @@
 ﻿using BN_Project.Core.IService.Admin;
 using BN_Project.Core.Response;
+using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Tools;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Admin;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BN_Project.Core.Service.Admin
 {
@@ -11,11 +13,16 @@ namespace BN_Project.Core.Service.Admin
     {
         private readonly IUserRepository _userRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public AdminServices(IUserRepository userRepository, IAccountRepository accountRepository)
+        public AdminServices(IUserRepository userRepository, IAccountRepository accountRepository
+            , IProductRepository productRepository, ICategoryRepository categoryRepository)
         {
             _userRepository = userRepository;
             _accountRepository = accountRepository;
+            _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
         }
 
         #region Users
@@ -59,7 +66,7 @@ namespace BN_Project.Core.Service.Admin
             return result;
         }
 
-        public async Task<BaseResponse> EditUser(EditUserViewModel user)
+        public async Task<BaseResponse> EditUsers(EditUserViewModel user)
         {
             var result = new BaseResponse();
 
@@ -119,14 +126,19 @@ namespace BN_Project.Core.Service.Admin
             return EditUserVM;
         }
 
-        public async Task<IReadOnlyList<UserListViewModel>> GetUsersForAdmin(int pageId)
+        public async Task<DataResponse<IReadOnlyList<UserListViewModel>>> GetUsersForAdmin(int pageId)
         {
-            List<UserListViewModel> result = new List<UserListViewModel>();
+            DataResponse<IReadOnlyList<UserListViewModel>> result = new DataResponse<IReadOnlyList<UserListViewModel>>();
+
+            List<UserListViewModel> data = new List<UserListViewModel>();
 
             var users = await _userRepository.GetAllUsers();
 
             if (users == null)
             {
+                result.Status = Response.Status.Status.NotFound;
+                result.Message = "کاربری وجود ندارد";
+
                 return result;
             }
 
@@ -137,7 +149,7 @@ namespace BN_Project.Core.Service.Admin
 
             foreach (var user in lUsers)
             {
-                result.Add(new UserListViewModel()
+                data.Add(new UserListViewModel()
                 {
                     PhoneNumber = (user.PhoneNumber != null) ? user.PhoneNumber : "---",
                     IsActive = user.IsActive,
@@ -147,7 +159,11 @@ namespace BN_Project.Core.Service.Admin
                 });
             }
 
-            return result.AsReadOnly();
+            result.Status = Response.Status.Status.Success;
+            result.Message = "دریافت کاربران با موفقیت انجام شد";
+            result.Data = data.AsReadOnly();
+
+            return result;
         }
 
         public async Task<bool> RemoveUserById(int Id)
@@ -155,11 +171,107 @@ namespace BN_Project.Core.Service.Admin
             var user = await _userRepository.GetUserById(Id);
             if (user == null)
                 return false;
+
             _userRepository.RemoveUser(user);
 
             await _userRepository.SaveChanges();
 
             return true;
+        }
+
+        #endregion
+
+        #region Products
+
+        public async Task<DataResponse<IReadOnlyList<ProductListViewModel>>> GetProducts(int pageId = 1)
+        {
+            DataResponse<IReadOnlyList<ProductListViewModel>> result = new DataResponse<IReadOnlyList<ProductListViewModel>>();
+
+            List<ProductListViewModel> data = new List<ProductListViewModel>();
+
+            var products = await _productRepository.GetProducts();
+
+            if (products == null)
+            {
+                result.Status = Response.Status.Status.NotFound;
+                result.Message = "محصولی وجود ندارد";
+
+                return result;
+            }
+
+            int take = 10;
+            int skip = (pageId - 1) * take;
+
+            var lProducts = products.ToList().Skip(skip).Take(take).OrderByDescending(u => u.Id).ToList();
+
+            foreach (var product in lProducts)
+            {
+                data.Add(new ProductListViewModel()
+                {
+                    Category = await _categoryRepository.GetNameById(product.CategoryId),
+                    CategoryId = product.CategoryId,
+                    Name = product.Name,
+                    Price = product.Price
+                });
+            }
+
+            result.Status = Response.Status.Status.Success;
+            result.Message = "دریافت محصولات با موفقیت انجام شد";
+            result.Data = data.AsReadOnly();
+
+            return result;
+        }
+
+        public async Task<BaseResponse> AddProduct(AddProductViewModel addProduct)
+        {
+            BaseResponse result = new BaseResponse();
+
+            Product product = new Product()
+            {
+                Description = addProduct.Description,
+                CategoryId = addProduct.CategoryId,
+                Features = addProduct.Feature,
+                Price = addProduct.Price,
+                Image = addProduct.Image,
+                Name = addProduct.Title
+            };
+
+            await _productRepository.InsertProduct(product);
+            await _productRepository.SaveChanges();
+
+            if(product.Id == null)
+            {
+                result.Status = Response.Status.Status.Error;
+                result.Message = "خطایی در سیستم رخ داده است";
+            } else
+            {
+                result.Status = Response.Status.Status.Success;
+                result.Message = "کاربر با موفقیت افزوده شد";
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region Categories
+
+        public async Task<SelectList> GetParentCategories()
+        {
+            List<Category> categories = _categoryRepository.GetAll(c => c.ParentId == null).Result.ToList();
+
+            SelectList result = new SelectList(categories, "Id", "Title");
+
+            return result;
+        }
+
+        public async Task<SelectList> GetSubCategories(int parentId)
+        {
+            List<Category> subCategories = _categoryRepository.GetAll(c => c.ParentId == parentId).Result.ToList();
+
+            SelectList result = new SelectList(subCategories, "Id", "Title");
+
+            return result;
         }
 
         #endregion

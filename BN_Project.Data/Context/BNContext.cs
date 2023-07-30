@@ -23,6 +23,11 @@ namespace BN_Project.Data.Context
 
             modelBuilder.Entity<UserEntity>().HasQueryFilter(u => !u.IsDelete);
 
+            modelBuilder.Entity<Category>().HasQueryFilter(u => !u.IsDelete);
+
+            modelBuilder.Entity<Product>().HasQueryFilter(u => !u.IsDelete);
+
+
             var cascadeFKs = modelBuilder
                             .Model
                             .GetEntityTypes()
