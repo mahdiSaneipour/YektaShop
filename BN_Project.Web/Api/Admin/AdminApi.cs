@@ -1,7 +1,6 @@
 ﻿using BN_Project.Core.IService.Admin;
 using BN_Project.Core.Tools.Image;
 using BN_Project.Core.Tools.ImageResizer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BN_Project.Web.Api.Admin

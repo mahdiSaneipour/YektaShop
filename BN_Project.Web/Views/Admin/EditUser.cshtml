@@ -1,0 +1,111 @@
+﻿@model EditUserViewModel
+@{
+    Layout = "Admin/_AdminLayout";
+    ViewData["Title"] = "ویرایش کاربر";
+}
+
+<link rel="stylesheet" href="~/cropper/css/cropper.css" />
+<div class="widget-body">
+    <div id="registration-form">
+        <form method="post" asp-controller="Admin" asp-action="EditUser">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-title">
+                ثبت کاربر جدید
+            </div>
+
+            <div class="select-image">
+                <div style="text-align: center;">
+
+                    <div style="width:100%">
+                        <img style="width:200px; height:200px" id="image" src="~/images/avatar/normal/@Model.Avatar" />
+                    </div>
+
+                    <input name="SelectedAvatarFile" id="file" type="file" class="cropper-hidden" />
+
+                    <input id="previous-banner" value="null" hidden />
+
+                    <input id="banner-image" asp-for="Avatar" hidden />
+
+                    <button class="btn btn-success" form="" id="save-profile" style="margin-top: 10px; margin-bottom: 10px">ثبت عکس</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <span class="input-icon icon-right">
+                    <input type="text" asp-for="Name" class="form-control" placeholder="نام کاربر">
+                    <span asp-validation-for="Name"></span>
+                    <i class="glyphicon glyphicon-user circular"></i>
+                </span>
+            </div>
+            <div class="form-group">
+                <span class="input-icon icon-right">
+                    <input type="text" asp-for="Email" class="form-control" placeholder="ایمیل کاربر">
+                    <span asp-validation-for="Email"></span>
+                    <i class="fa fa-envelope-o circular"></i>
+                </span>
+            </div>
+            <div class="form-group">
+                <span class="input-icon icon-right">
+                    <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="شماره کاربر">
+                    <span asp-validation-for="PhoneNumber"></span>
+                    <i class="fa fa-mobile circular"></i>
+                </span>
+            </div>
+            <div class="form-group">
+                <span class="input-icon icon-right">
+                    <input type="text" asp-for="Password" class="form-control" placeholder="رمز کاربر">
+                    <span asp-validation-for="Password"></span>
+                    <i class="fa fa-lock circular"></i>
+                </span>
+            </div>
+            <div class="form-group">
+                <span class="input-icon icon-right">
+                    <input type="text" asp-for="ConfirmPassword" class="form-control" placeholder="تکرار رمز کاربر">
+                    <span asp-validation-for="ConfirmPassword"></span>
+                    <i class="fa fa-lock circular"></i>
+                </span>
+            </div>
+            <button type="submit" class="btn btn-blue">ویرایش کاربر</button>
+        </form>
+    </div>
+</div>
+
+@section breadcrumb {
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a asp-action="Index">خانه</a>
+            </li>
+            <li class="active">افزودن کاربر</li>
+        </ul>
+    </div>
+}
+
+@section pageHeader {
+    <div class="page-header position-relative">
+        <div class="header-title">
+            <h1>
+                افزودن کاربر
+            </h1>
+        </div>
+        <!--Header Buttons-->
+        <div class="header-buttons">
+            <a class="sidebar-toggler" href="#">
+                <i class="fa fa-arrows-h"></i>
+            </a>
+            <a class="refresh" id="refresh-toggler" href="">
+                <i class="glyphicon glyphicon-refresh"></i>
+            </a>
+            <a class="fullscreen" id="fullscreen-toggler" href="#">
+                <i class="glyphicon glyphicon-fullscreen"></i>
+            </a>
+        </div>
+        <!--Header Buttons End-->
+    </div>
+}
+
+@section scripts {
+    <script src="~/cropper/js/cropper.js"></script>
+    <script src="~/admin/js/admin-avatar-cropper.js"></script>
+}

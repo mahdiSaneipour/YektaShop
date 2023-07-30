@@ -84,7 +84,40 @@ namespace BN_Project.Web.Controllers.Admin
 
         public async Task<IActionResult> EditUser(int Id)
         {
-            return View();
+            var item = await _adminServices.GetUserById(Id);
+            return View("~/Views/Admin/EditUser.cshtml", item);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(EditUserViewModel user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var result = await _adminServices.EditUsers(user);
+
+            switch (result.Status)
+            {
+                case Status.AlreadyHave:
+                    ModelState.AddModelError("Email", result.Message);
+                    return View();
+
+                case Status.AlreadyHavePhoneNumber:
+                    ModelState.AddModelError("PhoneNumber", result.Message);
+                    return View();
+            }
+
+            if (result.Status == Status.Success)
+            {
+                return RedirectToAction("Users");
+            }
+            else
+            {
+                ModelState.AddModelError("Email", "خطایی در سیستم رخ داده لطفا بعدا امتحان کنید");
+                return View();
+            }
         }
 
         #endregion

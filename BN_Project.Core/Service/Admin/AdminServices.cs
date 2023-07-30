@@ -68,6 +68,66 @@ namespace BN_Project.Core.Service.Admin
             return result;
         }
 
+        public async Task<BaseResponse> EditUsers(EditUserViewModel user)
+        {
+            var result = new BaseResponse();
+
+            //if (_userRepository.IsEmailExist(user.Email).Result)
+            //{
+            //    result.Status = Response.Status.Status.AlreadyHave;
+            //    result.Message = "کاربری با این ایمیل موجود است";
+
+            //    return result;
+            //}
+            //else if (_userRepository.IsPhoneNumberExist(user.PhoneNumber).Result)
+            //{
+            //    result.Status = Response.Status.Status.AlreadyHavePhoneNumber;
+            //    result.Message = "کاربری با این شماره موبایل موجود است";
+
+            //    return result;
+            //}
+
+            var item = await _accountRepository.GetUserById(user.Id);
+
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/avatar/normal", item.Avatar).RemoveFile();
+            Path.Combine(Directory.GetCurrentDirectory(), "wwroot/images/avatar/thumb", item.Avatar).RemoveFile();
+
+
+            item.Id = user.Id;
+
+            if (user.Password != null)
+                item.Password = user.Password.EncodePasswordMd5();
+
+            item.PhoneNumber = user.PhoneNumber;
+            item.Avatar = user.Avatar;
+            item.Email = user.Email;
+            item.Name = user.Name;
+
+
+            _accountRepository.UpdateUser(item);
+            await _accountRepository.SaveChanges();
+
+            result.Status = Response.Status.Status.Success;
+            result.Message = "کاربر با موفقیت اضافه شد";
+
+            return result;
+        }
+
+        public async Task<EditUserViewModel> GetUserById(int Id)
+        {
+            var item = await _userRepository.GetUserById(Id);
+            EditUserViewModel EditUserVM = new EditUserViewModel()
+            {
+                Id = Id,
+                Avatar = item.Avatar,
+                Name = item.Name,
+                Email = item.Email,
+                PhoneNumber = item.PhoneNumber
+            };
+
+            return EditUserVM;
+        }
+
         public async Task<DataResponse<IReadOnlyList<UserListViewModel>>> GetUsersForAdmin(int pageId)
         {
             DataResponse<IReadOnlyList<UserListViewModel>> result = new DataResponse<IReadOnlyList<UserListViewModel>>();

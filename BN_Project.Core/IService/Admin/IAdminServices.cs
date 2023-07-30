@@ -12,8 +12,9 @@ namespace BN_Project.Core.IService.Admin
         public Task<DataResponse<IReadOnlyList<UserListViewModel>>> GetUsersForAdmin(int pageId);
 
         public Task<BaseResponse> AddUserFromAdmin(AddUserViewModel addUser);
-
+        public Task<EditUserViewModel> GetUserById(int Id);
         public Task<bool> RemoveUserById(int Id);
+        public Task<BaseResponse> EditUsers(EditUserViewModel user);
 
         #endregion
 
