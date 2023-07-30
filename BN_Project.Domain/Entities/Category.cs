@@ -7,7 +7,11 @@ namespace BN_Project.Domain.Entities
     {
         public string Title { get; set; }
         public int? ParentId { get; set; }
+
         [ForeignKey("ParentId")]
-        public Category SubCategory { get; set; }
+        public Category ParentCategory { get; set; }
+
+        [InverseProperty(nameof(ParentCategory))]
+        public ICollection<Category> SubCategories { get; set;}
     }
 }

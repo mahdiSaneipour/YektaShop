@@ -1,0 +1,122 @@
+﻿@model EditProductViewModel
+@{
+    Layout = "Admin/_AdminLayout";
+    ViewData["Title"] = "ویرایش محصول";
+    SelectList categories = ViewData["Categories"] as SelectList;
+    SelectList subCategories = ViewData["SubCategories"] as SelectList;
+}
+
+<link rel="stylesheet" href="~/cropper/css/cropper.css" />
+<div class="widget-body">
+    <div id="registration-form">
+        <form method="post" asp-controller="Admin" asp-action="EditProduct">
+            <input type="text" asp-for="Id" hidden>
+
+            <div class="form-title">
+                ویرایش محصول
+            </div>
+
+            <div class="select-image">
+                <div style="text-align: center;">
+
+                    <div style="width:100%">
+                        <img style="width:200px; height:200px" id="image" src="../images/products/normal/@Model.Image" />
+                    </div>
+
+                    <input name="SelectedAvatarFile" id="file" type="file" class="cropper-hidden" />
+
+                    <input id="previous-banner" value="null" hidden />
+
+                    <input id="banner-image" asp-for="Image" hidden />
+
+                    <button class="btn btn-success" form="" id="save-profile" style="margin-top: 10px; margin-bottom: 10px">ثبت عکس</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <span class="input-icon icon-right">
+                    <select onchange="SetSubGroup(this)" asp-items="categories">
+                    </select>
+                </span>
+            </div>
+
+            <div class="form-group">
+                <span class="input-icon icon-right">
+                    <select id="sub-category" asp-for="CategoryId" asp-items="subCategories">
+                    </select>
+                    <span asp-validation-for="CategoryId"></span>
+                </span>
+            </div>
+
+            <div class="form-group">
+                <span class="input-icon icon-right">
+                    <input type="text" asp-for="Title" class="form-control" placeholder="نام محصول">
+                    <span asp-validation-for="Title"></span>
+                    <i class="glyphicon glyphicon-user circular"></i>
+                </span>
+            </div>
+            <div class="form-group">
+                <span class="input-icon icon-right">
+                    <input type="number" asp-for="Price" class="form-control" placeholder="قیمت محصول">
+                    <span asp-validation-for="Price"></span>
+                    <i class="fa fa-money" aria-hidden="true"></i>
+                </span>
+            </div>
+            <div class="form-group">
+                <span class="input-icon icon-right">
+                    <textarea type="text" asp-for="Feature" class="form-control" placeholder="ویژگی های محصول"></textarea>
+                    <span asp-validation-for="Feature"></span>
+                    <i class="fa fa-envelope-o circular"></i>
+                </span>
+            </div>
+            <div class="form-group">
+                <span class="input-icon icon-right">
+                    <textarea type="text" asp-for="Description" class="form-control" placeholder="توضیحات محصول"></textarea>
+                    <span asp-validation-for="Description"></span>
+                    <i class="fa fa-mobile circular"></i>
+                </span>
+            </div>
+            <button type="submit" class="btn btn-blue">ویرایش محصول</button>
+        </form>
+    </div>
+</div>
+
+@section breadcrumb {
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a asp-action="Index">خانه</a>
+            </li>
+            <li class="active">ویرایش محصول</li>
+        </ul>
+    </div>
+}
+
+@section pageHeader {
+    <div class="page-header position-relative">
+        <div class="header-title">
+            <h1>
+                ویرایش محصول
+            </h1>
+        </div>
+        <!--Header Buttons-->
+        <div class="header-buttons">
+            <a class="sidebar-toggler" href="#">
+                <i class="fa fa-arrows-h"></i>
+            </a>
+            <a class="refresh" id="refresh-toggler" href="">
+                <i class="glyphicon glyphicon-refresh"></i>
+            </a>
+            <a class="fullscreen" id="fullscreen-toggler" href="#">
+                <i class="glyphicon glyphicon-fullscreen"></i>
+            </a>
+        </div>
+        <!--Header Buttons End-->
+    </div>
+}
+
+@section scripts {
+    <script src="~/cropper/js/cropper.js"></script>
+    <script src="~/admin/js/admin-product-cropper.js"></script>
+}

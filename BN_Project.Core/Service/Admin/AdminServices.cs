@@ -1,11 +1,13 @@
 ﻿using BN_Project.Core.IService.Admin;
 using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
+using BN_Project.Core.Response.Status;
 using BN_Project.Core.Tools;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 
 namespace BN_Project.Core.Service.Admin
 {
@@ -150,8 +152,9 @@ namespace BN_Project.Core.Service.Admin
                 {
                     Category = await _categoryRepository.GetNameById(product.CategoryId),
                     CategoryId = product.CategoryId,
+                    Price = product.Price,
                     Name = product.Name,
-                    Price = product.Price
+                    Id = product.Id
                 });
             }
 
@@ -176,18 +179,43 @@ namespace BN_Project.Core.Service.Admin
                 Name = addProduct.Title
             };
 
-            await _productRepository.InsertProduct(product);
-            await _productRepository.SaveChanges();
+            _productRepository.InsertProduct(product);
+            _productRepository.SaveChanges();
 
-            if(product.Id == null)
+            result.Status = Response.Status.Status.Success;
+            result.Message = "کاربر با موفقیت افزوده شد";
+
+            return result;
+        }
+
+        public async Task<DataResponse<EditProductViewModel>> GetProductForEdit(int productId)
+        {
+            DataResponse<EditProductViewModel> result = new DataResponse<EditProductViewModel>();
+
+            var product = await _productRepository.GetProductByProductId(productId);
+
+            if(product == null)
             {
-                result.Status = Response.Status.Status.Error;
-                result.Message = "خطایی در سیستم رخ داده است";
-            } else
-            {
-                result.Status = Response.Status.Status.Success;
-                result.Message = "کاربر با موفقیت افزوده شد";
+                result.Status = Response.Status.Status.NotFound;
+                result.Message = "محصول با این ایدی پیدا نشد";
+
+                return result;
             }
+
+            EditProductViewModel productMV = new EditProductViewModel()
+            {
+                Description = product.Description,
+                CategoryId = product.CategoryId,
+                Feature = product.Features,
+                Price = product.Price,
+                Image = product.Image,
+                Title = product.Name,
+                Id = product.Id
+            };
+
+            result.Status = Response.Status.Status.Success;
+            result.Message = "محصول پیدا شد";
+            result.Data = productMV;
 
             return result;
         }
@@ -196,20 +224,118 @@ namespace BN_Project.Core.Service.Admin
 
         #region Categories
 
-        public async Task<SelectList> GetParentCategories()
+        public async Task<Tuple<SelectList, int?>> GetParentCategories(int? selected = 0)
         {
             List<Category> categories = _categoryRepository.GetAll(c => c.ParentId == null).Result.ToList();
+            SelectList categoriesSL = null;
 
-            SelectList result = new SelectList(categories, "Id", "Title");
+            if (selected == 0)
+            {
+                categoriesSL = new SelectList(categories, "Id", "Title");
+            }
+            else
+            {
+                foreach (Category category in categories)
+                {
+                    if (category.SubCategories != null)
+                    {
+                        foreach (Category subCategory in category.SubCategories)
+                        {
+                            if (subCategory.Id == selected)
+                            {
+                                selected = subCategory.ParentId;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                categoriesSL = new SelectList(categories, "Id", "Title", selected);
+            }
+
+            return Tuple.Create(categoriesSL, selected);
+        }
+
+        public async Task<SelectList> GetSubCategories(int parentId, int? selected = 0)
+        {
+            List<Category> subCategories = _categoryRepository.GetAll(c => c.ParentId == parentId).Result.ToList();
+
+            SelectList result = null;
+
+            if (selected == 0)
+            {
+                result = new SelectList(subCategories, "Id", "Title");
+            }
+            else
+            {
+                result = new SelectList(subCategories, "Id", "Title", selected);
+            }
 
             return result;
         }
 
-        public async Task<SelectList> GetSubCategories(int parentId)
+        public async Task<BaseResponse> EditProduct(EditProductViewModel editProduct)
         {
-            List<Category> subCategories = _categoryRepository.GetAll(c => c.ParentId == parentId).Result.ToList();
+            BaseResponse result = new BaseResponse();
+            var product = await _productRepository.GetProductByProductId(editProduct.Id);
 
-            SelectList result = new SelectList(subCategories, "Id", "Title");
+            if (product == null)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "محصولی پیدا نشد";
+                return result;
+            }
+
+            if(product.Image != editProduct.Image)
+            {
+                Tools.Image.UploadImage.DeleteFile(Directory.GetCurrentDirectory() + "/wwwroot/images/products/thumb/" + product.Image);
+                Tools.Image.UploadImage.DeleteFile(Directory.GetCurrentDirectory() + "/wwwroot/images/products/normal/" + product.Image);
+            }
+
+            product.Description = editProduct.Description;
+            product.CategoryId = editProduct.CategoryId;
+            product.Features = editProduct.Feature;
+            product.Price = editProduct.Price;
+            product.Image = editProduct.Image;
+            product.Name = editProduct.Title;
+            product.Id = editProduct.Id;
+
+            await _productRepository.UpdateProduct(product);
+            await _productRepository.SaveChanges();
+
+            result.Status = Status.Success;
+            result.Message = "تغییر محصوال با موفقیت انجام شد";
+
+            return result;
+        }
+
+        public async Task<BaseResponse> DeleteProductByProductId(int productId)
+        {
+            BaseResponse result = new BaseResponse();
+
+            var product = await _productRepository.GetProductByProductId(productId);
+
+            await Console.Out.WriteLineAsync("delete : " + product.IsDelete);
+
+
+            if (product == null)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "محصولی با این ایدی پیدا نشد";
+
+                return result;
+            }
+
+
+            product.IsDelete = true;
+
+            await _productRepository.UpdateProduct(product);
+            await _productRepository.SaveChanges();
+
+            await Console.Out.WriteLineAsync("delete : " + product.IsDelete);
+
+            result.Status = Status.Success;
+            result.Message = "محصول با موفقیت حذف شد";
 
             return result;
         }

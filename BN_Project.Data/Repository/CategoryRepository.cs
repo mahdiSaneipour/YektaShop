@@ -29,11 +29,11 @@ namespace BN_Project.Data.Repository
         {
             if (where == null)
             {
-                return await _context.Categories.ToListAsync();
+                return await _context.Categories.Include(c => c.SubCategories).ToListAsync();
             }
             else
             {
-                return await _context.Categories.Where(where).ToListAsync();
+                return await _context.Categories.Include(c => c.SubCategories).Where(where).ToListAsync();
             }
         }
 

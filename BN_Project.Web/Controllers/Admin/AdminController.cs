@@ -106,9 +106,9 @@ namespace BN_Project.Web.Controllers.Admin
         public async Task<IActionResult> AddProduct()
         {
             var categories = await _adminServices.GetParentCategories();
-            ViewData["Categories"] = categories;
+            ViewData["Categories"] = categories.Item1;
 
-            ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.FirstOrDefault().Value));
+            ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.Item1.FirstOrDefault().Value));
             
             return View();
         }
@@ -119,9 +119,9 @@ namespace BN_Project.Web.Controllers.Admin
             if(!ModelState.IsValid)
             {
                 var categories = await _adminServices.GetParentCategories();
-                ViewData["Categories"] = categories;
+                ViewData["Categories"] = categories.Item1;
 
-                ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.FirstOrDefault().Value));
+                ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.Item1.FirstOrDefault().Value));
 
                 return View();
             }
@@ -131,14 +131,59 @@ namespace BN_Project.Web.Controllers.Admin
             if(result.Status != Status.Success)
             {
                 var categories = await _adminServices.GetParentCategories();
-                ViewData["Categories"] = categories;
+                ViewData["Categories"] = categories.Item1;
 
-                ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.FirstOrDefault().Value));
+                ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.Item1.FirstOrDefault().Value));
 
                 return View();
             }
 
             return RedirectToAction("Products");
+        }
+
+        public async Task<IActionResult> EditProduct(int productId)
+        {
+            if(!ModelState.IsValid) {
+                return View();
+            }
+
+            EditProductViewModel model = new EditProductViewModel();
+
+            var result = await _adminServices.GetProductForEdit(productId);
+
+            if (result.Status == Status.Success)
+            {
+                model = result.Data;
+            }  else
+            {
+                return RedirectToAction("Products");
+            }
+
+            var categories = await _adminServices.GetParentCategories(model.CategoryId);
+            ViewData["Categories"] = categories.Item1;
+
+            ViewData["SubCategories"] = await _adminServices.GetSubCategories((int) categories.Item2, model.CategoryId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProduct(EditProductViewModel editProduct)
+        {
+
+            var result = await _adminServices.EditProduct(editProduct);
+
+            if(result.Status == Status.Success)
+            {
+                return RedirectToAction("Products");
+            }
+
+            var categories = await _adminServices.GetParentCategories(editProduct.CategoryId);
+            ViewData["Categories"] = categories.Item1;
+
+            ViewData["SubCategories"] = await _adminServices.GetSubCategories((int)categories.Item2, editProduct.CategoryId);
+
+            return View(editProduct);
         }
 
         #endregion

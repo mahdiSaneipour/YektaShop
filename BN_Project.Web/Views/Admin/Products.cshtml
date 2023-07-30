@@ -52,11 +52,11 @@
                         </span>
                     </td>
                     <td>
-                        <a class="btn btn-danger" asp-controller="Admin" asp-action="RemoveProduct" onclick="is_delete(this)" asp-route-Id="@Model[i-1].Id">
+                        <a class="btn btn-danger" onclick="is_delete(@Model[i-1].Id)">
                             <i class="fa fa-times"></i>
                             حذف
                         </a>
-                        <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditProduct">
+                        <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditProduct" asp-route-productId="@Model[i-1].Id">
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                             ویرایش
                         </a>
@@ -105,5 +105,5 @@
 }
 
 @section Scripts {
-    <script src="~/js/site.js"></script>
+    <script src="~/admin/js/delete-product.js"></script>
 }
