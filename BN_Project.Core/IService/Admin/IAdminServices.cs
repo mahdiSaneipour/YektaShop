@@ -39,12 +39,18 @@ namespace BN_Project.Core.IService.Admin
 
         public Task<SelectList> GetSubCategories(int parentId, int? selected = 0);
 
-        #endregion
         public Task<List<CategoriesViewModel>> GetAllCategories();
 
         public Task<bool> AddCategory(AddCategoriesViewModel category);
         public Task<bool> RemoveCatagory(int Id);
         public Task<EditCategoryViewModel> GetCategoryById(int Id);
         public Task<bool> EditCategory(EditCategoryViewModel category);
+        #endregion
+
+        #region Gallery
+        public Task<GalleryImagesViewModel> GetGalleryByProductId(int Id);
+        public Task<bool> AddGalleryImage(AddGalleryViewModel gallery);
+        public Task<int> RemoveGalleryImage(int imageId);
+        #endregion
     }
 }

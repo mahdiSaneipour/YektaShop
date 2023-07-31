@@ -49,6 +49,45 @@ namespace BN_Project.Data.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.Color", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Hex")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Price")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Color");
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -157,12 +196,11 @@ namespace BN_Project.Data.Migrations
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Category", b =>
                 {
-                    b.HasOne("BN_Project.Domain.Entities.Category", "ParentCategory")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                    b.HasOne("BN_Project.Domain.Entities.Category", "SubCategory")
+                        .WithMany()
+                        .HasForeignKey("ParentId");
 
-                    b.Navigation("ParentCategory");
+                    b.Navigation("SubCategory");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Product", b =>
@@ -174,22 +212,6 @@ namespace BN_Project.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("BN_Project.Domain.Entities.ProductGallery", b =>
-                {
-                    b.HasOne("BN_Project.Domain.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("BN_Project.Domain.Entities.Category", b =>
-                {
-                    b.Navigation("SubCategories");
                 });
 #pragma warning restore 612, 618
         }

@@ -23,6 +23,7 @@ services.AddScoped<IAccountRepository, AccountRepository>();
 services.AddScoped<IUserRepository, UserRepository>();
 services.AddScoped<IProductRepository, ProductRepository>();
 services.AddScoped<ICategoryRepository, CategoryRepository>();
+services.AddScoped<IGalleryRepository, GalleryRepository>();
 
 #endregion
 

@@ -52,6 +52,24 @@ namespace BN_Project.Web.Api.Admin
             return Ok(new { name = name });
         }
 
+        [HttpPost]
+        [Route("UploadGalleryImage")]
+        [Produces("application/json")]
+        public IActionResult UploadGalleryImage(IFormFile file)
+        {
+            string name = UploadImage.UploadFileImage(file, "wwwroot/images/gallery/normal");
+            UploadImage.UploadFileImage(file, "wwwroot/images/gallery/thumb", name);
+
+            var resizer = new ImageConvertor();
+
+            string fullNormalPath = Directory.GetCurrentDirectory() + "/wwwroot/images/gallery/normal/" + name;
+            string fullThumbPath = Directory.GetCurrentDirectory() + "/wwwroot/images/gallery/thumb/" + name;
+
+            resizer.Image_resize(fullNormalPath, fullThumbPath, 200);
+
+            return Ok(new { name = name });
+        }
+
         [HttpGet]
         [Route("GetSubCategoryByCategoryId/{categoryId}")]
         [Produces("application/json")]

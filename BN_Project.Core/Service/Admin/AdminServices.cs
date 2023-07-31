@@ -17,14 +17,17 @@ namespace BN_Project.Core.Service.Admin
         private readonly IAccountRepository _accountRepository;
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IGalleryRepository _galleryRepository;
 
         public AdminServices(IUserRepository userRepository, IAccountRepository accountRepository
-            , IProductRepository productRepository, ICategoryRepository categoryRepository)
+            , IProductRepository productRepository, ICategoryRepository categoryRepository,
+            IGalleryRepository galleryRepository)
         {
             _userRepository = userRepository;
             _accountRepository = accountRepository;
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _galleryRepository = galleryRepository;
         }
 
         #region Users
@@ -382,9 +385,6 @@ namespace BN_Project.Core.Service.Admin
 
             var product = await _productRepository.GetProductByProductId(productId);
 
-            await Console.Out.WriteLineAsync("delete : " + product.IsDelete);
-
-
             if (product == null)
             {
                 result.Status = Status.NotFound;
@@ -476,8 +476,55 @@ namespace BN_Project.Core.Service.Admin
             return true;
 
         }
+        #endregion
 
+        #region Gallery
+        public async Task<GalleryImagesViewModel> GetGalleryByProductId(int Id)
+        {
+            var items = await _galleryRepository.GetAll(n => n.ProductId == Id);
+            List<GalleryViewModel> Gallery = new List<GalleryViewModel>();
+            foreach (var item in items)
+            {
+                GalleryViewModel gallery = new GalleryViewModel()
+                {
+                    Id = item.Id,
+                    ImageName = item.ImageName
+                };
+                Gallery.Add(gallery);
+            }
+            GalleryImagesViewModel galleryImages = new GalleryImagesViewModel();
+            galleryImages.Galleries = Gallery;
+            galleryImages.PriductId = Id;
 
+            return galleryImages;
+        }
+
+        public async Task<bool> AddGalleryImage(AddGalleryViewModel gallery)
+        {
+            if (gallery.ImageName == null || gallery.ProductId == 0)
+                return false;
+            ProductGallery productGallery = new ProductGallery()
+            {
+                ImageName = gallery.ImageName,
+                ProductId = gallery.ProductId
+            };
+            _galleryRepository.Insert(productGallery);
+
+            await _galleryRepository.SaveChanges();
+
+            return true;
+        }
+
+        public async Task<int> RemoveGalleryImage(int imageId)
+        {
+            var item = await _galleryRepository.GetById(imageId);
+            item.IsDelete = true;
+
+            _galleryRepository.Update(item);
+            await _galleryRepository.SaveChanges();
+
+            return item.ProductId;
+        }
         #endregion
     }
 }

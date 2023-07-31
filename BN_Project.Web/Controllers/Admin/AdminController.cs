@@ -205,7 +205,6 @@ namespace BN_Project.Web.Controllers.Admin
         [HttpPost]
         public async Task<IActionResult> EditProduct(EditProductViewModel editProduct)
         {
-
             var result = await _adminServices.EditProduct(editProduct);
 
             if (result.Status == Status.Success)
@@ -265,6 +264,47 @@ namespace BN_Project.Web.Controllers.Admin
         {
             await _adminServices.EditCategory(category);
             return RedirectToAction("Categories", "Admin");
+        }
+        #endregion
+
+        #region Galleries
+        public async Task<IActionResult> Gallery(int Id)
+        {
+            if (Id == 0)
+                return NotFound();
+            var gallery = await _adminServices.GetGalleryByProductId(Id);
+            gallery.PriductId = Id;
+
+            return View(gallery);
+        }
+
+        public IActionResult AddImage(int Id)
+        {
+            AddGalleryViewModel addGallery = new AddGalleryViewModel()
+            {
+                ProductId = Id
+            };
+            return View(addGallery);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddImage(AddGalleryViewModel gallery)
+        {
+            if (!ModelState.IsValid)
+                return View();
+            if (!await _adminServices.AddGalleryImage(gallery))
+                return View();
+
+            return RedirectToAction("Gallery", "Admin", new { Id = gallery.ProductId });
+        }
+
+        public async Task<IActionResult> RemoveImage(int Id)
+        {
+            if (Id == 0)
+                return NotFound();
+            int ProductId = await _adminServices.RemoveGalleryImage(Id);
+
+            return RedirectToAction("Gallery", "Admin", new { Id = ProductId });
         }
         #endregion
     }

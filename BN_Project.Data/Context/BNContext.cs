@@ -14,10 +14,15 @@ namespace BN_Project.Data.Context
         {
 
         }
+
         public DbSet<UserEntity> Users { get; set; }
+
         public DbSet<Category> Categories { get; set; }
+
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductGallery> ProductGallery { get; set; }
+
+        public DbSet<Color> Color { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,6 +32,10 @@ namespace BN_Project.Data.Context
             modelBuilder.Entity<Category>().HasQueryFilter(u => !u.IsDelete);
 
             modelBuilder.Entity<Product>().HasQueryFilter(u => !u.IsDelete);
+
+            modelBuilder.Entity<Color>().HasQueryFilter(u => !u.IsDelete);
+
+            modelBuilder.Entity<ProductGallery>().HasQueryFilter(n => !n.IsDelete);
 
 
             var cascadeFKs = modelBuilder
