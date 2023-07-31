@@ -239,11 +239,12 @@ namespace BN_Project.Core.Service.Admin
             await _productRepository.InsertProduct(product);
             await _productRepository.SaveChanges();
 
-            if(product.Id == null)
+            if (product.Id == null)
             {
                 result.Status = Response.Status.Status.Error;
                 result.Message = "خطایی در سیستم رخ داده است";
-            } else
+            }
+            else
             {
                 result.Status = Response.Status.Status.Success;
                 result.Message = "کاربر با موفقیت افزوده شد";
@@ -273,6 +274,76 @@ namespace BN_Project.Core.Service.Admin
 
             return result;
         }
+
+        public async Task<List<CategoriesViewModel>> GetAllCategories()
+        {
+            var items = await _categoryRepository.GetAll();
+            List<CategoriesViewModel> categories = new List<CategoriesViewModel>();
+            if (items.Count() == 0)
+                return categories;
+            foreach (var item in items)
+            {
+                CategoriesViewModel category = new CategoriesViewModel();
+                category.Name = item.Title;
+                category.Id = item.Id;
+                if (item.ParentCategory != null)
+                    category.ParentCategoryName = item.ParentCategory.Title;
+                categories.Add(category);
+            }
+            return categories;
+        }
+
+        public async Task<bool> AddCategory(AddCategoriesViewModel category)
+        {
+            Category Category = new Category()
+            {
+                Title = category.Name,
+                ParentId = category.CategoryId
+            };
+            _categoryRepository.Insert(Category);
+
+            await _categoryRepository.SaveChanges();
+
+            return true;
+        }
+
+        public async Task<bool> RemoveCatagory(int Id)
+        {
+            var item = await _categoryRepository.GetById(Id);
+            if (item == null)
+                return false;
+            _categoryRepository.Delete(item);
+            await _categoryRepository.SaveChanges();
+
+            return true;
+        }
+
+        public async Task<EditCategoryViewModel> GetCategoryById(int Id)
+        {
+            EditCategoryViewModel EditCategory = new EditCategoryViewModel();
+            EditCategory.Categories = await _categoryRepository.GetAll();
+            var item = await _categoryRepository.GetById(Id);
+            EditCategory.Name = item.Title;
+            EditCategory.Id = Id;
+            if (item.ParentId != null)
+                EditCategory.CategoryId = item.ParentId;
+
+            return EditCategory;
+        }
+
+        public async Task<bool> EditCategory(EditCategoryViewModel category)
+        {
+            var item = await _categoryRepository.GetById(category.Id);
+            item.Title = category.Name;
+            item.ParentId = category.CategoryId;
+
+            _categoryRepository.Update(item);
+            await _categoryRepository.SaveChanges();
+
+            return true;
+
+        }
+
 
         #endregion
     }

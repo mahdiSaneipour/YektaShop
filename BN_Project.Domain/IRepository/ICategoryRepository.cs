@@ -5,8 +5,6 @@ namespace BN_Project.Domain.IRepository
 {
     public interface ICategoryRepository
     {
-        public void Delete(int Id);
-
         public void Delete(Category category);
 
         public void Insert(Category category);
@@ -18,5 +16,6 @@ namespace BN_Project.Domain.IRepository
         public Task<Category> GetById(int id);
 
         public Task<string> GetNameById(int id);
+        public Task SaveChanges();
     }
 }

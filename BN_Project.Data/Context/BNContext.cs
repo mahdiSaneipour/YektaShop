@@ -39,6 +39,13 @@ namespace BN_Project.Data.Context
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
+            modelBuilder.Entity<Category>()
+                .HasOne(n => n.ParentCategory)
+                .WithMany(n => n.SubCategories)
+                .HasForeignKey(n => n.ParentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
             base.OnModelCreating(modelBuilder);
         }
     }

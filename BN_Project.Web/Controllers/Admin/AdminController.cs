@@ -2,6 +2,7 @@
 using BN_Project.Core.Response.Status;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BN_Project.Web.Controllers.Admin
 {
@@ -25,7 +26,7 @@ namespace BN_Project.Web.Controllers.Admin
         {
             var result = await _adminServices.GetUsersForAdmin(pageId);
 
-            if(result.Status == Status.Success || result.Status == Status.NotFound)
+            if (result.Status == Status.Success || result.Status == Status.NotFound)
             {
                 return View(result.Data);
             }
@@ -142,14 +143,14 @@ namespace BN_Project.Web.Controllers.Admin
             ViewData["Categories"] = categories;
 
             ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.FirstOrDefault().Value));
-            
+
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> AddProduct(AddProductViewModel addProduct)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var categories = await _adminServices.GetParentCategories();
                 ViewData["Categories"] = categories;
@@ -161,7 +162,7 @@ namespace BN_Project.Web.Controllers.Admin
 
             var result = await _adminServices.AddProduct(addProduct);
 
-            if(result.Status != Status.Success)
+            if (result.Status != Status.Success)
             {
                 var categories = await _adminServices.GetParentCategories();
                 ViewData["Categories"] = categories;
@@ -175,5 +176,48 @@ namespace BN_Project.Web.Controllers.Admin
         }
 
         #endregion
+
+        public async Task<IActionResult> Categories()
+        {
+            var items = await _adminServices.GetAllCategories();
+            return View(items);
+        }
+
+        public async Task<IActionResult> AddCategory()
+        {
+            AddCategoriesViewModel AddCategory = new AddCategoriesViewModel()
+            {
+                Categories = await _adminServices.GetAllCategories()
+            };
+            return View(AddCategory);
+        }
+        public async Task<IActionResult> RemoveCategory(int Id)
+        {
+            if (Id == 0)
+                return NotFound();
+            if (await _adminServices.RemoveCatagory(Id))
+                return RedirectToAction("Categories", "Admin");
+            return NotFound();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddCategory(AddCategoriesViewModel category)
+        {
+            await _adminServices.AddCategory(category);
+
+            return RedirectToAction("Categories", "Admin");
+        }
+
+        public async Task<IActionResult> EditCategory(int Id)
+        {
+            var item = await _adminServices.GetCategoryById(Id);
+            return View(item);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditCategory(EditCategoryViewModel category)
+        {
+            await _adminServices.EditCategory(category);
+            return RedirectToAction("Categories", "Admin");
+        }
     }
 }

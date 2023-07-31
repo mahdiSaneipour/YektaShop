@@ -10,8 +10,8 @@ namespace BN_Project.Domain.Entities.Common
     {
         public int Id { get; set; }
 
-        public DateTime Create { get; set; }
+        public DateTime Create { get; set; } = DateTime.Now;
 
-        public bool IsDelete { get; set; }
+        public bool IsDelete { get; set; } = false;
     }
 }

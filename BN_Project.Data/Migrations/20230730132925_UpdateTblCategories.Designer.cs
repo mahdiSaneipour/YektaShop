@@ -4,6 +4,7 @@ using BN_Project.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BN_Project.Data.Migrations
 {
     [DbContext(typeof(BNContext))]
-    partial class BNContextModelSnapshot : ModelSnapshot
+    [Migration("20230730132925_UpdateTblCategories")]
+    partial class UpdateTblCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,9 +134,8 @@ namespace BN_Project.Data.Migrations
             modelBuilder.Entity("BN_Project.Domain.Entities.Category", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Category", "ParentCategory")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .WithMany()
+                        .HasForeignKey("ParentId");
 
                     b.Navigation("ParentCategory");
                 });
@@ -147,11 +149,6 @@ namespace BN_Project.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("BN_Project.Domain.Entities.Category", b =>
-                {
-                    b.Navigation("SubCategories");
                 });
 #pragma warning restore 612, 618
         }
