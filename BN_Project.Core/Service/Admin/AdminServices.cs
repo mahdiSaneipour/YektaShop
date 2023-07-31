@@ -174,7 +174,8 @@ namespace BN_Project.Core.Service.Admin
             if (user == null)
                 return false;
 
-            _userRepository.RemoveUser(user);
+            user.IsDelete = true;
+            _accountRepository.UpdateUser(user);
 
             await _userRepository.SaveChanges();
 
@@ -254,19 +255,19 @@ namespace BN_Project.Core.Service.Admin
 
             var product = await _productRepository.GetProductByProductId(productId);
 
-            if(product == null)
-            if (product.Id == null)
-            {
-                result.Status = Response.Status.Status.Error;
-                result.Message = "خطایی در سیستم رخ داده است";
-            }
-            else
-            {
-                result.Status = Response.Status.Status.NotFound;
-                result.Message = "محصول با این ایدی پیدا نشد";
+            if (product == null)
+                if (product.Id == null)
+                {
+                    result.Status = Response.Status.Status.Error;
+                    result.Message = "خطایی در سیستم رخ داده است";
+                }
+                else
+                {
+                    result.Status = Response.Status.Status.NotFound;
+                    result.Message = "محصول با این ایدی پیدا نشد";
 
-                return result;
-            }
+                    return result;
+                }
 
             EditProductViewModel productMV = new EditProductViewModel()
             {
@@ -352,7 +353,7 @@ namespace BN_Project.Core.Service.Admin
                 return result;
             }
 
-            if(product.Image != editProduct.Image)
+            if (product.Image != editProduct.Image)
             {
                 Tools.Image.UploadImage.DeleteFile(Directory.GetCurrentDirectory() + "/wwwroot/images/products/thumb/" + product.Image);
                 Tools.Image.UploadImage.DeleteFile(Directory.GetCurrentDirectory() + "/wwwroot/images/products/normal/" + product.Image);
@@ -443,7 +444,8 @@ namespace BN_Project.Core.Service.Admin
             var item = await _categoryRepository.GetById(Id);
             if (item == null)
                 return false;
-            _categoryRepository.Delete(item);
+            item.IsDelete = true;
+            _categoryRepository.Update(item);
             await _categoryRepository.SaveChanges();
 
             return true;

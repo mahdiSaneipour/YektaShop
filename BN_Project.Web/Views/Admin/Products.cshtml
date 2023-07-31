@@ -38,7 +38,9 @@
                     </td>
                     <td>
                         <span>
-                            @Model[i-1].Name
+                            <a asp-controller="Admin" asp-action="Gallery" asp-route-Id="@Model[i-1].Id">
+                                @Model[i-1].Name
+                            </a>
                         </span>
                     </td>
                     <td>

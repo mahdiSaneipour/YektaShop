@@ -2,7 +2,6 @@
 using BN_Project.Core.Response.Status;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BN_Project.Web.Controllers.Admin
 {
@@ -143,7 +142,7 @@ namespace BN_Project.Web.Controllers.Admin
             ViewData["Categories"] = categories.Item1;
 
             ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.Item1.FirstOrDefault().Value));
-            
+
             return View();
         }
 
@@ -177,7 +176,8 @@ namespace BN_Project.Web.Controllers.Admin
 
         public async Task<IActionResult> EditProduct(int productId)
         {
-            if(!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View();
             }
 
@@ -188,7 +188,8 @@ namespace BN_Project.Web.Controllers.Admin
             if (result.Status == Status.Success)
             {
                 model = result.Data;
-            }  else
+            }
+            else
             {
                 return RedirectToAction("Products");
             }
@@ -196,7 +197,7 @@ namespace BN_Project.Web.Controllers.Admin
             var categories = await _adminServices.GetParentCategories(model.CategoryId);
             ViewData["Categories"] = categories.Item1;
 
-            ViewData["SubCategories"] = await _adminServices.GetSubCategories((int) categories.Item2, model.CategoryId);
+            ViewData["SubCategories"] = await _adminServices.GetSubCategories((int)categories.Item2, model.CategoryId);
 
             return View(model);
         }
@@ -207,7 +208,7 @@ namespace BN_Project.Web.Controllers.Admin
 
             var result = await _adminServices.EditProduct(editProduct);
 
-            if(result.Status == Status.Success)
+            if (result.Status == Status.Success)
             {
                 return RedirectToAction("Products");
             }
@@ -222,6 +223,7 @@ namespace BN_Project.Web.Controllers.Admin
 
         #endregion
 
+        #region Categories
         public async Task<IActionResult> Categories()
         {
             var items = await _adminServices.GetAllCategories();
@@ -264,5 +266,6 @@ namespace BN_Project.Web.Controllers.Admin
             await _adminServices.EditCategory(category);
             return RedirectToAction("Categories", "Admin");
         }
+        #endregion
     }
 }
