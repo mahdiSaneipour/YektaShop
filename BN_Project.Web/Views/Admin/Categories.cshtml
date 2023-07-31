@@ -1,0 +1,92 @@
+﻿@model List<CategoriesViewModel>
+@{
+    ViewData["Title"] = "دسته بندی";
+    Layout = "Admin/_AdminLayout";
+}
+
+<div class="well with-header  with-footer">
+    <a asp-controller="Admin" asp-action="AddCategory" class="btn btn-success">افزودن دسته بندی</a>
+    <br />
+    <table class="table table-hover table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    دسته بندی
+                </th>
+                <th>
+                    زیرمجموعه
+                </th>
+                <th>
+                    عملیات
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int counter = 0;
+
+                foreach (var item in Model)
+                {
+                    counter++;
+                    <tr>
+                        <td>@counter</td>
+                        <td>@item.Name</td>
+                        <td>@item.ParentCategoryName</td>
+                        <td>
+                            <a class="btn btn-danger" asp-controller="Admin" asp-action="RemoveCategory" onclick="is_delete(this)" asp-route-Id="@item.Id">
+                                <i class="fa fa-times"></i>
+                                حذف
+                            </a>
+                            <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditCategory" asp-route-Id="@item.Id">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                                ویرایش
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@section breadcrumb {
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a asp-action="Index">خانه</a>
+            </li>
+            <li class="active">افزودن کاربر</li>
+        </ul>
+    </div>
+}
+
+@section pageHeader {
+    <div class="page-header position-relative">
+        <div class="header-title">
+            <h1>
+                افزودن دسته بندی
+            </h1>
+        </div>
+        <!--Header Buttons-->
+        <div class="header-buttons">
+            <a class="sidebar-toggler" href="#">
+                <i class="fa fa-arrows-h"></i>
+            </a>
+            <a class="refresh" id="refresh-toggler" href="">
+                <i class="glyphicon glyphicon-refresh"></i>
+            </a>
+            <a class="fullscreen" id="fullscreen-toggler" href="#">
+                <i class="glyphicon glyphicon-fullscreen"></i>
+            </a>
+        </div>
+        <!--Header Buttons End-->
+    </div>
+}
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}

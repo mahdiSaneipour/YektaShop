@@ -14,12 +14,6 @@ namespace BN_Project.Data.Repository
             _context = context;
         }
 
-        public async void Delete(int id)
-        {
-            var item = await GetById(id);
-            Delete(item);
-        }
-
         public void Delete(Category category)
         {
             _context.Categories.Remove(category);
@@ -29,17 +23,23 @@ namespace BN_Project.Data.Repository
         {
             if (where == null)
             {
-                return await _context.Categories.Include(c => c.SubCategories).ToListAsync();
+                return await _context.Categories
+                    .Include(n => n.ParentCategory)
+                    .ToListAsync();
             }
             else
             {
-                return await _context.Categories.Include(c => c.SubCategories).Where(where).ToListAsync();
+                return await _context.Categories.Where(where)
+                    .Include(n => n.ParentCategory)
+                    .ToListAsync();
             }
         }
 
         public async Task<Category> GetById(int Id)
         {
-            return await _context.Categories.SingleOrDefaultAsync(n => n.Id == Id);
+            return await _context.Categories
+                .Include(n => n.ParentCategory)
+                .SingleOrDefaultAsync(n => n.Id == Id);
         }
 
         public async Task<string> GetNameById(int id)
@@ -50,6 +50,11 @@ namespace BN_Project.Data.Repository
         public void Insert(Category category)
         {
             _context.Categories.Add(category);
+        }
+
+        public async Task SaveChanges()
+        {
+            await _context.SaveChangesAsync();
         }
 
         public void Update(Category category)
