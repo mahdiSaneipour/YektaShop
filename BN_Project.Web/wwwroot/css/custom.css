@@ -29,4 +29,11 @@ table {
 select {
     width : 100%;
 }
+
+.hex-show {
+    width: 100px;
+    height: 30px;
+    margin: auto;
+    margin-top: -3px;
+}
 /*# sourceMappingURL=custom.css.map */

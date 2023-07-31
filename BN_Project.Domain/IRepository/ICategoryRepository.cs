@@ -16,6 +16,7 @@ namespace BN_Project.Domain.IRepository
         public Task<Category> GetById(int id);
 
         public Task<string> GetNameById(int id);
+
         public Task SaveChanges();
     }
 }

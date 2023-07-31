@@ -21,7 +21,7 @@ namespace BN_Project.Data.Context
 
         public DbSet<Product> Products { get; set; }
 
-        public DbSet<Color> Color { get; set; }
+        public DbSet<Color> Colors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

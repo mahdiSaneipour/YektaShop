@@ -221,6 +221,8 @@ namespace BN_Project.Web.Controllers.Admin
 
         #endregion
 
+        #region Categories
+
         public async Task<IActionResult> Categories()
         {
             var items = await _adminServices.GetAllCategories();
@@ -235,6 +237,7 @@ namespace BN_Project.Web.Controllers.Admin
             };
             return View(AddCategory);
         }
+
         public async Task<IActionResult> RemoveCategory(int Id)
         {
             if (Id == 0)
@@ -243,6 +246,7 @@ namespace BN_Project.Web.Controllers.Admin
                 return RedirectToAction("Categories", "Admin");
             return NotFound();
         }
+
         [HttpPost]
         public async Task<IActionResult> AddCategory(AddCategoriesViewModel category)
         {
@@ -263,5 +267,23 @@ namespace BN_Project.Web.Controllers.Admin
             await _adminServices.EditCategory(category);
             return RedirectToAction("Categories", "Admin");
         }
+
+        #endregion
+
+        #region Colors
+
+        public async Task<IActionResult> Colors(int pageId = 0)
+        {
+            var result = await _adminServices.GetAllColors(pageId);
+
+            if (result.Status == Status.Success || result.Status == Status.NotFound)
+            {
+                return View(result.Data);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        #endregion
     }
 }
