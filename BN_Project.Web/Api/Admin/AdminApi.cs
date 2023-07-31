@@ -59,5 +59,13 @@ namespace BN_Project.Web.Api.Admin
         {
             return Ok(_adminServices.GetSubCategories(categoryId).Result);
         }
+
+        [HttpGet]
+        [Route("DeleteProductByProductId/{productId}")]
+        [Produces("application/json")]
+        public IActionResult DeleteProductByProductId(int productId)
+        {
+            return Ok(_adminServices.DeleteProductByProductId(productId));
+        }
     }
 }

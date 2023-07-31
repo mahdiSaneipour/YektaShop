@@ -23,11 +23,21 @@ namespace BN_Project.Core.IService.Admin
 
         public Task<DataResponse<IReadOnlyList<ProductListViewModel>>> GetProducts(int pageId = 1);
 
-        public Task<SelectList> GetParentCategories();
-
-        public Task<SelectList> GetSubCategories(int parentId);
-
         public Task<BaseResponse> AddProduct(AddProductViewModel addProduct);
+
+        public Task<DataResponse<EditProductViewModel>> GetProductForEdit(int productId);
+
+        public Task<BaseResponse> EditProduct(EditProductViewModel editProduct);
+
+        public Task<BaseResponse> DeleteProductByProductId(int productId);
+
+        #endregion
+
+        #region Categories
+
+        public Task<Tuple<SelectList, int?>> GetParentCategories(int? selected = 0);
+
+        public Task<SelectList> GetSubCategories(int parentId, int? selected = 0);
 
         #endregion
         public Task<List<CategoriesViewModel>> GetAllCategories();
