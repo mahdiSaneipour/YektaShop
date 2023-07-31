@@ -239,8 +239,8 @@ namespace BN_Project.Core.Service.Admin
                 Name = addProduct.Title
             };
 
-            _productRepository.InsertProduct(product);
-            _productRepository.SaveChanges();
+            await _productRepository.InsertProduct(product);
+            await _productRepository.SaveChanges();
 
             result.Status = Response.Status.Status.Success;
             result.Message = "کاربر با موفقیت افزوده شد";
@@ -374,9 +374,6 @@ namespace BN_Project.Core.Service.Admin
             BaseResponse result = new BaseResponse();
 
             var product = await _productRepository.GetProductByProductId(productId);
-
-            await Console.Out.WriteLineAsync("delete : " + product.IsDelete);
-
 
             if (product == null)
             {

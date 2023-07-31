@@ -24,5 +24,7 @@ namespace BN_Project.Domain.Entities
 
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; }
+
+        public ICollection<Color> Colors { get; set; }
     }
 }

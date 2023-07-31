@@ -203,7 +203,6 @@ namespace BN_Project.Web.Controllers.Admin
         [HttpPost]
         public async Task<IActionResult> EditProduct(EditProductViewModel editProduct)
         {
-
             var result = await _adminServices.EditProduct(editProduct);
 
             if(result.Status == Status.Success)

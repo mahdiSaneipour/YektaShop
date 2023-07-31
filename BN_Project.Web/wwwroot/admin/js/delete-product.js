@@ -1,6 +1,4 @@
 ﻿function is_delete(id) {
-    console.log(id);
-    alert(id)
     event.preventDefault();
     swal({
         title: 'آیا مطمئن هستید؟',
