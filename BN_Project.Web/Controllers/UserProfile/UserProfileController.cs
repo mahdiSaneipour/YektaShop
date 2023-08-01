@@ -1,5 +1,5 @@
-﻿using BN_Project.Core.IService.Account;
-using BN_Project.Core.Response.DataResponse;
+﻿using BN_Project.Core.Response.DataResponse;
+using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.ViewModel.UserProfile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +8,10 @@ namespace BN_Project.Web.Controllers.UserProfile
 {
     public class UserProfileController : Controller
     {
-        private readonly IAccountServices _accountService;
-        public UserProfileController(IAccountServices AccountService)
+        private readonly IUserServices _userServices;
+        public UserProfileController(IUserServices userService)
         {
-            _accountService = AccountService;
+            _userServices = userService;
         }
 
         [BindProperty]
@@ -20,7 +20,7 @@ namespace BN_Project.Web.Controllers.UserProfile
         private DataResponse<UserInformationViewModel> GetCurrentUser()
         {
             int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-            var user = _accountService.GetUserInformationById(UserId).Result;
+            var user = _userServices.GetUserInformationById(UserId).Result;
             return user;
         }
 
@@ -52,7 +52,7 @@ namespace BN_Project.Web.Controllers.UserProfile
                 updateUserVM.FullName = user.Data.FullName;
                 updateUserVM.Id = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
 
-                _accountService.UpdateUser(updateUserVM);
+                _userServices.UpdateUser(updateUserVM);
 
                 user.Data.PhoneNumber = updateUserVM.PhoneNumber;
                 UserInformationVM = user.Data;
@@ -77,7 +77,7 @@ namespace BN_Project.Web.Controllers.UserProfile
                 updateUserVM.PhoneNumber = user.Data.PhoneNumber;
                 updateUserVM.Id = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
 
-                _accountService.UpdateUser(updateUserVM);
+                _userServices.UpdateUser(updateUserVM);
 
                 user.Data.FullName = updateUserVM.FullName;
                 UserInformationVM = user.Data;

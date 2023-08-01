@@ -7,8 +7,6 @@ using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
 
 namespace BN_Project.Core.Service.Admin
 {
@@ -33,163 +31,6 @@ namespace BN_Project.Core.Service.Admin
             _colorRepository = colorRepository;
         }
 
-        #region Users
-
-        public async Task<BaseResponse> AddUserFromAdmin(AddUserViewModel addUser)
-        {
-            var result = new BaseResponse();
-
-            if (_userRepository.IsEmailExist(addUser.Email).Result)
-            {
-                result.Status = Response.Status.Status.AlreadyHave;
-                result.Message = "کاربری با این ایمیل موجد است";
-
-                return result;
-            }
-            else if (_userRepository.IsPhoneNumberExist(addUser.PhoneNumber).Result)
-            {
-                result.Status = Response.Status.Status.AlreadyHavePhoneNumber;
-                result.Message = "کاربری با این شماره موبایل موجد است";
-
-                return result;
-            }
-
-            UserEntity user = new UserEntity()
-            {
-                Password = addUser.Password.EncodePasswordMd5(),
-                ActivationCode = Tools.Tools.GenerateUniqCode(),
-                PhoneNumber = addUser.PhoneNumber,
-                Avatar = addUser.Avatar,
-                Email = addUser.Email,
-                Name = addUser.Name,
-                IsActive = true
-            };
-
-            await _userRepository.AddUserFromAdmin(user);
-            await _accountRepository.SaveChanges();
-
-            result.Status = Response.Status.Status.Success;
-            result.Message = "کاربر با موفقیت اضافه شد";
-
-            return result;
-        }
-
-        public async Task<BaseResponse> EditUsers(EditUserViewModel user)
-        {
-            var result = new BaseResponse();
-
-            //if (_userRepository.IsEmailExist(user.Email).Result)
-            //{
-            //    result.Status = Response.Status.Status.AlreadyHave;
-            //    result.Message = "کاربری با این ایمیل موجود است";
-
-            //    return result;
-            //}
-            //else if (_userRepository.IsPhoneNumberExist(user.PhoneNumber).Result)
-            //{
-            //    result.Status = Response.Status.Status.AlreadyHavePhoneNumber;
-            //    result.Message = "کاربری با این شماره موبایل موجود است";
-
-            //    return result;
-            //}
-
-            var item = await _accountRepository.GetUserById(user.Id);
-
-            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/avatar/normal", item.Avatar).RemoveFile();
-            Path.Combine(Directory.GetCurrentDirectory(), "wwroot/images/avatar/thumb", item.Avatar).RemoveFile();
-
-
-            item.Id = user.Id;
-
-            if (user.Password != null)
-                item.Password = user.Password.EncodePasswordMd5();
-
-            item.PhoneNumber = user.PhoneNumber;
-            item.Avatar = user.Avatar;
-            item.Email = user.Email;
-            item.Name = user.Name;
-
-
-            _accountRepository.UpdateUser(item);
-            await _accountRepository.SaveChanges();
-
-            result.Status = Response.Status.Status.Success;
-            result.Message = "کاربر با موفقیت اضافه شد";
-
-            return result;
-        }
-
-        public async Task<EditUserViewModel> GetUserById(int Id)
-        {
-            var item = await _userRepository.GetUserById(Id);
-            EditUserViewModel EditUserVM = new EditUserViewModel()
-            {
-                Id = Id,
-                Avatar = item.Avatar,
-                Name = item.Name,
-                Email = item.Email,
-                PhoneNumber = item.PhoneNumber
-            };
-
-            return EditUserVM;
-        }
-
-        public async Task<DataResponse<IReadOnlyList<UserListViewModel>>> GetUsersForAdmin(int pageId)
-        {
-            DataResponse<IReadOnlyList<UserListViewModel>> result = new DataResponse<IReadOnlyList<UserListViewModel>>();
-
-            List<UserListViewModel> data = new List<UserListViewModel>();
-
-            var users = await _userRepository.GetAllUsers();
-
-            if (users == null)
-            {
-                result.Status = Response.Status.Status.NotFound;
-                result.Message = "کاربری وجود ندارد";
-
-                return result;
-            }
-
-            int take = 10;
-            int skip = (pageId - 1) * take;
-
-            var lUsers = users.ToList().Skip(skip).Take(take).OrderByDescending(u => u.Id).ToList();
-
-            foreach (var user in lUsers)
-            {
-                data.Add(new UserListViewModel()
-                {
-                    PhoneNumber = (user.PhoneNumber != null) ? user.PhoneNumber : "---",
-                    IsActive = user.IsActive,
-                    Email = user.Email,
-                    Name = (user.Name != null) ? user.Name : "---",
-                    Id = user.Id
-                });
-            }
-
-            result.Status = Response.Status.Status.Success;
-            result.Message = "دریافت کاربران با موفقیت انجام شد";
-            result.Data = data.AsReadOnly();
-
-            return result;
-        }
-
-        public async Task<bool> RemoveUserById(int Id)
-        {
-            var user = await _userRepository.GetUserById(Id);
-            if (user == null)
-                return false;
-
-            user.IsDelete = true;
-            _accountRepository.UpdateUser(user);
-
-            await _userRepository.SaveChanges();
-
-            return true;
-        }
-
-        #endregion
-
         #region Products
 
         public async Task<DataResponse<IReadOnlyList<ProductListViewModel>>> GetProducts(int pageId = 1)
@@ -198,7 +39,7 @@ namespace BN_Project.Core.Service.Admin
 
             List<ProductListViewModel> data = new List<ProductListViewModel>();
 
-            var products = await _productRepository.GetProducts();
+            var products = await _productRepository.GetAll();
 
             if (products == null)
             {
@@ -246,8 +87,8 @@ namespace BN_Project.Core.Service.Admin
                 Name = addProduct.Title
             };
 
-            _productRepository.InsertProduct(product);
-            _productRepository.SaveChanges();
+            await _productRepository.Insert(product);
+            await _productRepository.SaveChanges();
 
             result.Status = Response.Status.Status.Success;
             result.Message = "کاربر با موفقیت افزوده شد";
@@ -259,10 +100,10 @@ namespace BN_Project.Core.Service.Admin
         {
             DataResponse<EditProductViewModel> result = new DataResponse<EditProductViewModel>();
 
-            var product = await _productRepository.GetProductByProductId(productId);
+            var product = await _productRepository.GetSingle(n => n.Id == productId);
 
             if (product == null)
-                if (product.Id == null)
+                if (product.Id == 0)
                 {
                     result.Status = Response.Status.Status.Error;
                     result.Message = "خطایی در سیستم رخ داده است";
@@ -296,13 +137,14 @@ namespace BN_Project.Core.Service.Admin
         public async Task<DataResponse<List<string>>> SearchProductByName(string name)
         {
             DataResponse<List<string>> result = new DataResponse<List<string>>();
-            List<string> data = _productRepository.SearchProductAndReturnName(name);
+            List<string> data = await _productRepository.SearchProductAndReturnName(name);
 
             if (data == null)
             {
                 result.Status = Status.NotFound;
                 result.Message = "محصولی با این نام پیدا نشد";
-            } else
+            }
+            else
             {
                 result.Status = Status.Success;
                 result.Message = "محصول ها با موفقیت پیدا شدند";
@@ -318,7 +160,7 @@ namespace BN_Project.Core.Service.Admin
 
         public async Task<Tuple<SelectList, int?>> GetParentCategories(int? selected = 0)
         {
-            List<Category> categories = await _categoryRepository.GetAll(c => c.ParentId == null);
+            List<Category> categories = (List<Category>)await _categoryRepository.GetAll(n => n.ParentId == null);
             SelectList categoriesSL = null;
 
             if (selected == 0)
@@ -356,7 +198,7 @@ namespace BN_Project.Core.Service.Admin
         public async Task<BaseResponse> EditProduct(EditProductViewModel editProduct)
         {
             BaseResponse result = new BaseResponse();
-            var product = await _productRepository.GetProductByProductId(editProduct.Id);
+            var product = await _productRepository.GetSingle(n => n.Id == editProduct.Id);
 
             if (product == null)
             {
@@ -379,7 +221,7 @@ namespace BN_Project.Core.Service.Admin
             product.Name = editProduct.Title;
             product.Id = editProduct.Id;
 
-            _productRepository.UpdateProduct(product);
+            _productRepository.Update(product);
             await _productRepository.SaveChanges();
 
             result.Status = Status.Success;
@@ -392,7 +234,7 @@ namespace BN_Project.Core.Service.Admin
         {
             BaseResponse result = new BaseResponse();
 
-            var product = await _productRepository.GetProductByProductId(productId);
+            var product = await _productRepository.GetSingle(n => n.Id == productId);
 
             if (product == null)
             {
@@ -405,7 +247,7 @@ namespace BN_Project.Core.Service.Admin
 
             product.IsDelete = true;
 
-            _productRepository.UpdateProduct(product);
+            _productRepository.Update(product);
             await _productRepository.SaveChanges();
 
             await Console.Out.WriteLineAsync("delete : " + product.IsDelete);
@@ -441,7 +283,7 @@ namespace BN_Project.Core.Service.Admin
                 Title = category.Name,
                 ParentId = category.CategoryId
             };
-            _categoryRepository.Insert(Category);
+            await _categoryRepository.Insert(Category);
 
             await _categoryRepository.SaveChanges();
 
@@ -450,7 +292,7 @@ namespace BN_Project.Core.Service.Admin
 
         public async Task<bool> RemoveCatagory(int Id)
         {
-            var item = await _categoryRepository.GetById(Id);
+            var item = await _categoryRepository.GetSingle(n => n.Id == Id);
             if (item == null)
                 return false;
             item.IsDelete = true;
@@ -463,8 +305,8 @@ namespace BN_Project.Core.Service.Admin
         public async Task<EditCategoryViewModel> GetCategoryById(int Id)
         {
             EditCategoryViewModel EditCategory = new EditCategoryViewModel();
-            EditCategory.Categories = await _categoryRepository.GetAll();
-            var item = await _categoryRepository.GetById(Id);
+            EditCategory.Categories = (List<Category>)await _categoryRepository.GetAll();
+            var item = await _categoryRepository.GetSingle(n => n.Id == Id);
             EditCategory.Name = item.Title;
             EditCategory.Id = Id;
             if (item.ParentId != null)
@@ -475,7 +317,7 @@ namespace BN_Project.Core.Service.Admin
 
         public async Task<bool> EditCategory(EditCategoryViewModel category)
         {
-            var item = await _categoryRepository.GetById(category.Id);
+            var item = await _categoryRepository.GetSingle(n => n.Id == category.Id);
             item.Title = category.Name;
             item.ParentId = category.CategoryId;
 
@@ -520,7 +362,7 @@ namespace BN_Project.Core.Service.Admin
 
             List<ListColorViewModel> data = new List<ListColorViewModel>();
 
-            var colors = _colorRepository.GetAllColors();
+            var colors = await _colorRepository.GetAll();
 
             if (colors == null)
             {
@@ -573,13 +415,13 @@ namespace BN_Project.Core.Service.Admin
 
             if (addColor.IsDefault)
             {
-                var defColor = await _colorRepository.GetDefaultColorByProductId(productId);
+                var defColor = await _colorRepository.GetSingle(n => n.ProductId == productId);
 
                 if (defColor != null)
                 {
                     defColor.IsDefault = false;
 
-                    _colorRepository.UpdateColor(defColor);
+                    _colorRepository.Update(defColor);
                     await _colorRepository.SaveChanges();
                 }
 
@@ -595,8 +437,8 @@ namespace BN_Project.Core.Service.Admin
                 Hex = addColor.Hex,
             };
 
-            _colorRepository.AddColor(color);
-            _colorRepository.SaveChanges();
+            await _colorRepository.Insert(color);
+            await _colorRepository.SaveChanges();
 
             result.Status = Status.Success;
             result.Message = "افزودن رنگ با موفقیت انجام شد";
@@ -613,7 +455,7 @@ namespace BN_Project.Core.Service.Admin
                 ImageName = gallery.ImageName,
                 ProductId = gallery.ProductId
             };
-            _galleryRepository.Insert(productGallery);
+            await _galleryRepository.Insert(productGallery);
 
             await _galleryRepository.SaveChanges();
 
@@ -622,7 +464,7 @@ namespace BN_Project.Core.Service.Admin
 
         public async Task<int> RemoveGalleryImage(int imageId)
         {
-            var item = await _galleryRepository.GetById(imageId);
+            var item = await _galleryRepository.GetSingle(n => n.Id == imageId);
             item.IsDelete = true;
 
             _galleryRepository.Update(item);

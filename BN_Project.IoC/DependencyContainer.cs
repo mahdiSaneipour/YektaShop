@@ -1,7 +1,7 @@
-﻿using BN_Project.Core.IService.Account;
-using BN_Project.Core.IService.Admin;
-using BN_Project.Core.Service.Account;
+﻿using BN_Project.Core.IService.Admin;
 using BN_Project.Core.Service.Admin;
+using BN_Project.Core.Services.Implementations;
+using BN_Project.Core.Services.Interfaces;
 using BN_Project.Data.Repository;
 using BN_Project.Domain.IRepository;
 using EP.Core.Tools.RenderViewToString;
@@ -20,7 +20,7 @@ namespace BN_Project.IoC
             services.AddScoped<IColorRepository, ColorRepository>();
             services.AddScoped<IGalleryRepository, GalleryRepository>();
 
-            services.AddScoped<IAccountServices, AccountServices>();
+            services.AddScoped<IUserServices, UserService>();
             services.AddScoped<IAdminServices, AdminServices>();
             services.AddScoped<IViewRenderService, RenderViewToString>();
         }

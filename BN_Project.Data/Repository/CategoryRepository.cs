@@ -6,65 +6,23 @@ using System.Linq.Expressions;
 
 namespace BN_Project.Data.Repository
 {
-    public class CategoryRepository : ICategoryRepository
+    public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
     {
         private readonly BNContext _context;
         public CategoryRepository(BNContext context)
+            : base(context)
         {
             _context = context;
         }
 
-        public void Delete(Category category)
-        {
-            _context.Categories.Remove(category);
-        }
-
-        public async Task<List<Category>> GetAll(Expression<Func<Category, bool>> where = null)
-        {
-            if (where == null)
-            {
-                return await _context.Categories
-                    .Include(n => n.ParentCategory)
-                    .ToListAsync();
-            }
-            else
-            {
-                return await _context.Categories.Where(where)
-                    .Include(n => n.ParentCategory)
-                    .ToListAsync();
-            }
-        }
-
-        public async Task<Category> GetById(int Id)
-        {
-            return await _context.Categories
-                .Include(n => n.ParentCategory)
-                .SingleOrDefaultAsync(n => n.Id == Id);
-        }
-
         public async Task<string> GetNameById(int id)
         {
-            return _context.Categories.FirstOrDefaultAsync(c => c.Id == id).Result.Title.ToString();
+            return await _context.Categories.Select(n => n.Title).FirstOrDefaultAsync();
         }
 
         public async Task<int> GetParentIdBySubCategoryId(int id)
         {
             return (int)await _context.Categories.Where(c => c.Id == id).Select(c => c.ParentId).FirstOrDefaultAsync();
-        }
-
-        public async Task Insert(Category category)
-        {
-            await _context.Categories.AddAsync(category);
-        }
-
-        public async Task SaveChanges()
-        {
-            await _context.SaveChangesAsync();
-        }
-
-        public void Update(Category category)
-        {
-            _context.Categories.Update(category);
         }
     }
 }
