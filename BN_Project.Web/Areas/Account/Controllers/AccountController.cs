@@ -1,6 +1,6 @@
 ﻿using BN_Project.Core.ExtraViewModels;
-using BN_Project.Core.IService.Account;
 using BN_Project.Core.Response.Status;
+using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.ViewModel.Account;
 using EP.Core.Tools.RenderViewToString;
 using EP.Core.Tools.Senders;
@@ -14,13 +14,15 @@ namespace BN_Project.Web.Areas.Account.Controllers
     [Area("Account")]
     public class AccountController : Controller
     {
-        private readonly IAccountServices _accountServices;
         private readonly IViewRenderService _viewRenderService;
+        private readonly IUserServices _userServices;
 
-        public AccountController(IAccountServices accountServices, IViewRenderService viewRenderService)
+        public AccountController(
+            IViewRenderService viewRenderService,
+            IUserServices userServices)
         {
-            _accountServices = accountServices;
             _viewRenderService = viewRenderService;
+            _userServices = userServices;
         }
 
         #region Login
@@ -48,7 +50,7 @@ namespace BN_Project.Web.Areas.Account.Controllers
                 return RedirectToAction("/");
             }*/
 
-            var result = await _accountServices.LoginUser(login);
+            var result = await _userServices.LoginUser(login);
 
             switch (result.Status)
             {
@@ -108,7 +110,7 @@ namespace BN_Project.Web.Areas.Account.Controllers
         public async Task<IActionResult> Register(RegisterUserViewModel register)
         {
 
-            var result = await _accountServices.CreateUser(register);
+            var result = await _userServices.CreateUser(register);
 
             switch (result.Status)
             {
@@ -158,7 +160,7 @@ namespace BN_Project.Web.Areas.Account.Controllers
         public IActionResult ConfirmEmail(string token)
         {
 
-            _accountServices.IsTokenTrue(token);
+            _userServices.IsTokenTrue(token);
 
             return Redirect("/");
         }
@@ -185,7 +187,7 @@ namespace BN_Project.Web.Areas.Account.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotPassword)
         {
-            var result = await _accountServices.ForgotPassword(forgotPassword.Email);
+            var result = await _userServices.ForgotPassword(forgotPassword.Email);
 
             switch (result.Status)
             {
@@ -238,7 +240,7 @@ namespace BN_Project.Web.Areas.Account.Controllers
 
         public async Task<IActionResult> ResetPassword(string token)
         {
-            var result = await _accountServices.IsTokenTrue(token);
+            var result = await _userServices.IsTokenTrue(token);
 
             if (result.Status == Status.Success)
             {
@@ -256,7 +258,7 @@ namespace BN_Project.Web.Areas.Account.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPassword)
         {
-            var result = await _accountServices.ResetPassword(resetPassword);
+            var result = await _userServices.ResetPassword(resetPassword);
 
             if (!result)
             {

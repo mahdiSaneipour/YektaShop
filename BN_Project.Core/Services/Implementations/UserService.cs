@@ -1,22 +1,27 @@
-﻿using BN_Project.Core.IService.Account;
-using BN_Project.Core.Response;
+﻿using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Response.Status;
+using BN_Project.Core.Services.Interfaces;
 using BN_Project.Core.Tools;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Account;
+using BN_Project.Domain.ViewModel.Admin;
 using BN_Project.Domain.ViewModel.UserProfile;
 
-namespace BN_Project.Core.Service.Account
+namespace BN_Project.Core.Services.Implementations
 {
-    public class AccountServices : IAccountServices
+    public class UserService : IUserServices
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly IUserRepository _userRepository;
 
-        public AccountServices(IAccountRepository accountRepository)
+        public UserService(
+            IAccountRepository accountRepository,
+            IUserRepository userRepository)
         {
             _accountRepository = accountRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<DataResponse<UserEntity>> CreateUser(RegisterUserViewModel register)
@@ -154,7 +159,7 @@ namespace BN_Project.Core.Service.Account
             return result;
         }
 
-        async void IAccountServices.UpdateUser(UpdateUserInfoViewModel user)
+        async void IUserServices.UpdateUser(UpdateUserInfoViewModel user)
         {
             UserEntity userE = new UserEntity();
 
@@ -254,6 +259,159 @@ namespace BN_Project.Core.Service.Account
             {
                 return false;
             }
+        }
+
+        public async Task<BaseResponse> AddUserFromAdmin(AddUserViewModel addUser)
+        {
+            var result = new BaseResponse();
+
+            if (_userRepository.IsEmailExist(addUser.Email).Result)
+            {
+                result.Status = Response.Status.Status.AlreadyHave;
+                result.Message = "کاربری با این ایمیل موجد است";
+
+                return result;
+            }
+            else if (await _userRepository.IsPhoneNumberExist(addUser.PhoneNumber))
+            {
+                result.Status = Response.Status.Status.AlreadyHavePhoneNumber;
+                result.Message = "کاربری با این شماره موبایل موجد است";
+
+                return result;
+            }
+
+            UserEntity user = new UserEntity()
+            {
+                Password = addUser.Password.EncodePasswordMd5(),
+                ActivationCode = Tools.Tools.GenerateUniqCode(),
+                PhoneNumber = addUser.PhoneNumber,
+                Avatar = addUser.Avatar,
+                Email = addUser.Email,
+                Name = addUser.Name,
+                IsActive = true
+            };
+
+            await _userRepository.Insert(user);
+            await _accountRepository.SaveChanges();
+
+            result.Status = Response.Status.Status.Success;
+            result.Message = "کاربر با موفقیت اضافه شد";
+
+            return result;
+        }
+
+        public async Task<BaseResponse> EditUsers(EditUserViewModel user)
+        {
+            var result = new BaseResponse();
+
+            //if (_userRepository.IsEmailExist(user.Email).Result)
+            //{
+            //    result.Status = Response.Status.Status.AlreadyHave;
+            //    result.Message = "کاربری با این ایمیل موجود است";
+
+            //    return result;
+            //}
+            //else if (_userRepository.IsPhoneNumberExist(user.PhoneNumber).Result)
+            //{
+            //    result.Status = Response.Status.Status.AlreadyHavePhoneNumber;
+            //    result.Message = "کاربری با این شماره موبایل موجود است";
+
+            //    return result;
+            //}
+
+            var item = await _accountRepository.GetSingle(n => n.Id == user.Id);
+
+            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/avatar/normal", item.Avatar).RemoveFile();
+            Path.Combine(Directory.GetCurrentDirectory(), "wwroot/images/avatar/thumb", item.Avatar).RemoveFile();
+
+
+            item.Id = user.Id;
+
+            if (user.Password != null)
+                item.Password = user.Password.EncodePasswordMd5();
+
+            item.PhoneNumber = user.PhoneNumber;
+            item.Avatar = user.Avatar;
+            item.Email = user.Email;
+            item.Name = user.Name;
+
+
+            _accountRepository.Update(item);
+            await _accountRepository.SaveChanges();
+
+            result.Status = Response.Status.Status.Success;
+            result.Message = "کاربر با موفقیت اضافه شد";
+
+            return result;
+        }
+
+        public async Task<EditUserViewModel> GetUserById(int Id)
+        {
+            var item = await _userRepository.GetSingle(n => n.Id == Id);
+            EditUserViewModel EditUserVM = new EditUserViewModel()
+            {
+                Id = Id,
+                Avatar = item.Avatar,
+                Name = item.Name,
+                Email = item.Email,
+                PhoneNumber = item.PhoneNumber
+            };
+
+            return EditUserVM;
+        }
+
+        public async Task<DataResponse<IReadOnlyList<UserListViewModel>>> GetUsersForAdmin(int pageId)
+        {
+            DataResponse<IReadOnlyList<UserListViewModel>> result = new DataResponse<IReadOnlyList<UserListViewModel>>();
+
+            List<UserListViewModel> data = new List<UserListViewModel>();
+
+            var users = await _userRepository.GetAll();
+
+            if (users == null)
+            {
+                result.Status = Response.Status.Status.NotFound;
+                result.Message = "کاربری وجود ندارد";
+
+                return result;
+            }
+
+            int take = 10;
+            int skip = (pageId - 1) * take;
+
+            var lUsers = users.ToList().Skip(skip).Take(take).OrderByDescending(u => u.Id).ToList();
+
+            foreach (var user in lUsers)
+            {
+                data.Add(new UserListViewModel()
+                {
+                    PhoneNumber = (user.PhoneNumber != null) ? user.PhoneNumber : "---",
+                    IsActive = user.IsActive,
+                    Email = user.Email,
+                    Name = (user.Name != null) ? user.Name : "---",
+                    Id = user.Id
+                });
+            }
+
+            result.Status = Response.Status.Status.Success;
+            result.Message = "دریافت کاربران با موفقیت انجام شد";
+            result.Data = data.AsReadOnly();
+
+            return result;
+        }
+
+        public async Task<bool> RemoveUserById(int Id)
+        {
+            var user = await _userRepository.GetSingle(n => n.Id == Id);
+            if (user == null)
+                return false;
+
+            user.IsDelete = true;
+            _accountRepository.Update(user);
+
+            await _userRepository.SaveChanges();
+
+            return true;
         }
     }
 }
