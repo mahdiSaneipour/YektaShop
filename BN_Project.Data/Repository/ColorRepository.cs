@@ -13,29 +13,43 @@ namespace BN_Project.Data.Repository
             _context = context;
         }
 
-        public Task AddColor(Color color)
+        public void AddColor(Color color)
         {
-            throw new NotImplementedException();
+            _context.Colors.Add(color);
         }
 
-        public Task<Color> GetColorByColorId()
+        public Color GetColorByColorId(int colorId)
         {
-            throw new NotImplementedException();
+            return _context.Colors.FirstOrDefault(c => c.Id == colorId);
         }
 
-        public Task<IQueryable<Color>> GetColorsByProductId(int productId)
+        public IQueryable<Color> GetColorsByProductId(int productId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task SaveChanges()
-        {
-            throw new NotImplementedException();
+            return _context.Colors.Where(c => c.ProductId == productId);
         }
 
         public void UpdateColor(Color color)
         {
-            throw new NotImplementedException();
+            _context.Colors.Update(color);
+        }
+
+
+        public IQueryable<Color> GetAllColors(Expression<Func<Color, bool>> where = null)
+        {
+            if (where == null)
+            {
+                return _context.Colors.Include(c => c.Product);
+            }
+            else
+            {
+                return _context.Colors.Where(where).Include(c => c.Product);
+            }
+        }
+
+        public void UpdateColor(Color color)
+        public void SaveChanges()
+        {
+            _context.SaveChangesAsync();
         }
     }
 }

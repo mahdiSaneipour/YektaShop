@@ -47,7 +47,12 @@ namespace BN_Project.Data.Repository
             return _context.Categories.FirstOrDefaultAsync(c => c.Id == id).Result.Title.ToString();
         }
 
-        public async Task Insert(Category category)
+        public async Task<int> GetParentIdBySubCategoryId(int id)
+        {
+            return (int)await _context.Categories.Where(c => c.Id == id).Select(c => c.ParentId).FirstOrDefaultAsync();
+        }
+
+        public void Insert(Category category)
         {
             await _context.Categories.AddAsync(category);
         }

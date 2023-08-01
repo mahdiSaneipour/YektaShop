@@ -1793,7 +1793,7 @@ if (typeof jQuery === 'undefined') {
         // - Use FontAwesome icons:
         //  feedbackIcons: {
         //      valid: 'fa fa-check',
-        //      invalid: 'fa fa-times',
+        //      invalid: 'fa fa-times danger',
         //      validating: 'fa fa-refresh'
         //  }
         feedbackIcons: {

@@ -1,11 +1,11 @@
-﻿@model IReadOnlyList<UserListViewModel>
+﻿@model IReadOnlyList<ListColorViewModel>
 @{
     Layout = "Admin/_AdminLayout";
-    ViewData["Title"] = "کاربران";
+    ViewData["Title"] = "رنگ ها";
 }
 
 <div class="well with-header  with-footer">
-    <a asp-action="AddUser" class="btn btn-success">افزودن کاربر جدید</a>
+    <a asp-action="AddColor" class="btn btn-success">افزودن رنگ جدید</a>
     <br />
     <table class="table table-hover table-striped table-bordered table-condensed">
         <thead>
@@ -14,16 +14,22 @@
                     #
                 </th>
                 <th>
-                    نام کاربر
+                    نام رنگ
                 </th>
                 <th>
-                    ایمیل کاربر
+                    رنگ
                 </th>
                 <th>
-                    شماره کاربر
+                    محصول
                 </th>
                 <th>
-                    وضعیت کاربر
+                    تعداد
+                </th>
+                <th>
+                    قیمت
+                </th>
+                <th>
+                    پیش فرض
                 </th>
                 <th>
                     عملیات
@@ -46,33 +52,45 @@
                     </td>
                     <td>
                         <span>
-                            @Model[i-1].Email
+                            <div class="hex-show" style="background-color:@Model[i-1].Hex;"></div>
                         </span>
                     </td>
                     <td>
                         <span>
-                            @Model[i-1].PhoneNumber
+                            <a asp-controller="Admin" asp-action="EditProduct" asp-route-productId="@Model[i-1].ProductId">@Model[i-1].ProductName</a>
                         </span>
                     </td>
                     <td>
-                        @if(Model[i-1].IsActive)
+                        <span>
+                            @Model[i-1].Count
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            @Model[i-1].Price تومان
+                        </span>
+                    </td>
+                    <td>
+                        @if (Model[i - 1].IsDefault)
                         {
                             <i class="fa fa-check success" aria-hidden="true"></i>
 
-                        } else
+                        }
+                        else
                         {
                             <i class="fa fa-times danger" aria-hidden="true"></i>
                         }
                     </td>
                     <td>
-                        <a class="btn btn-danger" asp-controller="Admin" asp-action="RemoveUser" onclick="is_delete(this)" asp-route-Id="@Model[i-1].Id">
+                        <a class="btn btn-danger" onclick="is_delete(@Model[i-1].Id)">
                             <i class="fa fa-times"></i>
                             حذف
                         </a>
-                        <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditUser" asp-route-Id="@Model[i-1].Id">
+                        <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditProduct" asp-route-productId="@Model[i-1].Id">
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                             ویرایش
                         </a>
+
                     </td>
                 </tr>
             }
@@ -88,7 +106,7 @@
                 <i class="fa fa-home"></i>
                 <a asp-action="Index">خانه</a>
             </li>
-            <li class="active">کاربران</li>
+            <li class="active">رنگ ها</li>
         </ul>
     </div>
 }
@@ -97,7 +115,7 @@
     <div class="page-header position-relative">
         <div class="header-title">
             <h1>
-                کاربران
+                رنگ ها
             </h1>
         </div>
         <!--Header Buttons-->

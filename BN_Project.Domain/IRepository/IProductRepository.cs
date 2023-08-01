@@ -13,6 +13,10 @@ namespace BN_Project.Domain.IRepository
 
         public void UpdateProduct(Product product);
 
+        public List<string> SearchProductAndReturnName(string name);
+
+        public Task<int> GetProductIdByName(string name);
+
         public Task SaveChanges();
     }
 }

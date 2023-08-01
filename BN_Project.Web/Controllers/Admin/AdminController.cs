@@ -176,10 +176,6 @@ namespace BN_Project.Web.Controllers.Admin
 
         public async Task<IActionResult> EditProduct(int productId)
         {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
 
             EditProductViewModel model = new EditProductViewModel();
 
@@ -223,6 +219,7 @@ namespace BN_Project.Web.Controllers.Admin
         #endregion
 
         #region Categories
+
         public async Task<IActionResult> Categories()
         {
             var items = await _adminServices.GetAllCategories();
@@ -237,6 +234,7 @@ namespace BN_Project.Web.Controllers.Admin
             };
             return View(AddCategory);
         }
+
         public async Task<IActionResult> RemoveCategory(int Id)
         {
             if (Id == 0)
@@ -245,6 +243,7 @@ namespace BN_Project.Web.Controllers.Admin
                 return RedirectToAction("Categories", "Admin");
             return NotFound();
         }
+
         [HttpPost]
         public async Task<IActionResult> AddCategory(AddCategoriesViewModel category)
         {
@@ -265,6 +264,46 @@ namespace BN_Project.Web.Controllers.Admin
             await _adminServices.EditCategory(category);
             return RedirectToAction("Categories", "Admin");
         }
+
+        #endregion
+
+        #region Colors
+
+        public async Task<IActionResult> Colors(int pageId = 0)
+        {
+            var result = await _adminServices.GetAllColors(pageId);
+
+            if (result.Status == Status.Success || result.Status == Status.NotFound)
+            {
+                return View(result.Data);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> AddColor()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddColor(AddColorViewModel addColor)
+        {
+            var result = await _adminServices.AddColor(addColor);
+
+            if (result.Status == Status.Success)
+            {
+                return RedirectToAction("Colors");
+            } else if (result.Status == Status.NotFound)
+            {
+                ModelState.AddModelError("ProductName", result.Message);
+            }
+
+            return View();
+        }
+
+        #endregion
         #endregion
 
         #region Galleries

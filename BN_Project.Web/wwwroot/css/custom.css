@@ -29,4 +29,26 @@ table {
 select {
     width : 100%;
 }
+
+.hex-show {
+    width: 100px;
+    height: 30px;
+    margin: auto;
+    margin-top: -3px;
+}
+
+input[type=checkbox], input[type=radio] {
+    z-index: 12;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin-top: -3px;
+    opacity: 1;
+    position: static;
+    margin-left: 8px;
+}
+
+span.input-icon.is-default {
+    display: flex;
+}
 /*# sourceMappingURL=custom.css.map */

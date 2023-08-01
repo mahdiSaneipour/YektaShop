@@ -85,5 +85,24 @@ namespace BN_Project.Web.Api.Admin
         {
             return Ok(_adminServices.DeleteProductByProductId(productId));
         }
+
+
+        [HttpGet]
+        [Route("SearchProduct")]
+        [Produces("application/json")]
+        public IActionResult SearchProduct()
+        {
+            try
+            {
+                string filter = HttpContext.Request.Query["term"].ToString();
+                List<string> result = _adminServices.SearchProductByName(filter).Result.Data;
+                Console.WriteLine("ssssssssssss : " + result.Count);
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }
