@@ -52,7 +52,7 @@ namespace BN_Project.Data.Repository
             return (int)await _context.Categories.Where(c => c.Id == id).Select(c => c.ParentId).FirstOrDefaultAsync();
         }
 
-        public void Insert(Category category)
+        public async Task Insert(Category category)
         {
             await _context.Categories.AddAsync(category);
         }

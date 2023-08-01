@@ -573,7 +573,16 @@ namespace BN_Project.Core.Service.Admin
 
             if (addColor.IsDefault)
             {
-//
+                var defColor = await _colorRepository.GetDefaultColorByProductId(productId);
+
+                if (defColor != null)
+                {
+                    defColor.IsDefault = false;
+
+                    _colorRepository.UpdateColor(defColor);
+                    await _colorRepository.SaveChanges();
+                }
+
             }
 
             Color color = new Color()

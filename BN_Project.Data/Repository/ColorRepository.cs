@@ -1,6 +1,8 @@
 ﻿using BN_Project.Data.Context;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BN_Project.Data.Repository
 {
@@ -33,6 +35,10 @@ namespace BN_Project.Data.Repository
             _context.Colors.Update(color);
         }
 
+        public async Task SaveChanges()
+        {
+            await _context.SaveChangesAsync();
+        }
 
         public IQueryable<Color> GetAllColors(Expression<Func<Color, bool>> where = null)
         {
@@ -46,10 +52,9 @@ namespace BN_Project.Data.Repository
             }
         }
 
-        public void UpdateColor(Color color)
-        public void SaveChanges()
+        public Task<Color> GetDefaultColorByProductId(int productId)
         {
-            _context.SaveChangesAsync();
+            return _context.Colors.FirstOrDefaultAsync(c => c.ProductId == productId && c.IsDefault);
         }
     }
 }

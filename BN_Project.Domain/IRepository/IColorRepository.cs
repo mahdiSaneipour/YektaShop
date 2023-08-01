@@ -16,10 +16,12 @@ namespace BN_Project.Domain.IRepository
 
         public IQueryable<Color> GetColorsByProductId(int productId);
 
+        public Task<Color> GetDefaultColorByProductId(int productId);
+
         public void AddColor(Color color);
 
         public void UpdateColor(Color color);
 
-        public void SaveChanges();
+        public Task SaveChanges();
     }
 }
