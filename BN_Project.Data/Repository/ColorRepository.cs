@@ -1,6 +1,8 @@
 ﻿using BN_Project.Data.Context;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BN_Project.Data.Repository
 {
@@ -46,7 +48,6 @@ namespace BN_Project.Data.Repository
             }
         }
 
-        public void UpdateColor(Color color)
         public void SaveChanges()
         {
             _context.SaveChangesAsync();

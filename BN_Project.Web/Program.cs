@@ -1,13 +1,8 @@
-using BN_Project.Core.IService.Account;
-using BN_Project.Core.IService.Admin;
-using BN_Project.Core.Service.Account;
-using BN_Project.Core.Service.Admin;
 using BN_Project.Data.Context;
-using BN_Project.Data.Repository;
-using BN_Project.Domain.IRepository;
-using EP.Core.Tools.RenderViewToString;
+using BN_Project.IoC;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -15,18 +10,7 @@ var services = builder.Services;
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
-
-
-#region Repositories
-
-services.AddScoped<IAccountRepository, AccountRepository>();
-services.AddScoped<IUserRepository, UserRepository>();
-services.AddScoped<IProductRepository, ProductRepository>();
-services.AddScoped<ICategoryRepository, CategoryRepository>();
-services.AddScoped<IColorRepository, ColorRepository>();
-services.AddScoped<IGalleryRepository, GalleryRepository>();
-
-#endregion
+RegisterServices(services);
 
 #region Authentication
 
@@ -41,14 +25,6 @@ builder.Services.AddAuthentication(option =>
     option.LogoutPath = "/Account/Logout";
     option.ExpireTimeSpan = TimeSpan.FromMinutes(43200);
 });
-
-#endregion
-
-#region Services
-
-services.AddScoped<IAccountServices, AccountServices>();
-services.AddScoped<IAdminServices, AdminServices>();
-services.AddScoped<IViewRenderService, RenderViewToString>();
 
 #endregion
 
@@ -93,5 +69,11 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+static void RegisterServices(IServiceCollection services)
+{
+    DependencyContainer.RegisterServices(services);
+}
+
 
 app.Run();
