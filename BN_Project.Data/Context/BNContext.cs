@@ -20,6 +20,7 @@ namespace BN_Project.Data.Context
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductGallery> ProductGallery { get; set; }
 
         public DbSet<Color> Colors { get; set; }
 
@@ -33,6 +34,8 @@ namespace BN_Project.Data.Context
             modelBuilder.Entity<Product>().HasQueryFilter(u => !u.IsDelete);
 
             modelBuilder.Entity<Color>().HasQueryFilter(u => !u.IsDelete);
+
+            modelBuilder.Entity<ProductGallery>().HasQueryFilter(n => !n.IsDelete);
 
 
             var cascadeFKs = modelBuilder

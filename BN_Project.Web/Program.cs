@@ -24,6 +24,7 @@ services.AddScoped<IUserRepository, UserRepository>();
 services.AddScoped<IProductRepository, ProductRepository>();
 services.AddScoped<ICategoryRepository, CategoryRepository>();
 services.AddScoped<IColorRepository, ColorRepository>();
+services.AddScoped<IGalleryRepository, GalleryRepository>();
 
 #endregion
 

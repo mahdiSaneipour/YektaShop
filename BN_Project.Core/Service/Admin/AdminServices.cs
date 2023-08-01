@@ -19,8 +19,11 @@ namespace BN_Project.Core.Service.Admin
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IColorRepository _colorRepository;
+        private readonly IGalleryRepository _galleryRepository;
 
         public AdminServices(IUserRepository userRepository, IAccountRepository accountRepository
+            , IProductRepository productRepository, ICategoryRepository categoryRepository,
+            IGalleryRepository galleryRepository)
             , IProductRepository productRepository, ICategoryRepository categoryRepository
             , IColorRepository colorRepository)
         {
@@ -28,6 +31,7 @@ namespace BN_Project.Core.Service.Admin
             _accountRepository = accountRepository;
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _galleryRepository = galleryRepository;
             _colorRepository = colorRepository;
         }
 
@@ -178,7 +182,8 @@ namespace BN_Project.Core.Service.Admin
             if (user == null)
                 return false;
 
-            _userRepository.RemoveUser(user);
+            user.IsDelete = true;
+            _accountRepository.UpdateUser(user);
 
             await _userRepository.SaveChanges();
 
@@ -243,8 +248,8 @@ namespace BN_Project.Core.Service.Admin
                 Name = addProduct.Title
             };
 
-            await _productRepository.InsertProduct(product);
-            await _productRepository.SaveChanges();
+            _productRepository.InsertProduct(product);
+            _productRepository.SaveChanges();
 
             result.Status = Response.Status.Status.Success;
             result.Message = "کاربر با موفقیت افزوده شد";
@@ -258,19 +263,19 @@ namespace BN_Project.Core.Service.Admin
 
             var product = await _productRepository.GetProductByProductId(productId);
 
-            if(product == null)
-            if (product.Id == null)
-            {
-                result.Status = Response.Status.Status.Error;
-                result.Message = "خطایی در سیستم رخ داده است";
-            }
-            else
-            {
-                result.Status = Response.Status.Status.NotFound;
-                result.Message = "محصول با این ایدی پیدا نشد";
+            if (product == null)
+                if (product.Id == null)
+                {
+                    result.Status = Response.Status.Status.Error;
+                    result.Message = "خطایی در سیستم رخ داده است";
+                }
+                else
+                {
+                    result.Status = Response.Status.Status.NotFound;
+                    result.Message = "محصول با این ایدی پیدا نشد";
 
-                return result;
-            }
+                    return result;
+                }
 
             EditProductViewModel productMV = new EditProductViewModel()
             {
@@ -362,7 +367,7 @@ namespace BN_Project.Core.Service.Admin
                 return result;
             }
 
-            if(product.Image != editProduct.Image)
+            if (product.Image != editProduct.Image)
             {
                 Tools.Image.UploadImage.DeleteFile(Directory.GetCurrentDirectory() + "/wwwroot/images/products/thumb/" + product.Image);
                 Tools.Image.UploadImage.DeleteFile(Directory.GetCurrentDirectory() + "/wwwroot/images/products/normal/" + product.Image);
@@ -450,7 +455,8 @@ namespace BN_Project.Core.Service.Admin
             var item = await _categoryRepository.GetById(Id);
             if (item == null)
                 return false;
-            _categoryRepository.Delete(item);
+            item.IsDelete = true;
+            _categoryRepository.Update(item);
             await _categoryRepository.SaveChanges();
 
             return true;
@@ -480,6 +486,29 @@ namespace BN_Project.Core.Service.Admin
 
             return true;
 
+        }
+        #endregion
+
+        #region Gallery
+        public async Task<GalleryImagesViewModel> GetGalleryByProductId(int Id)
+        {
+            var items = await _galleryRepository.GetAll(n => n.ProductId == Id);
+            List<GalleryViewModel> Gallery = new List<GalleryViewModel>();
+            foreach (var item in items)
+            {
+                GalleryViewModel gallery = new GalleryViewModel()
+                {
+                    Id = item.Id,
+                    ImageName = item.ImageName
+                };
+                Gallery.Add(gallery);
+            }
+            GalleryImagesViewModel galleryImages = new GalleryImagesViewModel();
+            galleryImages.Galleries = Gallery;
+            galleryImages.PriductId = Id;
+
+            return galleryImages;
+        }
         }
 
         #endregion
@@ -562,7 +591,32 @@ namespace BN_Project.Core.Service.Admin
 
             return result;
         }
+        public async Task<bool> AddGalleryImage(AddGalleryViewModel gallery)
+        {
+            if (gallery.ImageName == null || gallery.ProductId == 0)
+                return false;
+            ProductGallery productGallery = new ProductGallery()
+            {
+                ImageName = gallery.ImageName,
+                ProductId = gallery.ProductId
+            };
+            _galleryRepository.Insert(productGallery);
 
+            await _galleryRepository.SaveChanges();
+
+            return true;
+        }
+
+        public async Task<int> RemoveGalleryImage(int imageId)
+        {
+            var item = await _galleryRepository.GetById(imageId);
+            item.IsDelete = true;
+
+            _galleryRepository.Update(item);
+            await _galleryRepository.SaveChanges();
+
+            return item.ProductId;
+        }
         #endregion
     }
 }

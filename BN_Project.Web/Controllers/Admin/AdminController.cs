@@ -2,7 +2,6 @@
 using BN_Project.Core.Response.Status;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BN_Project.Web.Controllers.Admin
 {
@@ -143,7 +142,7 @@ namespace BN_Project.Web.Controllers.Admin
             ViewData["Categories"] = categories.Item1;
 
             ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.Item1.FirstOrDefault().Value));
-            
+
             return View();
         }
 
@@ -185,7 +184,8 @@ namespace BN_Project.Web.Controllers.Admin
             if (result.Status == Status.Success)
             {
                 model = result.Data;
-            }  else
+            }
+            else
             {
                 return RedirectToAction("Products");
             }
@@ -193,7 +193,7 @@ namespace BN_Project.Web.Controllers.Admin
             var categories = await _adminServices.GetParentCategories(model.CategoryId);
             ViewData["Categories"] = categories.Item1;
 
-            ViewData["SubCategories"] = await _adminServices.GetSubCategories((int) categories.Item2, model.CategoryId);
+            ViewData["SubCategories"] = await _adminServices.GetSubCategories((int)categories.Item2, model.CategoryId);
 
             return View(model);
         }
@@ -203,7 +203,7 @@ namespace BN_Project.Web.Controllers.Admin
         {
             var result = await _adminServices.EditProduct(editProduct);
 
-            if(result.Status == Status.Success)
+            if (result.Status == Status.Success)
             {
                 return RedirectToAction("Products");
             }
@@ -303,6 +303,48 @@ namespace BN_Project.Web.Controllers.Admin
             return View();
         }
 
+        #endregion
+        #endregion
+
+        #region Galleries
+        public async Task<IActionResult> Gallery(int Id)
+        {
+            if (Id == 0)
+                return NotFound();
+            var gallery = await _adminServices.GetGalleryByProductId(Id);
+            gallery.PriductId = Id;
+
+            return View(gallery);
+        }
+
+        public IActionResult AddImage(int Id)
+        {
+            AddGalleryViewModel addGallery = new AddGalleryViewModel()
+            {
+                ProductId = Id
+            };
+            return View(addGallery);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddImage(AddGalleryViewModel gallery)
+        {
+            if (!ModelState.IsValid)
+                return View();
+            if (!await _adminServices.AddGalleryImage(gallery))
+                return View();
+
+            return RedirectToAction("Gallery", "Admin", new { Id = gallery.ProductId });
+        }
+
+        public async Task<IActionResult> RemoveImage(int Id)
+        {
+            if (Id == 0)
+                return NotFound();
+            int ProductId = await _adminServices.RemoveGalleryImage(Id);
+
+            return RedirectToAction("Gallery", "Admin", new { Id = ProductId });
+        }
         #endregion
     }
 }

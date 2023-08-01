@@ -127,6 +127,33 @@ namespace BN_Project.Data.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.ProductGallery", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductGallery");
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.UserEntity", b =>
                 {
                     b.Property<int>("Id")

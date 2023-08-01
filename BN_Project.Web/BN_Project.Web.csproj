@@ -365,6 +365,8 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\avatar\thumb\" />
     <Folder Include="wwwroot\images\avatar\normal\" />
+    <Folder Include="wwwroot\images\gallery\thumb\" />
+    <Folder Include="wwwroot\images\gallery\normal\" />
     <Folder Include="wwwroot\images\products\normal\" />
     <Folder Include="wwwroot\images\products\thumb\" />
   </ItemGroup>
