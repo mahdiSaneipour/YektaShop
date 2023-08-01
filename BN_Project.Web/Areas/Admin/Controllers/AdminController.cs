@@ -3,8 +3,9 @@ using BN_Project.Core.Response.Status;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BN_Project.Web.Controllers.Admin
+namespace BN_Project.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class AdminController : Controller
     {
         private readonly IAdminServices _adminServices;
@@ -141,7 +142,7 @@ namespace BN_Project.Web.Controllers.Admin
             var categories = await _adminServices.GetParentCategories();
             ViewData["Categories"] = categories.Item1;
 
-            ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.Item1.FirstOrDefault().Value));
+            ViewData["SubCategories"] = await _adminServices.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
 
             return View();
         }
@@ -154,7 +155,7 @@ namespace BN_Project.Web.Controllers.Admin
                 var categories = await _adminServices.GetParentCategories();
                 ViewData["Categories"] = categories.Item1;
 
-                ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.Item1.FirstOrDefault().Value));
+                ViewData["SubCategories"] = await _adminServices.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
 
                 return View();
             }
@@ -166,7 +167,7 @@ namespace BN_Project.Web.Controllers.Admin
                 var categories = await _adminServices.GetParentCategories();
                 ViewData["Categories"] = categories.Item1;
 
-                ViewData["SubCategories"] = await _adminServices.GetSubCategories(Int32.Parse(categories.Item1.FirstOrDefault().Value));
+                ViewData["SubCategories"] = await _adminServices.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
 
                 return View();
             }
@@ -295,7 +296,8 @@ namespace BN_Project.Web.Controllers.Admin
             if (result.Status == Status.Success)
             {
                 return RedirectToAction("Colors");
-            } else if (result.Status == Status.NotFound)
+            }
+            else if (result.Status == Status.NotFound)
             {
                 ModelState.AddModelError("ProductName", result.Message);
             }

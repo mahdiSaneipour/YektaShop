@@ -364,6 +364,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Account\Data\" />
+    <Folder Include="Areas\Account\Models\" />
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Profile\Data\" />
+    <Folder Include="Areas\Profile\Models\" />
+    <Folder Include="Controllers\Account\" />
+    <Folder Include="Controllers\Admin\" />
+    <Folder Include="Views\UserChangePass\" />
+    <Folder Include="Views\UserProfile\" />
     <Folder Include="wwwroot\images\avatar\thumb\" />
     <Folder Include="wwwroot\images\avatar\normal\" />
     <Folder Include="wwwroot\images\gallery\thumb\" />

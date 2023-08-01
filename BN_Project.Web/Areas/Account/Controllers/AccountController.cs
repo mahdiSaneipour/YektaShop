@@ -8,14 +8,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using BN_Project.Core.ExtraViewModels;
-using EP.Core.Tools.RenderViewToString;
-using EP.Core.Tools.Senders;
-using BN_Project.Core.IService.Account;
-using BN_Project.Domain.ViewModel.Account;
 
-namespace BN_Project.Web.Controllers.Account
+namespace BN_Project.Web.Areas.Account.Controllers
 {
+    [Area("Account")]
     public class AccountController : Controller
     {
         private readonly IAccountServices _accountServices;
@@ -69,7 +65,7 @@ namespace BN_Project.Web.Controllers.Account
                     return View();
             }
 
-            if (result.Status == Core.Response.Status.Status.Success)
+            if (result.Status == Status.Success)
             {
                 #region Cookie
 
@@ -126,7 +122,7 @@ namespace BN_Project.Web.Controllers.Account
             {
                 #region Send Email
 
-                var confirmLink = $"{this.Request.Scheme}://{this.Request.Host}/Register/ConfirmEmail?token={result.Data.ActivationCode}";
+                var confirmLink = $"{Request.Scheme}://{Request.Host}/Register/ConfirmEmail?token={result.Data.ActivationCode}";
 
                 ConfirmEmailViewModel model = new ConfirmEmailViewModel();
 
@@ -202,7 +198,7 @@ namespace BN_Project.Web.Controllers.Account
             {
                 #region SendEmail
 
-                var confirmLink = $"{this.Request.Scheme}://{this.Request.Host}/Account/ResetPassword?token={result.Data.ActivationCode}";
+                var confirmLink = $"{Request.Scheme}://{Request.Host}/Account/ResetPassword?token={result.Data.ActivationCode}";
 
                 ConfirmEmailViewModel model = new ConfirmEmailViewModel();
 
@@ -244,7 +240,8 @@ namespace BN_Project.Web.Controllers.Account
         {
             var result = await _accountServices.IsTokenTrue(token);
 
-            if (result.Status == Status.Success) {
+            if (result.Status == Status.Success)
+            {
                 ResetPasswordViewModel model = new ResetPasswordViewModel()
                 {
                     Token = token
@@ -261,7 +258,7 @@ namespace BN_Project.Web.Controllers.Account
         {
             var result = await _accountServices.ResetPassword(resetPassword);
 
-            if(!result)
+            if (!result)
             {
                 return Redirect("/");
             }
