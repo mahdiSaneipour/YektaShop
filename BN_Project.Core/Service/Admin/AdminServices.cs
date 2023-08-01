@@ -23,9 +23,7 @@ namespace BN_Project.Core.Service.Admin
 
         public AdminServices(IUserRepository userRepository, IAccountRepository accountRepository
             , IProductRepository productRepository, ICategoryRepository categoryRepository,
-            IGalleryRepository galleryRepository)
-            , IProductRepository productRepository, ICategoryRepository categoryRepository
-            , IColorRepository colorRepository)
+            IGalleryRepository galleryRepository, IColorRepository colorRepository)
         {
             _userRepository = userRepository;
             _accountRepository = accountRepository;
@@ -490,6 +488,7 @@ namespace BN_Project.Core.Service.Admin
         #endregion
 
         #region Gallery
+
         public async Task<GalleryImagesViewModel> GetGalleryByProductId(int Id)
         {
             var items = await _galleryRepository.GetAll(n => n.ProductId == Id);
@@ -508,7 +507,6 @@ namespace BN_Project.Core.Service.Admin
             galleryImages.PriductId = Id;
 
             return galleryImages;
-        }
         }
 
         #endregion
@@ -537,7 +535,7 @@ namespace BN_Project.Core.Service.Admin
 
             var lColors = colors.ToList().Skip(skip).Take(take).OrderByDescending(u => u.ProductId).ToList();
 
-            foreach(var color in lColors)
+            foreach (var color in lColors)
             {
                 data.Add(new ListColorViewModel()
                 {
@@ -573,6 +571,11 @@ namespace BN_Project.Core.Service.Admin
                 return result;
             }
 
+            if (addColor.IsDefault)
+            {
+//
+            }
+
             Color color = new Color()
             {
                 IsDefault = addColor.IsDefault,
@@ -591,6 +594,7 @@ namespace BN_Project.Core.Service.Admin
 
             return result;
         }
+
         public async Task<bool> AddGalleryImage(AddGalleryViewModel gallery)
         {
             if (gallery.ImageName == null || gallery.ProductId == 0)

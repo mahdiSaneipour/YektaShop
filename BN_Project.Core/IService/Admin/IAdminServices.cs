@@ -62,12 +62,14 @@ namespace BN_Project.Core.IService.Admin
 
         #endregion
 
-        #endregion
-
         #region Gallery
+
         public Task<GalleryImagesViewModel> GetGalleryByProductId(int Id);
+
         public Task<bool> AddGalleryImage(AddGalleryViewModel gallery);
+
         public Task<int> RemoveGalleryImage(int imageId);
+
         #endregion
     }
 }

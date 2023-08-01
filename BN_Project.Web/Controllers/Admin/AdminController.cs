@@ -304,7 +304,6 @@ namespace BN_Project.Web.Controllers.Admin
         }
 
         #endregion
-        #endregion
 
         #region Galleries
         public async Task<IActionResult> Gallery(int Id)
