@@ -54,7 +54,7 @@ namespace BN_Project.Data.Repository
 
         public void Insert(Category category)
         {
-            _context.Categories.Add(category);
+            await _context.Categories.AddAsync(category);
         }
 
         public async Task SaveChanges()

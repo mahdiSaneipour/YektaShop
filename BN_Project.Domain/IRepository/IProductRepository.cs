@@ -11,7 +11,7 @@ namespace BN_Project.Domain.IRepository
 
         public Task<Product> GetProductByProductId(int productId);
 
-        public Task UpdateProduct(Product product);
+        public void UpdateProduct(Product product);
 
         public List<string> SearchProductAndReturnName(string name);
 

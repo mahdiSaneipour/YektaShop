@@ -8,4 +8,12 @@
 
         public T Data { get; set; }
     }
+
+    public class DataResponse
+    {
+        public string? Message { get; set; }
+
+        public Response.Status.Status Status { get; set; }
+
+    }
 }

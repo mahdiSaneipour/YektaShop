@@ -2,11 +2,6 @@
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BN_Project.Data.Repository
 {
@@ -46,12 +41,12 @@ namespace BN_Project.Data.Repository
 
         async Task IUserRepository.AddUserFromAdmin(UserEntity user)
         {
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(user);
         }
 
         async Task IUserRepository.SaveChanges()
         {
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

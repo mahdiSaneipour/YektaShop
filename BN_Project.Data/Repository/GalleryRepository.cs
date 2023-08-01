@@ -48,9 +48,9 @@ namespace BN_Project.Data.Repository
         }
 
 
-        public void Insert(ProductGallery gallery)
+        public async Task Insert(ProductGallery gallery)
         {
-            _context.ProductGallery.Add(gallery);
+            await _context.ProductGallery.AddAsync(gallery);
         }
 
         public async Task SaveChanges()

@@ -13,5 +13,6 @@ namespace BN_Project.Core.Response
         public Response.Status.Status Status { get; set; }
 
         public int Id { get; set; }
+         
     }
 }

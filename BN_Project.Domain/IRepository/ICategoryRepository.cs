@@ -7,7 +7,7 @@ namespace BN_Project.Domain.IRepository
     {
         public void Delete(Category category);
 
-        public void Insert(Category category);
+        public Task Insert(Category category);
 
         public void Update(Category category);
 

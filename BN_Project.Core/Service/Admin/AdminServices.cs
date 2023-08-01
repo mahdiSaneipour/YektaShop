@@ -318,7 +318,7 @@ namespace BN_Project.Core.Service.Admin
 
         public async Task<Tuple<SelectList, int?>> GetParentCategories(int? selected = 0)
         {
-            List<Category> categories = _categoryRepository.GetAll(c => c.ParentId == null).Result.ToList();
+            List<Category> categories = await _categoryRepository.GetAll(c => c.ParentId == null);
             SelectList categoriesSL = null;
 
             if (selected == 0)
@@ -379,7 +379,7 @@ namespace BN_Project.Core.Service.Admin
             product.Name = editProduct.Title;
             product.Id = editProduct.Id;
 
-            await _productRepository.UpdateProduct(product);
+            _productRepository.UpdateProduct(product);
             await _productRepository.SaveChanges();
 
             result.Status = Status.Success;
@@ -405,7 +405,7 @@ namespace BN_Project.Core.Service.Admin
 
             product.IsDelete = true;
 
-            await _productRepository.UpdateProduct(product);
+            _productRepository.UpdateProduct(product);
             await _productRepository.SaveChanges();
 
             await Console.Out.WriteLineAsync("delete : " + product.IsDelete);
