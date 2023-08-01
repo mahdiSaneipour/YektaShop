@@ -290,6 +290,25 @@ namespace BN_Project.Core.Service.Admin
             return result;
         }
 
+        public async Task<DataResponse<List<string>>> SearchProductByName(string name)
+        {
+            DataResponse<List<string>> result = new DataResponse<List<string>>();
+            List<string> data = _productRepository.SearchProductAndReturnName(name);
+
+            if (data == null)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "محصولی با این نام پیدا نشد";
+            } else
+            {
+                result.Status = Status.Success;
+                result.Message = "محصول ها با موفقیت پیدا شدند";
+                result.Data = data;
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Categories
@@ -305,20 +324,7 @@ namespace BN_Project.Core.Service.Admin
             }
             else
             {
-                foreach (Category category in categories)
-                {
-                    if (category.SubCategories != null)
-                    {
-                        foreach (Category subCategory in category.SubCategories)
-                        {
-                            if (subCategory.Id == selected)
-                            {
-                                selected = subCategory.ParentId;
-                                break;
-                            }
-                        }
-                    }
-                }
+                selected = await _categoryRepository.GetParentIdBySubCategoryId((int)selected);
 
                 categoriesSL = new SelectList(categories, "Id", "Title", selected);
             }
@@ -520,6 +526,39 @@ namespace BN_Project.Core.Service.Admin
             result.Status = Response.Status.Status.Success;
             result.Message = "دریافت رنگ ها با موفقیت انجام شد";
             result.Data = data.AsReadOnly();
+
+            return result;
+        }
+
+        public async Task<BaseResponse> AddColor(AddColorViewModel addColor)
+        {
+            BaseResponse result = new BaseResponse();
+
+            int productId = await _productRepository.GetProductIdByName(addColor.ProductName);
+
+            if (productId == 0)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "محصولی با این نام پیدا نشد";
+
+                return result;
+            }
+
+            Color color = new Color()
+            {
+                IsDefault = addColor.IsDefault,
+                Count = addColor.Count,
+                Price = addColor.Price,
+                ProductId = productId,
+                Name = addColor.Name,
+                Hex = addColor.Hex,
+            };
+
+            _colorRepository.AddColor(color);
+            _colorRepository.SaveChanges();
+
+            result.Status = Status.Success;
+            result.Message = "افزودن رنگ با موفقیت انجام شد";
 
             return result;
         }

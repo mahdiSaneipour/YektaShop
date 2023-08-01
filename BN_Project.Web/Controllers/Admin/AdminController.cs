@@ -177,9 +177,6 @@ namespace BN_Project.Web.Controllers.Admin
 
         public async Task<IActionResult> EditProduct(int productId)
         {
-            if(!ModelState.IsValid) {
-                return View();
-            }
 
             EditProductViewModel model = new EditProductViewModel();
 
@@ -282,6 +279,28 @@ namespace BN_Project.Web.Controllers.Admin
             }
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> AddColor()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddColor(AddColorViewModel addColor)
+        {
+            var result = await _adminServices.AddColor(addColor);
+
+            if (result.Status == Status.Success)
+            {
+                return RedirectToAction("Colors");
+            } else if (result.Status == Status.NotFound)
+            {
+                ModelState.AddModelError("ProductName", result.Message);
+            }
+
+            return View();
         }
 
         #endregion

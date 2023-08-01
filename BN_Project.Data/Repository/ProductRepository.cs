@@ -36,6 +36,11 @@ namespace BN_Project.Data.Repository
             }
         }
 
+        public List<string> SearchProductAndReturnName(string name)
+        {
+            return _context.Products.Where(p => p.Name.Contains(name)).Select(p => p.Name).ToList();
+        }
+
         public async Task InsertProduct(Product product)
         {
             _context.Products.Add(product);
@@ -49,6 +54,11 @@ namespace BN_Project.Data.Repository
         public async Task UpdateProduct(Product product)
         {
             _context.Products.Update(product);
+        }
+
+        public async Task<int> GetProductIdByName(string name)
+        {
+            return await _context.Products.Where(p => p.Name == name).Select(p => p.Id).FirstOrDefaultAsync();
         }
     }
 }

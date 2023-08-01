@@ -3,6 +3,7 @@ using BN_Project.Core.Response.DataResponse;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Drawing;
 
 namespace BN_Project.Core.IService.Admin
 {
@@ -31,6 +32,8 @@ namespace BN_Project.Core.IService.Admin
 
         public Task<BaseResponse> DeleteProductByProductId(int productId);
 
+        public Task<DataResponse<List<string>>> SearchProductByName(string name);
+
         #endregion
 
         #region Categories
@@ -54,6 +57,8 @@ namespace BN_Project.Core.IService.Admin
         #region Colors
 
         public Task<DataResponse<IReadOnlyList<ListColorViewModel>>> GetAllColors(int pageId);
+
+        public Task<BaseResponse> AddColor(AddColorViewModel addColor);
 
         #endregion
 
