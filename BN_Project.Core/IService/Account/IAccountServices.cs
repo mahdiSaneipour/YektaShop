@@ -22,8 +22,6 @@ namespace BN_Project.Core.IService.Account
 
         public Task<DataResponse<UserEntity>> ForgotPassword(string email);
 
-        public Task<DataResponse<UserInformationViewModel>> GetUserByEmail(string email);
-
         public Task<bool> ResetPassword(ResetPasswordViewModel resetPassword);
 
         public void ChangeActivationCode(UserEntity user);

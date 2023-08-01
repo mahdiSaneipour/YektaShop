@@ -23,7 +23,7 @@ namespace BN_Project.Core.Service.Account
         {
             DataResponse<UserEntity> result = new DataResponse<UserEntity>();
 
-            var user = await _accountRepository.GetUserByEmail(register.Email);
+            var user = await _accountRepository.GetSingle(n => n.Email == register.Email);
 
             if (user != null)
             {
@@ -41,12 +41,12 @@ namespace BN_Project.Core.Service.Account
                 Password = Tools.Tools.EncodePasswordMd5(register.Password)
             };
 
-            user = await _accountRepository.RegisterUsere(userEntity);
+            await _accountRepository.Insert(userEntity);
             await _accountRepository.SaveChanges();
 
             result.Status = Response.Status.Status.Success;
             result.Message = "ورود با موفقیت انجام شد";
-            result.Data = user;
+            result.Data = userEntity;
 
             return result;
         }
@@ -54,7 +54,7 @@ namespace BN_Project.Core.Service.Account
         public async Task<DataResponse<UserInformationViewModel>> GetUserInformationById(int Id)
         {
             DataResponse<UserInformationViewModel> result = new DataResponse<UserInformationViewModel>();
-            var user = await _accountRepository.GetUserById(Id);
+            var user = await _accountRepository.GetSingle(n => n.Id == Id);
             result.Data = new UserInformationViewModel();
 
             if (user != null)
@@ -77,7 +77,7 @@ namespace BN_Project.Core.Service.Account
         public async Task<DataResponse<UserEntity>> ForgotPassword(string email)
         {
             DataResponse<UserEntity> result = new DataResponse<UserEntity>();
-            var user = await _accountRepository.GetUserByEmail(email);
+            var user = await _accountRepository.GetSingle(n => n.Email == email);
 
             if (user == null)
             {
@@ -98,7 +98,7 @@ namespace BN_Project.Core.Service.Account
         {
             BaseResponse result = new BaseResponse();
             await Console.Out.WriteLineAsync("token : " + token);
-            var user = _accountRepository.GetUserByToken(token).Result;
+            var user = await _accountRepository.GetSingle(n => n.ActivationCode == token);
 
             if (user == null)
             {
@@ -121,7 +121,7 @@ namespace BN_Project.Core.Service.Account
         {
             DataResponse<UserEntity> result = new DataResponse<UserEntity>();
 
-            var user = await _accountRepository.GetUserByEmail(login.Email);
+            var user = await _accountRepository.GetSingle(n => n.Email == login.Email);
 
             if (user == null)
             {
@@ -154,28 +154,22 @@ namespace BN_Project.Core.Service.Account
             return result;
         }
 
-
-        public Task<DataResponse<UserInformationViewModel>> GetUserByEmail(string email)
-        {
-            throw new NotImplementedException();
-        }
-
         async void IAccountServices.UpdateUser(UpdateUserInfoViewModel user)
         {
             UserEntity userE = new UserEntity();
 
-            userE = await _accountRepository.GetUserById(user.Id);
+            userE = await _accountRepository.GetSingle(n => n.Id == user.Id);
             userE.Name = user.FullName;
             userE.PhoneNumber = user.PhoneNumber;
             userE.Password = user.Password;
-            _accountRepository.UpdateUser(userE);
+            _accountRepository.Update(userE);
 
             await _accountRepository.SaveChanges();
         }
 
         public async Task<bool> CheckPassword(int id, string password)
         {
-            var user = await _accountRepository.GetUserById(id);
+            var user = await _accountRepository.GetSingle(n => n.Id == id);
 
             if (user == null)
             {
@@ -192,7 +186,7 @@ namespace BN_Project.Core.Service.Account
 
         public async Task<bool> CheckToken(string token)
         {
-            var user = await _accountRepository.GetUserByToken(token);
+            var user = await _accountRepository.GetSingle(n => n.ActivationCode == token);
 
             if (user != null)
             {
@@ -204,7 +198,7 @@ namespace BN_Project.Core.Service.Account
 
         public async Task<bool> ResetPassword(ResetPasswordViewModel resetPassword)
         {
-            var user = await _accountRepository.GetUserByToken(resetPassword.Token);
+            var user = await _accountRepository.GetSingle(n => n.ActivationCode == resetPassword.Token);
 
             if (user == null)
             {
@@ -213,23 +207,24 @@ namespace BN_Project.Core.Service.Account
 
             user.Password = resetPassword.Password.EncodePasswordMd5();
 
-            _accountRepository.UpdateUser(user);
+            _accountRepository.Update(user);
             ChangeActivationCode(user);
 
             return true;
         }
 
-        public void ChangeActivationCode(UserEntity user)
+        public async void ChangeActivationCode(UserEntity user)
         {
             user.ActivationCode = Tools.Tools.GenerateUniqCode();
 
-            _accountRepository.UpdateUser(user);
-            _accountRepository.SaveChanges();
+            _accountRepository.Update(user);
+            await _accountRepository.SaveChanges();
         }
 
         public async void DeleteAccount(int Id)
         {
-            _accountRepository.DeleteUser(Id);
+            var item = await _accountRepository.GetSingle(n => n.Id == Id);
+            _accountRepository.Delete(item);
 
             await _accountRepository.SaveChanges();
         }
@@ -238,14 +233,14 @@ namespace BN_Project.Core.Service.Account
         {
             if (user.Password != null && user.NewPass != null && user.ConfirmNewPass != null)
             {
-                var currentUser = await _accountRepository.GetUserById(user.UserId);
+                var currentUser = await _accountRepository.GetSingle(n => n.Id == user.UserId);
 
                 string EncodedPassword = user.Password.EncodePasswordMd5();
                 if (EncodedPassword == currentUser.Password)
                 {
                     currentUser.Password = user.NewPass.EncodePasswordMd5();
 
-                    _accountRepository.UpdateUser(currentUser);
+                    _accountRepository.Update(currentUser);
                     await _accountRepository.SaveChanges();
 
                     return true;

@@ -5,48 +5,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BN_Project.Data.Repository
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : GenericRepository<UserEntity>, IUserRepository
     {
         private readonly BNContext _context;
-
         public UserRepository(BNContext context)
+            : base(context)
         {
             _context = context;
         }
-
-        public async Task<IQueryable<UserEntity>> GetAllUsers()
-        {
-            return _context.Users;
-        }
-
-        public async Task<UserEntity> GetUserById(int Id)
-        {
-            return await _context.Users.SingleOrDefaultAsync(n => n.Id == Id);
-        }
-
         public async Task<bool> IsEmailExist(string email)
         {
-            return _context.Users.Any(u => u.Email == email);
+            return await _context.Users.Where(n => n.Email == email).AnyAsync() == true;
         }
 
         public async Task<bool> IsPhoneNumberExist(string phoneNumber)
         {
-            return _context.Users.Any(u => u.PhoneNumber == phoneNumber);
-        }
-
-        public void RemoveUser(UserEntity user)
-        {
-            _context.Remove(user);
-        }
-
-        async Task IUserRepository.AddUserFromAdmin(UserEntity user)
-        {
-            await _context.Users.AddAsync(user);
-        }
-
-        async Task IUserRepository.SaveChanges()
-        {
-            await _context.SaveChangesAsync();
+            return await _context.Users.Where(n => n.PhoneNumber == phoneNumber).AnyAsync();
         }
     }
 }
