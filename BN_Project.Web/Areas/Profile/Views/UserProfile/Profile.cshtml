@@ -1,4 +1,5 @@
 ﻿@{
+    ViewData["Title"] = "ویرایش مشخصات";
     Layout = "Profile/_ProfileLayout";
 }
 
@@ -16,7 +17,7 @@
                     <partial name="_UserInformationParial" model="Model" />
 
                     <!-- start of personal-info-fullname-modal -->
-                    <form asp-controller="UserProfile" asp-action="UpdateFullName" class="remodal remodal-xs" data-remodal-id="personal-info-fullname-modal"
+                    <form method="post" asp-controller="UserProfile" asp-action="UpdateFullName" class="remodal remodal-xs" data-remodal-id="personal-info-fullname-modal"
                           data-remodal-options="hashTracking: false">
                         <div class="remodal-header">
                             <div class="remodal-title">نام و نام خانوادگی</div>
@@ -35,7 +36,7 @@
                     </form>
                     <!-- end of personal-info-fullname-modal -->
                     <!-- start of personal-info-phone-number-modal -->
-                    <form class="remodal remodal-xs" data-remodal-id="personal-info-phone-number-modal"
+                    <form method="post" class="remodal remodal-xs" data-remodal-id="personal-info-phone-number-modal"
                           data-remodal-options="hashTracking: false" asp-controller="UserProfile" asp-action="UpdatePhoneNumber">
                         <div class="remodal-header">
                             <div class="remodal-title">شماره موبایل</div>

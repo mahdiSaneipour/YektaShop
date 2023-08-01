@@ -162,12 +162,12 @@ namespace BN_Project.Core.Service.Account
 
         async void IAccountServices.UpdateUser(UpdateUserInfoViewModel user)
         {
-            UserEntity userE = new UserEntity();
+            UserEntity userE = await _accountRepository.GetUserById(user.Id);
 
-            userE = await _accountRepository.GetUserById(user.Id);
             userE.Name = user.FullName;
             userE.PhoneNumber = user.PhoneNumber;
             userE.Password = user.Password;
+
             _accountRepository.UpdateUser(userE);
 
             await _accountRepository.SaveChanges();
