@@ -76,7 +76,7 @@ saveProfile.addEventListener("click", function () {
 
                 previousBanner.value = this.response.name;
 
-                image.src = "../../../images/gallery/normal/" + this.response.name;
+                image.src = "../../../../images/gallery/normal/" + this.response.name;
 
                 cropper.destroy();
 

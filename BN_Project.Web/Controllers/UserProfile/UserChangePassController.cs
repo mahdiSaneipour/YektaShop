@@ -10,22 +10,6 @@ namespace BN_Project.Web.Controllers.UserProfile
 {
     public class UserChangePassController : Controller
     {
-        private readonly IAccountServices _accountService;
-        public UserChangePassController(IAccountServices AccountService)
-        {
-            _accountService = AccountService;
-        }
 
-        private int GetCurrentUserId()
-        {
-            int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-            return UserId;
-        }
-
-
-        public IActionResult Index()
-        {
-            return View("~/Views/UserChangePass/ChangePassword.cshtml");
-        }
     }
 }

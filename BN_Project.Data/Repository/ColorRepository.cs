@@ -1,6 +1,7 @@
 ﻿using BN_Project.Data.Context;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace BN_Project.Data.Repository
 {
