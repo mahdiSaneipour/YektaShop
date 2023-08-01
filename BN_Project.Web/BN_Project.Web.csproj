@@ -360,6 +360,7 @@
     <ProjectReference Include="..\BN_Project.Core\BN_Project.Core.csproj" />
     <ProjectReference Include="..\BN_Project.Data\BN_Project.Data.csproj" />
     <ProjectReference Include="..\BN_Project.Domain\BN_Project.Domain.csproj" />
+    <ProjectReference Include="..\BN_Project.IoC\BN_Project.IoC.csproj" />
   </ItemGroup>
 
   <ItemGroup>
