@@ -1,11 +1,6 @@
 ﻿using BN_Project.Data.Context;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BN_Project.Data.Repository
 {
@@ -38,7 +33,7 @@ namespace BN_Project.Data.Repository
             throw new NotImplementedException();
         }
 
-        public Task UpdateColor(Color color)
+        public void UpdateColor(Color color)
         {
             throw new NotImplementedException();
         }

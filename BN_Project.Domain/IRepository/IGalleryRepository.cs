@@ -7,7 +7,7 @@ namespace BN_Project.Domain.IRepository
     {
         public void Delete(ProductGallery gallery);
 
-        public void Insert(ProductGallery gallery);
+        public Task Insert(ProductGallery gallery);
 
         public void Update(ProductGallery gallery);
 

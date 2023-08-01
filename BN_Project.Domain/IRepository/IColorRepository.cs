@@ -15,7 +15,7 @@ namespace BN_Project.Domain.IRepository
 
         public Task AddColor(Color color);
 
-        public Task UpdateColor(Color color);
+        public void UpdateColor(Color color);
 
         public Task SaveChanges();
     }

@@ -47,9 +47,9 @@ namespace BN_Project.Data.Repository
             return _context.Categories.FirstOrDefaultAsync(c => c.Id == id).Result.Title.ToString();
         }
 
-        public void Insert(Category category)
+        public async Task Insert(Category category)
         {
-            _context.Categories.Add(category);
+            await _context.Categories.AddAsync(category);
         }
 
         public async Task SaveChanges()
