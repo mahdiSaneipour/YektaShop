@@ -3,8 +3,17 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="IService\**" />
+    <Compile Remove="Service\**" />
+    <EmbeddedResource Remove="IService\**" />
+    <EmbeddedResource Remove="Service\**" />
+    <None Remove="IService\**" />
+    <None Remove="Service\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.0" />

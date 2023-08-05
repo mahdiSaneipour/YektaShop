@@ -27,7 +27,8 @@ namespace BN_Project.Core.Services.Interfaces
 
         public void ChangeActivationCode(UserEntity user);
 
-        public void UpdateUser(UpdateUserInfoViewModel user);
+        public Task<bool> UpdateUserFullName(UpdateUserInfoViewModel userInfo);
+        public Task<bool> UpdatePhoneNumber(UpdateUserInfoViewModel userInfo);
 
         public void DeleteAccount(int Id);
 

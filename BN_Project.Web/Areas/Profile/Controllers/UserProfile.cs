@@ -16,6 +16,18 @@ namespace BN_Project.Web.Areas.Profile.Controllers
             _userServices = UserServices;
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+
+        private DataResponse<UserInformationViewModel> GetCurrentUser()
+        {
+            int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
+            var user = _userServices.GetUserInformationById(UserId).Result;
+            return user;
+        }
         private int GetCurrentUserId()
         {
             int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
@@ -45,23 +57,10 @@ namespace BN_Project.Web.Areas.Profile.Controllers
 
             if (result)
             {
-                return RedirectToAction("Index");
+                return Redirect("~/Account/Account/Logout");
             }
 
             ModelState.AddModelError("Password", "رمز عبور صحیح نمیباشد");
-            return View();
-        }
-
-        private DataResponse<UserInformationViewModel> GetCurrentUser()
-        {
-            int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-            var user = _userServices.GetUserInformationById(UserId).Result;
-            return user;
-        }
-
-
-        public IActionResult Index()
-        {
             return View();
         }
 
@@ -74,24 +73,16 @@ namespace BN_Project.Web.Areas.Profile.Controllers
             return View("Profile", UserInformationVM);
         }
 
-        public IActionResult UpdatePhoneNumber(UserInformationViewModel UserInformationVM)
+        public async Task<IActionResult> UpdatePhoneNumber(UserInformationViewModel UserInformationVM)
         {
-            if (UserInformationVM.PhoneNumber != null)
+            UpdateUserInfoViewModel user = new UpdateUserInfoViewModel()
             {
-                UpdateUserInfoViewModel updateUserVM = new UpdateUserInfoViewModel();
-
-                var user = GetCurrentUser();
-
-                updateUserVM.PhoneNumber = UserInformationVM.PhoneNumber;
-                updateUserVM.FullName = user.Data.FullName;
-                updateUserVM.Id = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-
-                _userServices.UpdateUser(updateUserVM);
-
-                user.Data.PhoneNumber = updateUserVM.PhoneNumber;
-                UserInformationVM = user.Data;
-
-                return View("Profile", UserInformationVM);
+                Id = GetCurrentUserId(),
+                PhoneNumber = UserInformationVM.PhoneNumber
+            };
+            if (await _userServices.UpdatePhoneNumber(user))
+            {
+                return Redirect("Profile");
             }
             else
             {
@@ -101,22 +92,15 @@ namespace BN_Project.Web.Areas.Profile.Controllers
 
         public async Task<IActionResult> UpdateFullName(UserInformationViewModel UserInformationVM)
         {
-            if (UserInformationVM.FullName != null)
+            UpdateUserInfoViewModel user = new UpdateUserInfoViewModel()
             {
-                UpdateUserInfoViewModel updateUserVM = new UpdateUserInfoViewModel();
+                Id = GetCurrentUserId(),
+                FullName = UserInformationVM.FullName
+            };
 
-                var user = GetCurrentUser();
-
-                updateUserVM.FullName = UserInformationVM.FullName;
-                updateUserVM.PhoneNumber = user.Data.PhoneNumber;
-                updateUserVM.Id = GetCurrentUserId();
-
-                _userServices.UpdateUser(updateUserVM);
-
-                user.Data.FullName = updateUserVM.FullName;
-                UserInformationVM = user.Data;
-
-                return View("Profile", UserInformationVM);
+            if (await _userServices.UpdateUserFullName(user))
+            {
+                return Redirect("Profile");
             }
             else
             {
