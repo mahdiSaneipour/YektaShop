@@ -246,8 +246,6 @@ namespace BN_Project.Core.Services.Implementations
             _productRepository.Update(product);
             await _productRepository.SaveChanges();
 
-            await Console.Out.WriteLineAsync("delete : " + product.IsDelete);
-
             result.Status = Status.Success;
             result.Message = "محصول با موفقیت حذف شد";
 
@@ -474,9 +472,144 @@ namespace BN_Project.Core.Services.Implementations
         public async Task<DataResponse<EditColorViewModel>> GetEditColor(int colorId)
         {
             DataResponse<EditColorViewModel> result = new DataResponse<EditColorViewModel>();
-            var ressult = _colorRepository.GetSingle(c => c.Id == colorId);
-            return result;
 
+            var color = await _colorRepository.GetColorWithProductInclude(colorId);
+
+            if (color == null)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "رنگی با این ایدی پیدا نشد";
+
+                return result;
+            }
+
+            EditColorViewModel model = new EditColorViewModel()
+            {
+                IsDefault = color.IsDefault,
+                Count = color.Count,
+                ColorId = color.Id,
+                Hex = color.Hex,
+                Name = color.Name,
+                Price = color.Price,
+                ProductName = color.Product.Name
+            };
+
+            result.Status = Status.Success;
+            result.Message = "رنگ با موفقیت پیدا شد";
+            result.Data = model;
+
+            return result;
+        }
+
+
+        public async Task<BaseResponse> ColorReadyForAddAndEdit()
+        {
+            BaseResponse result = new BaseResponse();
+
+            if (await _productRepository.IsThereAny())
+            {
+                result.Status = Status.Success;
+                result.Message = "محصول وجود دارد";
+
+                return result;
+            }
+
+            result.Status = Status.NotFound;
+            result.Message = "محصول وجود دارد";
+
+            return result;
+        }
+
+        public async Task<BaseResponse> ProductReadyForAddAndEdit()
+        {
+            BaseResponse result = new BaseResponse();
+
+            if (await _categoryRepository.IsThereAny())
+            {
+                result.Status = Status.Success;
+                result.Message = "دسته بندی وجود دارد";
+
+                return result;
+            }
+
+            result.Status = Status.NotFound;
+            result.Message = "دسته بندی وجود دارد";
+
+            return result;
+        }
+
+
+        public async Task<BaseResponse> EditColor(EditColorViewModel editColor)
+        {
+            BaseResponse result = new BaseResponse();
+
+            int productId = await _productRepository.GetProductIdByName(editColor.ProductName);
+
+            if (productId == 0)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "محصولی با این نام پیدا نشد";
+
+                return result;
+            }
+
+            if (editColor.IsDefault)
+            {
+                var defColor = await _colorRepository.GetSingle(c => c.ProductId == productId && c.Id != editColor.ColorId);
+
+                if (defColor != null)
+                {
+                    defColor.IsDefault = false;
+
+                    _colorRepository.Update(defColor);
+                    await _colorRepository.SaveChanges();
+                }
+
+            }
+
+            Color color = new Color()
+            {
+                IsDefault = editColor.IsDefault,
+                Count = editColor.Count,
+                Price = editColor.Price,
+                Id = editColor.ColorId,
+                ProductId = productId,
+                Name = editColor.Name,
+                Hex = editColor.Hex
+            };
+
+            _colorRepository.Update(color);
+            await _colorRepository.SaveChanges();
+
+            result.Status = Status.Success;
+            result.Message = "ویرایش رنگ با موفقیت انجام شد";
+
+            return result;
+        }
+
+        public async Task<BaseResponse> DeleteColorById(int colorId)
+        {
+            BaseResponse result = new BaseResponse();
+
+            var color = await _colorRepository.GetSingle(n => n.Id == colorId);
+
+            if (color == null)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "محصولی با این ایدی پیدا نشد";
+
+                return result;
+            }
+
+            color.IsDelete = true;
+
+            _colorRepository.Update(color);
+            await _colorRepository.SaveChanges();
+
+            result.Status = Status.Success;
+            result.Message = "رنگ با موفقیت حذف شد";
+
+            return result;
         }
 
         #endregion

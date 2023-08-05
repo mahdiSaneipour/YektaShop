@@ -21,6 +21,8 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<DataResponse<List<string>>> SearchProductByName(string name);
 
+        public Task<BaseResponse> ProductReadyForAddAndEdit();
+
         #endregion
 
         #region Categories
@@ -47,7 +49,13 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<BaseResponse> AddColor(AddColorViewModel addColor);
 
+        public Task<BaseResponse> EditColor(EditColorViewModel editColor);
+
         public Task<DataResponse<EditColorViewModel>> GetEditColor(int colorId);
+
+        public Task<BaseResponse> ColorReadyForAddAndEdit();
+
+        public Task<BaseResponse> DeleteColorById(int colorId);
 
         #endregion
 

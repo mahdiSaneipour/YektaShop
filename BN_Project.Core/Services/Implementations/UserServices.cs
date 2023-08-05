@@ -400,9 +400,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<bool> RemoveUserById(int Id)
+        public async Task<bool> RemoveUserById(int userId)
         {
-            var user = await _userRepository.GetSingle(n => n.Id == Id);
+            var user = await _userRepository.GetSingle(n => n.Id == userId);
             if (user == null)
                 return false;
 

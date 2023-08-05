@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BN_Project.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("[Controller]")]
     public class AdminController : Controller
     {
         private readonly IUserServices _userService;
@@ -24,6 +25,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         #region Users
 
+        [Route("Users")]
         public async Task<IActionResult> Users(int pageId = 1)
         {
             var result = await _userService.GetUsersForAdmin(pageId);
@@ -36,12 +38,14 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [Route("AddUser")]
         public async Task<IActionResult> AddUser()
         {
             return View();
         }
 
         [HttpPost]
+        [Route("Users")]
         public async Task<IActionResult> AddUser(AddUserViewModel addUser)
         {
             if (!ModelState.IsValid)
@@ -73,11 +77,12 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> RemoveUser(int Id)
+        [Route("RemoveUser/{userId}")]
+        public async Task<IActionResult> RemoveUser(int userId)
         {
-            if (await _userService.RemoveUserById(Id))
+            if (await _userService.RemoveUserById(userId))
             {
-                return RedirectToAction("Users", "Admin");
+                return RedirectToAction("Users");
             }
             else
             {
@@ -85,13 +90,15 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> EditUser(int Id)
+        [Route("EditUser/{userId}")]
+        public async Task<IActionResult> EditUser(int userId)
         {
-            var item = await _userService.GetUserById(Id);
-            return View("~/Views/Admin/EditUser.cshtml", item);
+            var item = await _userService.GetUserById(userId);
+            return View(item);
         }
 
         [HttpPost]
+        [Route("EditUser")]
         public async Task<IActionResult> EditUser(EditUserViewModel user)
         {
             if (!ModelState.IsValid)
@@ -127,6 +134,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         #region Products
 
+        [Route("Products")]
         public async Task<IActionResult> Products()
         {
             var result = await _productService.GetProducts();
@@ -139,8 +147,16 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [Route("AddProduct")]
         public async Task<IActionResult> AddProduct()
         {
+            var ready = await _productService.ProductReadyForAddAndEdit();
+
+            if (ready.Status == Status.NotFound)
+            {
+                return RedirectToAction("Categories");
+            }
+
             var categories = await _productService.GetParentCategories();
             ViewData["Categories"] = categories.Item1;
 
@@ -151,6 +167,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Route("AddProduct")]
         public async Task<IActionResult> AddProduct(AddProductViewModel addProduct)
         {
             if (!ModelState.IsValid)
@@ -178,8 +195,15 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return RedirectToAction("Products");
         }
 
+        [Route("EditProduct/{productId}")]
         public async Task<IActionResult> EditProduct(int productId)
         {
+            var ready = await _productService.ProductReadyForAddAndEdit();
+
+            if (ready.Status == Status.NotFound)
+            {
+                return RedirectToAction("Categories");
+            }
 
             EditProductViewModel model = new EditProductViewModel();
 
@@ -203,6 +227,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Route("EditProduct")]
         public async Task<IActionResult> EditProduct(EditProductViewModel editProduct)
         {
             var result = await _productService.EditProduct(editProduct);
@@ -220,16 +245,27 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return View(editProduct);
         }
 
+
+        [Route("DeleteProduct/{productId}")]
+        public async Task<IActionResult> DeleteProduct(int productId)
+        {
+            await _productService.DeleteProductByProductId(productId);
+
+            return RedirectToAction("Products");
+        }
+
         #endregion
 
         #region Categories
 
+        [Route("Categories")]
         public async Task<IActionResult> Categories()
         {
             var items = await _productService.GetAllCategories();
             return View(items);
         }
 
+        [Route("AddCategory")]
         public async Task<IActionResult> AddCategory()
         {
             AddCategoriesViewModel AddCategory = new AddCategoriesViewModel()
@@ -239,16 +275,8 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return View(AddCategory);
         }
 
-        public async Task<IActionResult> RemoveCategory(int Id)
-        {
-            if (Id == 0)
-                return NotFound();
-            if (await _productService.RemoveCatagory(Id))
-                return RedirectToAction("Categories", "Admin");
-            return NotFound();
-        }
-
         [HttpPost]
+        [Route("AddCategory")]
         public async Task<IActionResult> AddCategory(AddCategoriesViewModel category)
         {
             await _productService.AddCategory(category);
@@ -256,13 +284,25 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return RedirectToAction("Categories", "Admin");
         }
 
-        public async Task<IActionResult> EditCategory(int Id)
+        [Route("RemoveCategory")]
+        public async Task<IActionResult> RemoveCategory(int categoryId)
         {
-            var item = await _productService.GetCategoryById(Id);
+            if (categoryId == 0)
+                return NotFound();
+            if (await _productService.RemoveCatagory(categoryId))
+                return RedirectToAction("Categories", "Admin");
+            return NotFound();
+        }
+
+        [Route("EditCategory/{categoryId}")]
+        public async Task<IActionResult> EditCategory(int categoryId)
+        {
+            var item = await _productService.GetCategoryById(categoryId);
             return View(item);
         }
 
         [HttpPost]
+        [Route("EditCategory")]
         public async Task<IActionResult> EditCategory(EditCategoryViewModel category)
         {
             await _productService.EditCategory(category);
@@ -273,6 +313,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         #region Colors
 
+        [Route("Colors")]
         public async Task<IActionResult> Colors(int pageId = 1)
         {
             var result = await _productService.GetAllColors(pageId);
@@ -285,13 +326,21 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [Route("AddColor")]
         public async Task<IActionResult> AddColor()
         {
+            var ready = await _productService.ColorReadyForAddAndEdit();
 
-            return View();
+            if (ready.Status == Status.Success)
+            {
+                return View();
+            }
+
+            return RedirectToAction("Products");
         }
 
         [HttpPost]
+        [Route("AddColor")]
         public async Task<IActionResult> AddColor(AddColorViewModel addColor)
         {
             var result = await _productService.AddColor(addColor);
@@ -308,16 +357,73 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return View();
         }
 
+        [Route("EditColor/{colorId}")]
         public async Task<IActionResult> EditColor(int colorId)
         {
+            var ready = await _productService.ColorReadyForAddAndEdit();
+
+            if (ready.Status == Status.NotFound)
+            {
+                return RedirectToAction("Products");
+            }
+
             var result = await _productService.GetEditColor(colorId);
 
-            return View();
+            if (result.Status == Status.Success)
+            {
+                return View(result.Data);
+            }
+
+            return RedirectToAction("Colors");
+        }
+
+        [HttpPost]
+        [Route("EditColor")]
+        public async Task<IActionResult> EditColor(EditColorViewModel color)
+        {
+            if(!ModelState.IsValid)
+            {
+                var data = await _productService.GetEditColor(color.ColorId);
+                return View(data.Data);
+            }
+
+            var ready = await _productService.ColorReadyForAddAndEdit();
+
+            if (ready.Status == Status.NotFound)
+            {
+                return RedirectToAction("Products");
+            }
+
+            var result = await _productService.EditColor(color);
+
+            if (result.Status != Status.Success)
+            {
+                var data = await _productService.GetEditColor(color.ColorId);
+                return View(data.Data);
+
+            } else if (result.Status == Status.NotFound)
+            {
+                ModelState.AddModelError("ProductName", result.Message);
+
+                var data = await _productService.GetEditColor(color.ColorId);
+                return View(data.Data);
+            }
+
+            return RedirectToAction("Colors");
+        }
+
+        [Route("DeleteColorById/{colorId}")]
+        public async Task<IActionResult> DeleteColorById(int colorId)
+        {
+            await _productService.DeleteColorById(colorId);
+            return RedirectToAction("Colors");
         }
 
         #endregion
 
         #region Galleries
+
+        [Route("Gallery/{Id}")]
         public async Task<IActionResult> Gallery(int Id)
         {
             if (Id == 0)
@@ -328,6 +434,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return View(gallery);
         }
 
+        [Route("AddImage/{Id}")]
         public IActionResult AddImage(int Id)
         {
             AddGalleryViewModel addGallery = new AddGalleryViewModel()
@@ -338,6 +445,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Route("AddImage")]
         public async Task<IActionResult> AddImage(AddGalleryViewModel gallery)
         {
             if (!ModelState.IsValid)
@@ -348,6 +456,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return RedirectToAction("Gallery", "Admin", new { Id = gallery.ProductId });
         }
 
+        [Route("RemoveImage/{Id}")]
         public async Task<IActionResult> RemoveImage(int Id)
         {
             if (Id == 0)

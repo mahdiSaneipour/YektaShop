@@ -79,15 +79,6 @@ namespace BN_Project.Web.Api.Admin
         }
 
         [HttpGet]
-        [Route("DeleteProductByProductId/{productId}")]
-        [Produces("application/json")]
-        public IActionResult DeleteProductByProductId(int productId)
-        {
-            return Ok(_productServices.DeleteProductByProductId(productId));
-        }
-
-
-        [HttpGet]
         [Route("SearchProduct")]
         [Produces("application/json")]
         public IActionResult SearchProduct()
@@ -96,7 +87,7 @@ namespace BN_Project.Web.Api.Admin
             {
                 string filter = HttpContext.Request.Query["term"].ToString();
                 List<string> result = _productServices.SearchProductByName(filter).Result.Data;
-                Console.WriteLine("ssssssssssss : " + result.Count);
+
                 return Ok(result);
             }
             catch

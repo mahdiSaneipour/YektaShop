@@ -54,7 +54,7 @@
                         </span>
                     </td>
                     <td>
-                        <a class="btn btn-danger" onclick="is_delete(@Model[i-1].Id)">
+                        <a class="btn btn-danger" asp-controller="Admin" asp-action="DeleteProduct" asp-route-productId="@Model[i-1].Id" onclick="is_delete(this)">
                             <i class="fa fa-times"></i>
                             حذف
                         </a>
@@ -107,5 +107,5 @@
 }
 
 @section Scripts {
-    <script src="~/admin/js/delete-product.js"></script>
+    <script src="~/js/site.js"></script>
 }
