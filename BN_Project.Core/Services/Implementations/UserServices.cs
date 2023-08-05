@@ -11,12 +11,12 @@ using BN_Project.Domain.ViewModel.UserProfile;
 
 namespace BN_Project.Core.Services.Implementations
 {
-    public class UserService : IUserServices
+    public class UserServices : IUserServices
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IUserRepository _userRepository;
 
-        public UserService(
+        public UserServices(
             IAccountRepository accountRepository,
             IUserRepository userRepository)
         {

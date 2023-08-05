@@ -1,13 +1,11 @@
 ﻿using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
-using BN_Project.Domain.Entities;
 using BN_Project.Domain.ViewModel.Admin;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Drawing;
+using System.Web.Mvc;
 
-namespace BN_Project.Core.IService.Admin
+namespace BN_Project.Core.Services.Interfaces
 {
-    public interface IAdminServices
+    public interface IProductServices
     {
         #region Product
 

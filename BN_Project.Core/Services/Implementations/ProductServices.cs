@@ -1,30 +1,26 @@
-﻿using BN_Project.Core.IService.Admin;
-using BN_Project.Core.Response;
+﻿using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Response.Status;
-using BN_Project.Core.Tools;
+using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Admin;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Web.Mvc;
 
-namespace BN_Project.Core.Service.Admin
+namespace BN_Project.Core.Services.Implementations
 {
-    public class AdminServices : IAdminServices
+    public class ProductServices : IProductServices
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IAccountRepository _accountRepository;
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IColorRepository _colorRepository;
         private readonly IGalleryRepository _galleryRepository;
 
-        public AdminServices(IUserRepository userRepository, IAccountRepository accountRepository
-            , IProductRepository productRepository, ICategoryRepository categoryRepository,
-            IGalleryRepository galleryRepository, IColorRepository colorRepository)
+        public ProductServices(IProductRepository productRepository,
+            ICategoryRepository categoryRepository,
+            IGalleryRepository galleryRepository,
+            IColorRepository colorRepository)
         {
-            _userRepository = userRepository;
-            _accountRepository = accountRepository;
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _galleryRepository = galleryRepository;

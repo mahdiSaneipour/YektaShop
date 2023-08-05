@@ -1,5 +1,5 @@
-﻿using BN_Project.Core.IService.Admin;
-using BN_Project.Core.Response.Status;
+﻿using BN_Project.Core.Response.Status;
+using BN_Project.Core.Services.Implementations;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +8,14 @@ namespace BN_Project.Web.Areas.Admin.Controllers
     [Area("Admin")]
     public class AdminController : Controller
     {
-        private readonly IAdminServices _adminServices;
+        private readonly UserServices _userService;
+        private readonly ProductServices _productService;
 
-        public AdminController(IAdminServices adminServices)
+        public AdminController(UserServices userService,
+            ProductServices productService)
         {
-            _adminServices = adminServices;
+            _userService = userService;
+            _productService = productService;
         }
 
         public IActionResult Index()
@@ -24,7 +27,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Users(int pageId = 1)
         {
-            var result = await _adminServices.GetUsersForAdmin(pageId);
+            var result = await _userService.GetUsersForAdmin(pageId);
 
             if (result.Status == Status.Success || result.Status == Status.NotFound)
             {
@@ -47,7 +50,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 return View();
             }
 
-            var result = await _adminServices.AddUserFromAdmin(addUser);
+            var result = await _userService.AddUserFromAdmin(addUser);
 
             switch (result.Status)
             {
@@ -73,7 +76,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> RemoveUser(int Id)
         {
-            if (await _adminServices.RemoveUserById(Id))
+            if (await _userService.RemoveUserById(Id))
             {
                 return RedirectToAction("Users", "Admin");
             }
@@ -85,7 +88,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> EditUser(int Id)
         {
-            var item = await _adminServices.GetUserById(Id);
+            var item = await _userService.GetUserById(Id);
             return View("~/Views/Admin/EditUser.cshtml", item);
         }
 
@@ -97,7 +100,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 return View();
             }
 
-            var result = await _adminServices.EditUsers(user);
+            var result = await _userService.EditUsers(user);
 
             switch (result.Status)
             {
@@ -127,7 +130,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Products()
         {
-            var result = await _adminServices.GetProducts();
+            var result = await _productService.GetProducts();
 
             if (result.Status == Status.Success || result.Status == Status.NotFound)
             {
@@ -139,10 +142,10 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> AddProduct()
         {
-            var categories = await _adminServices.GetParentCategories();
+            var categories = await _productService.GetParentCategories();
             ViewData["Categories"] = categories.Item1;
 
-            ViewData["SubCategories"] = await _adminServices.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
+            ViewData["SubCategories"] = await _productService.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
 
             return View();
         }
@@ -152,22 +155,22 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var categories = await _adminServices.GetParentCategories();
+                var categories = await _productService.GetParentCategories();
                 ViewData["Categories"] = categories.Item1;
 
-                ViewData["SubCategories"] = await _adminServices.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
+                ViewData["SubCategories"] = await _productService.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
 
                 return View();
             }
 
-            var result = await _adminServices.AddProduct(addProduct);
+            var result = await _productService.AddProduct(addProduct);
 
             if (result.Status != Status.Success)
             {
-                var categories = await _adminServices.GetParentCategories();
+                var categories = await _productService.GetParentCategories();
                 ViewData["Categories"] = categories.Item1;
 
-                ViewData["SubCategories"] = await _adminServices.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
+                ViewData["SubCategories"] = await _productService.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
 
                 return View();
             }
@@ -180,7 +183,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             EditProductViewModel model = new EditProductViewModel();
 
-            var result = await _adminServices.GetProductForEdit(productId);
+            var result = await _productService.GetProductForEdit(productId);
 
             if (result.Status == Status.Success)
             {
@@ -191,10 +194,10 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 return RedirectToAction("Products");
             }
 
-            var categories = await _adminServices.GetParentCategories(model.CategoryId);
+            var categories = await _productService.GetParentCategories(model.CategoryId);
             ViewData["Categories"] = categories.Item1;
 
-            ViewData["SubCategories"] = await _adminServices.GetSubCategories((int)categories.Item2, model.CategoryId);
+            ViewData["SubCategories"] = await _productService.GetSubCategories((int)categories.Item2, model.CategoryId);
 
             return View(model);
         }
@@ -202,17 +205,17 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> EditProduct(EditProductViewModel editProduct)
         {
-            var result = await _adminServices.EditProduct(editProduct);
+            var result = await _productService.EditProduct(editProduct);
 
             if (result.Status == Status.Success)
             {
                 return RedirectToAction("Products");
             }
 
-            var categories = await _adminServices.GetParentCategories(editProduct.CategoryId);
+            var categories = await _productService.GetParentCategories(editProduct.CategoryId);
             ViewData["Categories"] = categories.Item1;
 
-            ViewData["SubCategories"] = await _adminServices.GetSubCategories((int)categories.Item2, editProduct.CategoryId);
+            ViewData["SubCategories"] = await _productService.GetSubCategories((int)categories.Item2, editProduct.CategoryId);
 
             return View(editProduct);
         }
@@ -223,7 +226,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Categories()
         {
-            var items = await _adminServices.GetAllCategories();
+            var items = await _productService.GetAllCategories();
             return View(items);
         }
 
@@ -231,7 +234,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             AddCategoriesViewModel AddCategory = new AddCategoriesViewModel()
             {
-                Categories = await _adminServices.GetAllCategories()
+                Categories = await _productService.GetAllCategories()
             };
             return View(AddCategory);
         }
@@ -240,7 +243,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             if (Id == 0)
                 return NotFound();
-            if (await _adminServices.RemoveCatagory(Id))
+            if (await _productService.RemoveCatagory(Id))
                 return RedirectToAction("Categories", "Admin");
             return NotFound();
         }
@@ -248,21 +251,21 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCategory(AddCategoriesViewModel category)
         {
-            await _adminServices.AddCategory(category);
+            await _productService.AddCategory(category);
 
             return RedirectToAction("Categories", "Admin");
         }
 
         public async Task<IActionResult> EditCategory(int Id)
         {
-            var item = await _adminServices.GetCategoryById(Id);
+            var item = await _productService.GetCategoryById(Id);
             return View(item);
         }
 
         [HttpPost]
         public async Task<IActionResult> EditCategory(EditCategoryViewModel category)
         {
-            await _adminServices.EditCategory(category);
+            await _productService.EditCategory(category);
             return RedirectToAction("Categories", "Admin");
         }
 
@@ -272,7 +275,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Colors(int pageId = 0)
         {
-            var result = await _adminServices.GetAllColors(pageId);
+            var result = await _productService.GetAllColors(pageId);
 
             if (result.Status == Status.Success || result.Status == Status.NotFound)
             {
@@ -291,7 +294,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddColor(AddColorViewModel addColor)
         {
-            var result = await _adminServices.AddColor(addColor);
+            var result = await _productService.AddColor(addColor);
 
             if (result.Status == Status.Success)
             {
@@ -312,7 +315,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             if (Id == 0)
                 return NotFound();
-            var gallery = await _adminServices.GetGalleryByProductId(Id);
+            var gallery = await _productService.GetGalleryByProductId(Id);
             gallery.PriductId = Id;
 
             return View(gallery);
@@ -332,7 +335,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            if (!await _adminServices.AddGalleryImage(gallery))
+            if (!await _productService.AddGalleryImage(gallery))
                 return View();
 
             return RedirectToAction("Gallery", "Admin", new { Id = gallery.ProductId });
@@ -342,7 +345,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             if (Id == 0)
                 return NotFound();
-            int ProductId = await _adminServices.RemoveGalleryImage(Id);
+            int ProductId = await _productService.RemoveGalleryImage(Id);
 
             return RedirectToAction("Gallery", "Admin", new { Id = ProductId });
         }
