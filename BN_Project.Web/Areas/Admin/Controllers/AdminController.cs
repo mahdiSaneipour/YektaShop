@@ -273,7 +273,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         #region Colors
 
-        public async Task<IActionResult> Colors(int pageId = 0)
+        public async Task<IActionResult> Colors(int pageId = 1)
         {
             var result = await _productService.GetAllColors(pageId);
 
@@ -307,6 +307,8 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return View();
         }
+
+
 
         #endregion
 

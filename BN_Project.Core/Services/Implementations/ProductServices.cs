@@ -39,7 +39,7 @@ namespace BN_Project.Core.Services.Implementations
 
             if (products == null)
             {
-                result.Status = Response.Status.Status.NotFound;
+                result.Status = Status.NotFound;
                 result.Message = "محصولی وجود ندارد";
 
                 return result;
@@ -62,7 +62,7 @@ namespace BN_Project.Core.Services.Implementations
                 });
             }
 
-            result.Status = Response.Status.Status.Success;
+            result.Status = Status.Success;
             result.Message = "دریافت محصولات با موفقیت انجام شد";
             result.Data = data.AsReadOnly();
 
@@ -86,7 +86,7 @@ namespace BN_Project.Core.Services.Implementations
             await _productRepository.Insert(product);
             await _productRepository.SaveChanges();
 
-            result.Status = Response.Status.Status.Success;
+            result.Status = Status.Success;
             result.Message = "کاربر با موفقیت افزوده شد";
 
             return result;
@@ -101,12 +101,12 @@ namespace BN_Project.Core.Services.Implementations
             if (product == null)
                 if (product.Id == 0)
                 {
-                    result.Status = Response.Status.Status.Error;
+                    result.Status = Status.Error;
                     result.Message = "خطایی در سیستم رخ داده است";
                 }
                 else
                 {
-                    result.Status = Response.Status.Status.NotFound;
+                    result.Status = Status.NotFound;
                     result.Message = "محصول با این ایدی پیدا نشد";
 
                     return result;
@@ -123,7 +123,7 @@ namespace BN_Project.Core.Services.Implementations
                 Id = product.Id
             };
 
-            result.Status = Response.Status.Status.Success;
+            result.Status = Status.Success;
             result.Message = "محصول پیدا شد";
             result.Data = productMV;
 
@@ -358,11 +358,11 @@ namespace BN_Project.Core.Services.Implementations
 
             List<ListColorViewModel> data = new List<ListColorViewModel>();
 
-            var colors = await _colorRepository.GetAll();
+            var colors = await _colorRepository.GetAllColorsWithProductInclude();
 
             if (colors == null)
             {
-                result.Status = Response.Status.Status.NotFound;
+                result.Status = Status.NotFound;
                 result.Message = "رنگی وجود ندارد";
 
                 return result;
@@ -371,7 +371,7 @@ namespace BN_Project.Core.Services.Implementations
             int take = 10;
             int skip = (pageId - 1) * take;
 
-            var lColors = colors.ToList().Skip(skip).Take(take).OrderByDescending(u => u.ProductId).ToList();
+            var lColors = colors.Skip(skip).Take(take).OrderByDescending(u => u.ProductId).ToList();
 
             foreach (var color in lColors)
             {
@@ -388,7 +388,7 @@ namespace BN_Project.Core.Services.Implementations
                 });
             }
 
-            result.Status = Response.Status.Status.Success;
+            result.Status = Status.Success;
             result.Message = "دریافت رنگ ها با موفقیت انجام شد";
             result.Data = data.AsReadOnly();
 

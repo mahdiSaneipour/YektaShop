@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BN_Project.Web.Areas.Profile.Controllers
 {
+    [Authorize]
     [Area("Profile")]
     public class UserProfile : Controller
     {
@@ -22,13 +23,34 @@ namespace BN_Project.Web.Areas.Profile.Controllers
         }
 
 
-        public IActionResult ChangePassword()
+        public async Task<IActionResult> ChangePassword()
         {
-            return View();
+            UserLoginInformationViewModel model = new UserLoginInformationViewModel()
+            {
+                UserId = GetCurrentUserId()
+            };
+
+            return View(model);
         }
 
-        [BindProperty]
-        public UserInformationViewModel UserInformationVM { get; set; }
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(UserLoginInformationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var result = await _userServices.ChangeUserPassword(model);
+
+            if (result)
+            {
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("Password", "رمز عبور صحیح نمیباشد");
+            return View();
+        }
 
         private DataResponse<UserInformationViewModel> GetCurrentUser()
         {
@@ -37,23 +59,22 @@ namespace BN_Project.Web.Areas.Profile.Controllers
             return user;
         }
 
-        [Authorize]
+
         public IActionResult Index()
         {
             return View();
         }
 
-        [Authorize]
         public IActionResult Profile()
         {
             var user = GetCurrentUser();
-            UserInformationVM = new UserInformationViewModel();
+            UserInformationViewModel UserInformationVM = new UserInformationViewModel();
             UserInformationVM = user.Data;
 
             return View("Profile", UserInformationVM);
         }
 
-        public IActionResult UpdatePhoneNumber()
+        public IActionResult UpdatePhoneNumber(UserInformationViewModel UserInformationVM)
         {
             if (UserInformationVM.PhoneNumber != null)
             {
@@ -78,7 +99,7 @@ namespace BN_Project.Web.Areas.Profile.Controllers
             }
         }
 
-        public IActionResult UpdateFullName()
+        public async Task<IActionResult> UpdateFullName(UserInformationViewModel UserInformationVM)
         {
             if (UserInformationVM.FullName != null)
             {
@@ -88,7 +109,7 @@ namespace BN_Project.Web.Areas.Profile.Controllers
 
                 updateUserVM.FullName = UserInformationVM.FullName;
                 updateUserVM.PhoneNumber = user.Data.PhoneNumber;
-                updateUserVM.Id = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
+                updateUserVM.Id = GetCurrentUserId();
 
                 _userServices.UpdateUser(updateUserVM);
 
