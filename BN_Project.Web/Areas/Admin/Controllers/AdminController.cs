@@ -1,18 +1,17 @@
 ﻿using BN_Project.Core.Response.Status;
-using BN_Project.Core.Services.Implementations;
+using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc;
-
 namespace BN_Project.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class AdminController : Controller
     {
-        private readonly UserServices _userService;
-        private readonly ProductServices _productService;
+        private readonly IUserServices _userService;
+        private readonly IProductServices _productService;
 
-        public AdminController(UserServices userService,
-            ProductServices productService)
+        public AdminController(IUserServices userService,
+            IProductServices productService)
         {
             _userService = userService;
             _productService = productService;
@@ -145,7 +144,8 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             var categories = await _productService.GetParentCategories();
             ViewData["Categories"] = categories.Item1;
 
-            ViewData["SubCategories"] = await _productService.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
+            var id = categories.Item1.FirstOrDefault();
+            ViewData["SubCategories"] = await _productService.GetSubCategories(int.Parse(id.Value));
 
             return View();
         }
@@ -308,7 +308,12 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return View();
         }
 
+        public async Task<IActionResult> EditColor(int colorId)
+        {
+            var result = await _productService.GetEditColor(colorId);
 
+            return View();
+        }
 
         #endregion
 

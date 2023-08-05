@@ -1,7 +1,7 @@
 ﻿using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
 using BN_Project.Domain.ViewModel.Admin;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BN_Project.Core.Services.Interfaces
 {
@@ -46,6 +46,8 @@ namespace BN_Project.Core.Services.Interfaces
         public Task<DataResponse<IReadOnlyList<ListColorViewModel>>> GetAllColors(int pageId);
 
         public Task<BaseResponse> AddColor(AddColorViewModel addColor);
+
+        public Task<DataResponse<EditColorViewModel>> GetEditColor(int colorId);
 
         #endregion
 
