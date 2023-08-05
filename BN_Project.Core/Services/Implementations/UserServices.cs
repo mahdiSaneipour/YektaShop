@@ -159,19 +159,6 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        async void IUserServices.UpdateUser(UpdateUserInfoViewModel user)
-        {
-            UserEntity userE = new UserEntity();
-
-            userE = await _accountRepository.GetSingle(n => n.Id == user.Id);
-            userE.Name = user.FullName;
-            userE.PhoneNumber = user.PhoneNumber;
-            userE.Password = user.Password;
-            _accountRepository.Update(userE);
-
-            await _accountRepository.SaveChanges();
-        }
-
         public async Task<bool> CheckPassword(int id, string password)
         {
             var user = await _accountRepository.GetSingle(n => n.Id == id);
@@ -412,6 +399,40 @@ namespace BN_Project.Core.Services.Implementations
             await _userRepository.SaveChanges();
 
             return true;
+        }
+
+        public async Task<bool> UpdateUserFullName(UpdateUserInfoViewModel userInfo)
+        {
+            if (userInfo.FullName != null && userInfo.Id != 0)
+            {
+                var user = await _userRepository.GetSingle(n => n.Id == userInfo.Id);
+                user.Name = userInfo.FullName;
+                _userRepository.Update(user);
+                await _userRepository.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdatePhoneNumber(UpdateUserInfoViewModel userInfo)
+        {
+            if (userInfo.PhoneNumber != null && userInfo.Id != 0)
+            {
+                var user = await _userRepository.GetSingle(n => n.Id == userInfo.Id);
+                user.PhoneNumber = userInfo.PhoneNumber;
+
+                _userRepository.Update(user);
+                await _userRepository.SaveChanges();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
