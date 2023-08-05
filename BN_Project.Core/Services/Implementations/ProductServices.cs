@@ -1,16 +1,16 @@
-﻿using BN_Project.Core.IService.Admin;
-using BN_Project.Core.Response;
+﻿using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Response.Status;
+using BN_Project.Core.Services.Interfaces;
 using BN_Project.Core.Tools;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace BN_Project.Core.Service.Admin
+namespace BN_Project.Core.Services.Implementations
 {
-    public class AdminServices : IAdminServices
+    public class ProductServices : IProductServices
     {
         private readonly IUserRepository _userRepository;
         private readonly IAccountRepository _accountRepository;
@@ -19,7 +19,7 @@ namespace BN_Project.Core.Service.Admin
         private readonly IColorRepository _colorRepository;
         private readonly IGalleryRepository _galleryRepository;
 
-        public AdminServices(IUserRepository userRepository, IAccountRepository accountRepository
+        public ProductServices(IUserRepository userRepository, IAccountRepository accountRepository
             , IProductRepository productRepository, ICategoryRepository categoryRepository,
             IGalleryRepository galleryRepository, IColorRepository colorRepository)
         {
@@ -43,7 +43,7 @@ namespace BN_Project.Core.Service.Admin
 
             if (products == null)
             {
-                result.Status = Response.Status.Status.NotFound;
+                result.Status = Status.NotFound;
                 result.Message = "محصولی وجود ندارد";
 
                 return result;
@@ -66,7 +66,7 @@ namespace BN_Project.Core.Service.Admin
                 });
             }
 
-            result.Status = Response.Status.Status.Success;
+            result.Status = Status.Success;
             result.Message = "دریافت محصولات با موفقیت انجام شد";
             result.Data = data.AsReadOnly();
 
@@ -90,7 +90,7 @@ namespace BN_Project.Core.Service.Admin
             await _productRepository.Insert(product);
             await _productRepository.SaveChanges();
 
-            result.Status = Response.Status.Status.Success;
+            result.Status = Status.Success;
             result.Message = "کاربر با موفقیت افزوده شد";
 
             return result;
@@ -105,12 +105,12 @@ namespace BN_Project.Core.Service.Admin
             if (product == null)
                 if (product.Id == 0)
                 {
-                    result.Status = Response.Status.Status.Error;
+                    result.Status = Status.Error;
                     result.Message = "خطایی در سیستم رخ داده است";
                 }
                 else
                 {
-                    result.Status = Response.Status.Status.NotFound;
+                    result.Status = Status.NotFound;
                     result.Message = "محصول با این ایدی پیدا نشد";
 
                     return result;
@@ -127,7 +127,7 @@ namespace BN_Project.Core.Service.Admin
                 Id = product.Id
             };
 
-            result.Status = Response.Status.Status.Success;
+            result.Status = Status.Success;
             result.Message = "محصول پیدا شد";
             result.Data = productMV;
 
@@ -362,11 +362,11 @@ namespace BN_Project.Core.Service.Admin
 
             List<ListColorViewModel> data = new List<ListColorViewModel>();
 
-            var colors = await _colorRepository.GetAll();
+            var colors = await _colorRepository.GetAllColorsWithProductInclude();
 
             if (colors == null)
             {
-                result.Status = Response.Status.Status.NotFound;
+                result.Status = Status.NotFound;
                 result.Message = "رنگی وجود ندارد";
 
                 return result;
@@ -375,7 +375,7 @@ namespace BN_Project.Core.Service.Admin
             int take = 10;
             int skip = (pageId - 1) * take;
 
-            var lColors = colors.ToList().Skip(skip).Take(take).OrderByDescending(u => u.ProductId).ToList();
+            var lColors = colors.Skip(skip).Take(take).OrderByDescending(u => u.ProductId).ToList();
 
             foreach (var color in lColors)
             {
@@ -392,7 +392,7 @@ namespace BN_Project.Core.Service.Admin
                 });
             }
 
-            result.Status = Response.Status.Status.Success;
+            result.Status = Status.Success;
             result.Message = "دریافت رنگ ها با موفقیت انجام شد";
             result.Data = data.AsReadOnly();
 

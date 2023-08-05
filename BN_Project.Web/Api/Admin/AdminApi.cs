@@ -1,4 +1,4 @@
-﻿using BN_Project.Core.IService.Admin;
+﻿using BN_Project.Core.Services.Interfaces;
 using BN_Project.Core.Tools.Image;
 using BN_Project.Core.Tools.ImageResizer;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +9,11 @@ namespace BN_Project.Web.Api.Admin
     [ApiController]
     public class AdminApi : ControllerBase
     {
-        private readonly IAdminServices _adminServices;
+        private readonly IProductServices _productServices;
 
-        public AdminApi(IAdminServices adminServices)
+        public AdminApi(IProductServices productServices)
         {
-            _adminServices = adminServices;
+            _productServices = productServices;
         }
 
         [HttpPost]
@@ -75,7 +75,7 @@ namespace BN_Project.Web.Api.Admin
         [Produces("application/json")]
         public IActionResult GetSubCategoryByCategoryId(int categoryId)
         {
-            return Ok(_adminServices.GetSubCategories(categoryId).Result);
+            return Ok(_productServices.GetSubCategories(categoryId).Result);
         }
 
         [HttpGet]
@@ -83,7 +83,7 @@ namespace BN_Project.Web.Api.Admin
         [Produces("application/json")]
         public IActionResult DeleteProductByProductId(int productId)
         {
-            return Ok(_adminServices.DeleteProductByProductId(productId));
+            return Ok(_productServices.DeleteProductByProductId(productId));
         }
 
 
@@ -95,7 +95,7 @@ namespace BN_Project.Web.Api.Admin
             try
             {
                 string filter = HttpContext.Request.Query["term"].ToString();
-                List<string> result = _adminServices.SearchProductByName(filter).Result.Data;
+                List<string> result = _productServices.SearchProductByName(filter).Result.Data;
                 Console.WriteLine("ssssssssssss : " + result.Count);
                 return Ok(result);
             }

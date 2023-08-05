@@ -41,7 +41,7 @@ namespace BN_Project.Web.Areas.Profile.Controllers
                 return View();
             }
 
-            var result = await _accountService.ChangeUserPassword(model);
+            var result = await _userServices.ChangeUserPassword(model);
 
             if (result)
             {

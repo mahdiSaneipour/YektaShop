@@ -1,6 +1,4 @@
-﻿using BN_Project.Core.IService.Admin;
-using BN_Project.Core.Service.Admin;
-using BN_Project.Core.Services.Implementations;
+﻿using BN_Project.Core.Services.Implementations;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Data.Repository;
 using BN_Project.Domain.IRepository;
@@ -21,7 +19,7 @@ namespace BN_Project.IoC
             services.AddScoped<IGalleryRepository, GalleryRepository>();
 
             services.AddScoped<IUserServices, UserService>();
-            services.AddScoped<IAdminServices, AdminServices>();
+            services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IViewRenderService, RenderViewToString>();
         }
     }
