@@ -5,7 +5,7 @@ using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Admin;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BN_Project.Core.Services.Implementations
 {
@@ -347,6 +347,34 @@ namespace BN_Project.Core.Services.Implementations
             return galleryImages;
         }
 
+
+        public async Task<bool> AddGalleryImage(AddGalleryViewModel gallery)
+        {
+            if (gallery.ImageName == null || gallery.ProductId == 0)
+                return false;
+            ProductGallery productGallery = new ProductGallery()
+            {
+                ImageName = gallery.ImageName,
+                ProductId = gallery.ProductId
+            };
+            await _galleryRepository.Insert(productGallery);
+
+            await _galleryRepository.SaveChanges();
+
+            return true;
+        }
+
+        public async Task<int> RemoveGalleryImage(int imageId)
+        {
+            var item = await _galleryRepository.GetSingle(n => n.Id == imageId);
+            item.IsDelete = true;
+
+            _galleryRepository.Update(item);
+            await _galleryRepository.SaveChanges();
+
+            return item.ProductId;
+        }
+
         #endregion
 
         #region Colors
@@ -442,32 +470,15 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<bool> AddGalleryImage(AddGalleryViewModel gallery)
+
+        public async Task<DataResponse<EditColorViewModel>> GetEditColor(int colorId)
         {
-            if (gallery.ImageName == null || gallery.ProductId == 0)
-                return false;
-            ProductGallery productGallery = new ProductGallery()
-            {
-                ImageName = gallery.ImageName,
-                ProductId = gallery.ProductId
-            };
-            await _galleryRepository.Insert(productGallery);
+            DataResponse<EditColorViewModel> result = new DataResponse<EditColorViewModel>();
+            var ressult = _colorRepository.GetSingle(c => c.Id == colorId);
+            return result;
 
-            await _galleryRepository.SaveChanges();
-
-            return true;
         }
 
-        public async Task<int> RemoveGalleryImage(int imageId)
-        {
-            var item = await _galleryRepository.GetSingle(n => n.Id == imageId);
-            item.IsDelete = true;
-
-            _galleryRepository.Update(item);
-            await _galleryRepository.SaveChanges();
-
-            return item.ProductId;
-        }
         #endregion
     }
 }
