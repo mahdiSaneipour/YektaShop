@@ -8,6 +8,33 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Account\Data\**" />
+    <Compile Remove="Areas\Account\Models\**" />
+    <Compile Remove="Areas\Admin\Data\**" />
+    <Compile Remove="Areas\Admin\Models\**" />
+    <Compile Remove="Areas\Profile\Data\**" />
+    <Compile Remove="Areas\Profile\Models\**" />
+    <Content Remove="Areas\Account\Data\**" />
+    <Content Remove="Areas\Account\Models\**" />
+    <Content Remove="Areas\Admin\Data\**" />
+    <Content Remove="Areas\Admin\Models\**" />
+    <Content Remove="Areas\Profile\Data\**" />
+    <Content Remove="Areas\Profile\Models\**" />
+    <EmbeddedResource Remove="Areas\Account\Data\**" />
+    <EmbeddedResource Remove="Areas\Account\Models\**" />
+    <EmbeddedResource Remove="Areas\Admin\Data\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\**" />
+    <EmbeddedResource Remove="Areas\Profile\Data\**" />
+    <EmbeddedResource Remove="Areas\Profile\Models\**" />
+    <None Remove="Areas\Account\Data\**" />
+    <None Remove="Areas\Account\Models\**" />
+    <None Remove="Areas\Admin\Data\**" />
+    <None Remove="Areas\Admin\Models\**" />
+    <None Remove="Areas\Profile\Data\**" />
+    <None Remove="Areas\Profile\Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\admin\css\4095-rtl.css.map" />
     <None Include="wwwroot\admin\css\4095.css.map" />
     <None Include="wwwroot\admin\css\4095.less" />
@@ -364,14 +391,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Account\Data\" />
-    <Folder Include="Areas\Account\Models\" />
-    <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Profile\Data\" />
-    <Folder Include="Areas\Profile\Models\" />
     <Folder Include="Views\UserChangePass\" />
     <Folder Include="Views\UserProfile\" />
+    <Folder Include="wwwroot\admin\js\DatePicker\" />
     <Folder Include="wwwroot\images\avatar\thumb\" />
     <Folder Include="wwwroot\images\avatar\normal\" />
     <Folder Include="wwwroot\images\gallery\thumb\" />

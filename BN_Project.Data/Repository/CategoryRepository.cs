@@ -2,7 +2,6 @@
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace BN_Project.Data.Repository
 {

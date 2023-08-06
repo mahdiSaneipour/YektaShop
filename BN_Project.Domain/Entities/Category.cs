@@ -1,5 +1,6 @@
 ﻿using BN_Project.Domain.Entities.Common;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BN_Project.Domain.Entities
 {
@@ -9,7 +10,7 @@ namespace BN_Project.Domain.Entities
         public int? ParentId { get; set; }
 
         [ForeignKey("ParentId")]
-        public Category ParentCategory { get; set; }
+        public Category? ParentCategory { get; set; }
         [InverseProperty(nameof(ParentCategory))]
         public ICollection<Category> SubCategories { get; set; }
     }

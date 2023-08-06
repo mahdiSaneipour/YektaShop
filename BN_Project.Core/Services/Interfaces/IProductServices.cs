@@ -60,5 +60,11 @@ namespace BN_Project.Core.Services.Interfaces
         public Task<int> RemoveGalleryImage(int imageId);
 
         #endregion
+
+        #region Discount
+        public Task<List<DiscountViewModel>> GetAllDiscounts();
+
+        public Task<List<ProductsForDiscountViewModel>> GetAllProductsForDiscount();
+        #endregion
     }
 }
