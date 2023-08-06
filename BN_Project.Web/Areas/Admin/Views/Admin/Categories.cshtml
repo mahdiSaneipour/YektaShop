@@ -36,11 +36,11 @@
                         <td>@item.Name</td>
                         <td>@item.ParentCategoryName</td>
                         <td>
-                            <a class="btn btn-danger" asp-controller="Admin" asp-action="RemoveCategory" onclick="is_delete(this)" asp-route-Id="@item.Id">
+                            <a class="btn btn-danger" asp-controller="Admin" asp-action="RemoveCategory" onclick="is_delete(this)" asp-route-categoryId="@item.Id">
                                 <i class="fa fa-times"></i>
                                 حذف
                             </a>
-                            <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditCategory" asp-route-Id="@item.Id">
+                            <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditCategory" asp-route-categoryId="@item.Id">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                                 ویرایش
                             </a>

@@ -5,5 +5,7 @@ namespace BN_Project.Domain.IRepository
     public interface IColorRepository : IGenericRepositroy<Color>
     {
         public Task<IEnumerable<Color>> GetAllColorsWithProductInclude();
+
+        public Task<Color> GetColorWithProductInclude(int colorId);
     }
 }

@@ -65,11 +65,11 @@
                         }
                     </td>
                     <td>
-                        <a class="btn btn-danger" asp-controller="Admin" asp-action="RemoveUser" onclick="is_delete(this)" asp-route-Id="@Model[i-1].Id">
+                        <a class="btn btn-danger" asp-controller="Admin" asp-action="RemoveUser" asp-route-userId="@Model[i-1].Id" onclick="is_delete(this)">
                             <i class="fa fa-times"></i>
                             حذف
                         </a>
-                        <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditUser" asp-route-Id="@Model[i-1].Id">
+                        <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditUser" asp-route-userId="@Model[i-1].Id">
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                             ویرایش
                         </a>
