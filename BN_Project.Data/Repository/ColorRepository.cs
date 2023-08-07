@@ -24,5 +24,10 @@ namespace BN_Project.Data.Repository
         {
             return await _context.Colors.Include(c => c.Product).FirstOrDefaultAsync(c => c.Id == colorId);
         }
+
+        public async Task<List<string>> GetHexColorsByProductId(int productId)
+        {
+            return await _context.Colors.Where(c => c.ProductId == productId).Select(c => c.Hex).ToListAsync();
+        }
     }
 }

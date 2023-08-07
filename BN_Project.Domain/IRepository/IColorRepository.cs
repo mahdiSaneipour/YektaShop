@@ -7,5 +7,7 @@ namespace BN_Project.Domain.IRepository
         public Task<IEnumerable<Color>> GetAllColorsWithProductInclude();
 
         public Task<Color> GetColorWithProductInclude(int colorId);
+
+        public Task<List<string>> GetHexColorsByProductId(int productId);
     }
 }

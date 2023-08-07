@@ -51,4 +51,16 @@ input[type=checkbox], input[type=radio] {
 span.input-icon.is-default {
     display: flex;
 }
+
+.product-card-body {
+    padding-right: 5px;
+}
+
+.product-thumbnail {
+    margin-right: 8px;
+}
+
+.product-card.product-card-horizontal .product-card-body {
+    flex: 0 0 67%;
+}
 /*# sourceMappingURL=custom.css.map */

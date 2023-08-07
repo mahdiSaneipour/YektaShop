@@ -11,7 +11,10 @@ namespace BN_Project.Domain.Entities
 
         [ForeignKey("ParentId")]
         public Category? ParentCategory { get; set; }
+
         [InverseProperty(nameof(ParentCategory))]
         public ICollection<Category> SubCategories { get; set; }
+
+        public ICollection<Product> Products { get; set; }
     }
 }

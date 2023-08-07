@@ -4,6 +4,8 @@ using BN_Project.Core.Tools;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
+
 namespace BN_Project.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -92,7 +94,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             }
         }
 
-        [Route("EditUser/{userId}")]
+        [Route("EditUser")]
         public async Task<IActionResult> EditUser(int userId)
         {
             var item = await _userService.GetUserById(userId);
@@ -159,12 +161,6 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 return RedirectToAction("Categories");
             }
 
-            var categories = await _productService.GetParentCategories();
-            ViewData["Categories"] = categories.Item1;
-
-            var id = categories.Item1.FirstOrDefault();
-            ViewData["SubCategories"] = await _productService.GetSubCategories(int.Parse(id.Value));
-
             return View();
         }
 
@@ -184,7 +180,17 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             var result = await _productService.AddProduct(addProduct);
 
-            if (result.Status != Status.Success)
+            if (result.Status == Status.AlreadyHave)
+            {
+                ModelState.AddModelError("Title", result.Message);
+
+                var categories = await _productService.GetParentCategories();
+                ViewData["Categories"] = categories.Item1;
+
+                ViewData["SubCategories"] = await _productService.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
+
+                return View();
+            } else if(result.Status != Status.Success)
             {
                 var categories = await _productService.GetParentCategories();
                 ViewData["Categories"] = categories.Item1;
@@ -197,7 +203,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return RedirectToAction("Products");
         }
 
-        [Route("EditProduct/{productId}")]
+        [Route("EditProduct")]
         public async Task<IActionResult> EditProduct(int productId)
         {
             var ready = await _productService.ProductReadyForAddAndEdit();
@@ -205,6 +211,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             if (ready.Status == Status.NotFound)
             {
                 return RedirectToAction("Categories");
+
             }
 
             EditProductViewModel model = new EditProductViewModel();
@@ -214,16 +221,12 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             if (result.Status == Status.Success)
             {
                 model = result.Data;
-            }
-            else
+            } else
             {
                 return RedirectToAction("Products");
             }
 
-            var categories = await _productService.GetParentCategories(model.CategoryId);
-            ViewData["Categories"] = categories.Item1;
-
-            ViewData["SubCategories"] = await _productService.GetSubCategories((int)categories.Item2, model.CategoryId);
+            int categoryId = await _productService.GetCategoryIdByCategoryName(model.Category);
 
             return View(model);
         }
@@ -237,12 +240,12 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             if (result.Status == Status.Success)
             {
                 return RedirectToAction("Products");
+            } else if (result.Status == Status.AlreadyHave)
+            {
+                ModelState.AddModelError("Title", result.Message);
+
+                return View(editProduct);
             }
-
-            var categories = await _productService.GetParentCategories(editProduct.CategoryId);
-            ViewData["Categories"] = categories.Item1;
-
-            ViewData["SubCategories"] = await _productService.GetSubCategories((int)categories.Item2, editProduct.CategoryId);
 
             return View(editProduct);
         }
@@ -281,9 +284,22 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         [Route("AddCategory")]
         public async Task<IActionResult> AddCategory(AddCategoriesViewModel category)
         {
-            await _productService.AddCategory(category);
+            var result = await _productService.AddCategory(category);
 
-            return RedirectToAction("Categories", "Admin");
+            if(result)
+            {
+                return RedirectToAction("Categories", "Admin");
+            }
+            else
+            {
+                ModelState.AddModelError("Name","دسته بندی با این نام وجود دارد");
+
+                AddCategoriesViewModel AddCategory = new AddCategoriesViewModel()
+                {
+                    Categories = await _productService.GetAllCategories()
+                };
+                return View(AddCategory);
+            }
         }
 
         [Route("RemoveCategory")]
@@ -296,7 +312,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return NotFound();
         }
 
-        [Route("EditCategory/{categoryId}")]
+        [Route("EditCategory")]
         public async Task<IActionResult> EditCategory(int categoryId)
         {
             var item = await _productService.GetCategoryById(categoryId);
@@ -309,8 +325,18 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         [Route("EditCategory")]
         public async Task<IActionResult> EditCategory(EditCategoryViewModel category)
         {
-            await _productService.EditCategory(category);
-            return RedirectToAction("Categories", "Admin");
+            var result = await _productService.EditCategory(category);
+
+            if(result)
+            {
+                return RedirectToAction("Categories", "Admin");
+            }
+            else
+            {
+                ModelState.AddModelError("Name","دسته بندی با این نام وجود دارد");
+                var item = await _productService.GetCategoryById(category.Id);
+                return View(category);
+            }
         }
 
         #endregion
@@ -361,7 +387,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return View();
         }
 
-        [Route("EditColor/{colorId}")]
+        [Route("EditColor")]
         public async Task<IActionResult> EditColor(int colorId)
         {
             var ready = await _productService.ColorReadyForAddAndEdit();

@@ -308,7 +308,7 @@ namespace BN_Project.Data.Migrations
             modelBuilder.Entity("BN_Project.Domain.Entities.Product", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Category", "Category")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

@@ -2,11 +2,10 @@
 @{
     Layout = "Admin/_AdminLayout";
     ViewData["Title"] = "افزودن محصول";
-    SelectList categories = ViewData["Categories"] as SelectList;
-    SelectList subCategories = ViewData["SubCategories"] as SelectList;
 }
 
 <link rel="stylesheet" href="~/cropper/css/cropper.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <div class="widget-body">
     <div id="registration-form">
         <form method="post" asp-controller="Admin" asp-action="AddProduct">
@@ -34,18 +33,8 @@
 
             <div class="form-group">
                 <span class="input-icon icon-right">
-                    <select onchange="SetSubGroup(this)" asp-items="categories">
-
-                    </select>
-                </span>
-            </div>
-
-            <div class="form-group">
-                <span class="input-icon icon-right">
-                    <select id="sub-category" asp-for="CategoryId" asp-items="subCategories">
-
-                    </select>
-                    <span asp-validation-for="CategoryId"></span>
+                    <input id="category" asp-for="Category" class="form-control" placeholder="دسته بندی" />
+                    <span asp-validation-for="Category"></span>
                 </span>
             </div>
 
@@ -120,4 +109,15 @@
 @section scripts {
     <script src="~/cropper/js/cropper.js"></script>
     <script src="~/admin/js/admin-product-cropper.js"></script>
+    <script src="~/admin/js/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+    <script>
+
+
+        $(document).ready(function () {
+            $("#category").autocomplete({
+                source: '../../Api/AdminApi/SearchCategory'
+            });
+        })
+    </script>
 }

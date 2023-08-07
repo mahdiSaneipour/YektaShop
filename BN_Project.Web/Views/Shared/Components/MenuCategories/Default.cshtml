@@ -1,0 +1,36 @@
+﻿@model List<Category>
+
+<div class="vertical-menu">
+    <a href="#" class="vertical-menu-btn">دسته بندی کالاها <i class="ri-apps-fill icon"></i></a>
+    <div class="vertical-menu-items">
+        <ul>
+        @{
+            int i = 0;
+        }
+        @foreach (var category in Model.Where(c => c.ParentId == null))
+        {
+            <li class="mega-menu-category @((i == 0) ? "show" : "")">
+                    <a asp-area="Product" asp-controller="Products" asp-action="ProductsGroup" asp-route-categoryId="@category.Id">@category.Title</a>
+                @if(category.SubCategories != null) {
+                    <ul class="mega-menu">
+                        @foreach (var subCategory in Model.Where(c => c.ParentId == category.Id))
+                        {
+                                <li class="@((subCategory.SubCategories != null) ? " parent" : "")">
+                                    <a asp-area="Product" asp-controller="Products" asp-action="ProductsGroup" asp-route-categoryId="@subCategory.Id">@subCategory.Title</a>
+                                </li>
+
+                            @if(subCategory.SubCategories != null)
+                            {
+                                    @foreach(var subCategory2 in Model.Where(c => c.ParentId == subCategory.Id))
+                                    {
+                                        <li><a asp-area="Product" asp-controller="Products" asp-action="ProductsGroup" asp-route-categoryId="@subCategory2.Id">@subCategory2.Title</a></li>
+                                    }
+                                }
+                        }
+                    </ul>
+                }
+            </li>
+        }
+        </ul>
+    </div>
+</div>
