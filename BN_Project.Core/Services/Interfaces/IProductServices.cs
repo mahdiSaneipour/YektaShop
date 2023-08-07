@@ -1,6 +1,8 @@
 ﻿using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
+using BN_Project.Domain.Entities;
 using BN_Project.Domain.ViewModel.Admin;
+using BN_Project.Domain.ViewModel.Product;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BN_Project.Core.Services.Interfaces
@@ -10,6 +12,8 @@ namespace BN_Project.Core.Services.Interfaces
         #region Product
 
         public Task<DataResponse<IReadOnlyList<ProductListViewModel>>> GetProducts(int pageId = 1);
+
+        public Task<DataResponse<List<ListProductViewModel>>> GetProductsListShowByCategoryId(int categoryId);
 
         public Task<BaseResponse> AddProduct(AddProductViewModel addProduct);
 
@@ -40,6 +44,12 @@ namespace BN_Project.Core.Services.Interfaces
         public Task<EditCategoryViewModel> GetCategoryById(int Id);
 
         public Task<bool> EditCategory(EditCategoryViewModel category);
+
+        public Task<List<Category>> GetAllCategoriesForHeader();
+
+        public Task<DataResponse<List<string>>> SearchCategoriesByName(string name);
+
+        public Task<int> GetCategoryIdByCategoryName(string name);
 
         #endregion
 

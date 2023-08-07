@@ -95,5 +95,23 @@ namespace BN_Project.Web.Api.Admin
                 return BadRequest();
             }
         }
+
+        [HttpGet]
+        [Route("SearchCategory")]
+        [Produces("application/json")]
+        public IActionResult SearchCategory()
+        {
+            try
+            {
+                string filter = HttpContext.Request.Query["term"].ToString();
+                List<string> result = _productServices.SearchCategoriesByName(filter).Result.Data;
+
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }

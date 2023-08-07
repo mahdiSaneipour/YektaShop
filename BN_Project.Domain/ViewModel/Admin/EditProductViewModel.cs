@@ -26,7 +26,7 @@ namespace BN_Project.Domain.ViewModel.Admin
 
         [Display(Name = "دسته بندی محصول")]
         [Required(ErrorMessage = "{0} نمیتواند خالی باشد")]
-        public int CategoryId { get; set; }
+        public string Category { get; set; }
 
         [Display(Name = "توضیحات محصول")]
         [Required(ErrorMessage = "{0} نمیتواند خالی باشد")]

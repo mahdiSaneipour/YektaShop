@@ -5,6 +5,7 @@ using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Admin;
+using BN_Project.Domain.ViewModel.Product;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BN_Project.Core.Services.Implementations
@@ -73,10 +74,18 @@ namespace BN_Project.Core.Services.Implementations
         {
             BaseResponse result = new BaseResponse();
 
+            if(await _productRepository.IsProductNameExist(addProduct.Title))
+            {
+                result.Status = Status.AlreadyHave;
+                result.Message = "محصولی با این نام موجود است";
+
+                return result;
+            }
+
             Product product = new Product()
             {
                 Description = addProduct.Description,
-                CategoryId = addProduct.CategoryId,
+                CategoryId = await _categoryRepository.GetCategoryIdByName(addProduct.Category),
                 Features = addProduct.Feature,
                 Price = addProduct.Price,
                 Image = addProduct.Image,
@@ -87,7 +96,7 @@ namespace BN_Project.Core.Services.Implementations
             await _productRepository.SaveChanges();
 
             result.Status = Status.Success;
-            result.Message = "کاربر با موفقیت افزوده شد";
+            result.Message = "محصول با موفقیت افزوده شد";
 
             return result;
         }
@@ -96,7 +105,7 @@ namespace BN_Project.Core.Services.Implementations
         {
             DataResponse<EditProductViewModel> result = new DataResponse<EditProductViewModel>();
 
-            var product = await _productRepository.GetSingle(n => n.Id == productId);
+            var product = await _productRepository.GetProductByIdWithIncludeCategory(productId);
 
             if (product == null)
                 if (product.Id == 0)
@@ -115,7 +124,7 @@ namespace BN_Project.Core.Services.Implementations
             EditProductViewModel productMV = new EditProductViewModel()
             {
                 Description = product.Description,
-                CategoryId = product.CategoryId,
+                Category = product.Category.Title,
                 Feature = product.Features,
                 Price = product.Price,
                 Image = product.Image,
@@ -145,6 +154,40 @@ namespace BN_Project.Core.Services.Implementations
                 result.Status = Status.Success;
                 result.Message = "محصول ها با موفقیت پیدا شدند";
                 result.Data = data;
+            }
+
+            return result;
+        }
+
+        public async Task<DataResponse<List<ListProductViewModel>>> GetProductsListShowByCategoryId(int categoryId)
+        {
+            DataResponse<List<ListProductViewModel>> result = new DataResponse<List<ListProductViewModel>>();
+
+            var products = await _productRepository.GetProductsIncludeColorsByCategoryId(categoryId);
+
+            if (products != null)
+            {
+                List<ListProductViewModel> data = new List<ListProductViewModel>();
+
+                foreach (var product in products)
+                {
+                    data.Add(new ListProductViewModel
+                    {
+                        Colors = await _colorRepository.GetHexColorsByProductId(product.Id),
+                        ProductId = product.Id,
+                        Price = product.Price,
+                        Image = product.Image,
+                        Title = product.Name,
+                    });
+                }
+
+                result.Data = data;
+                result.Status = Status.Success;
+                result.Message = "محصوالات با موفقیت پیدا شدند";
+            } else
+            {
+                result.Status = Status.NotFound;
+                result.Message = "هیچ محصولی پیدا نشد";
             }
 
             return result;
@@ -203,6 +246,15 @@ namespace BN_Project.Core.Services.Implementations
                 return result;
             }
 
+            if (await _productRepository.IsProductNameExist(editProduct.Title, editProduct.Id))
+            {
+                result.Status = Status.AlreadyHave;
+                result.Message = "محصولی با این نام موجود است";
+
+                return result;
+            }
+
+
             if (product.Image != editProduct.Image)
             {
                 Tools.Image.UploadImage.DeleteFile(Directory.GetCurrentDirectory() + "/wwwroot/images/products/thumb/" + product.Image);
@@ -210,7 +262,7 @@ namespace BN_Project.Core.Services.Implementations
             }
 
             product.Description = editProduct.Description;
-            product.CategoryId = editProduct.CategoryId;
+            product.CategoryId = await _categoryRepository.GetCategoryIdByName(editProduct.Category);
             product.Features = editProduct.Feature;
             product.Price = editProduct.Price;
             product.Image = editProduct.Image;
@@ -272,6 +324,11 @@ namespace BN_Project.Core.Services.Implementations
 
         public async Task<bool> AddCategory(AddCategoriesViewModel category)
         {
+            if(await _categoryRepository.IsCategoryNameExist(category.Name))
+            {
+                return false;
+            }
+
             Category Category = new Category()
             {
                 Title = category.Name,
@@ -299,10 +356,14 @@ namespace BN_Project.Core.Services.Implementations
         public async Task<EditCategoryViewModel> GetCategoryById(int Id)
         {
             EditCategoryViewModel EditCategory = new EditCategoryViewModel();
+
             EditCategory.Categories = (List<Category>)await _categoryRepository.GetAll();
+
             var item = await _categoryRepository.GetSingle(n => n.Id == Id);
+
             EditCategory.Name = item.Title;
             EditCategory.Id = Id;
+
             if (item.ParentId != null)
                 EditCategory.CategoryId = item.ParentId;
 
@@ -311,6 +372,11 @@ namespace BN_Project.Core.Services.Implementations
 
         public async Task<bool> EditCategory(EditCategoryViewModel category)
         {
+            if (await _categoryRepository.IsCategoryNameExist(category.Name))
+            {
+                return false;
+            }
+
             var item = await _categoryRepository.GetSingle(n => n.Id == category.Id);
             item.Title = category.Name;
             item.ParentId = category.CategoryId;
@@ -321,6 +387,39 @@ namespace BN_Project.Core.Services.Implementations
             return true;
 
         }
+
+        public async Task<List<Category>> GetAllCategoriesForHeader()
+        {
+            List<Category> categories = await _categoryRepository.GetAllCategoryWithIncludeProducts();
+
+            return categories;
+        }
+
+        public async Task<DataResponse<List<string>>> SearchCategoriesByName(string name)
+        {
+            DataResponse<List<string>> result = new DataResponse<List<string>>();
+            List<string> data = await _categoryRepository.SearchCategoriesByName(name);
+
+            if (data == null)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "محصولی با این نام پیدا نشد";
+            }
+            else
+            {
+                result.Status = Status.Success;
+                result.Message = "محصول ها با موفقیت پیدا شدند";
+                result.Data = data;
+            }
+
+            return result;
+        }
+
+        public async Task<int> GetCategoryIdByCategoryName(string name)
+        {
+            return await _categoryRepository.GetCategoryIdByName(name);
+        }
+
         #endregion
 
         #region Gallery
@@ -376,7 +475,6 @@ namespace BN_Project.Core.Services.Implementations
         #endregion
 
         #region Colors
-
 
         public async Task<DataResponse<IReadOnlyList<ListColorViewModel>>> GetAllColors(int pageId)
         {
@@ -468,7 +566,6 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-
         public async Task<DataResponse<EditColorViewModel>> GetEditColor(int colorId)
         {
             DataResponse<EditColorViewModel> result = new DataResponse<EditColorViewModel>();
@@ -500,7 +597,6 @@ namespace BN_Project.Core.Services.Implementations
 
             return result;
         }
-
 
         public async Task<BaseResponse> ColorReadyForAddAndEdit()
         {
@@ -537,7 +633,6 @@ namespace BN_Project.Core.Services.Implementations
 
             return result;
         }
-
 
         public async Task<BaseResponse> EditColor(EditColorViewModel editColor)
         {
