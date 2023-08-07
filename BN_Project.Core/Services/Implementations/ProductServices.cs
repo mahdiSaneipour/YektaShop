@@ -16,16 +16,19 @@ namespace BN_Project.Core.Services.Implementations
         private readonly ICategoryRepository _categoryRepository;
         private readonly IColorRepository _colorRepository;
         private readonly IGalleryRepository _galleryRepository;
+        private readonly IDiscountRepository _discountRepository;
 
         public ProductServices(IProductRepository productRepository,
             ICategoryRepository categoryRepository,
             IGalleryRepository galleryRepository,
-            IColorRepository colorRepository)
+            IColorRepository colorRepository,
+            IDiscountRepository discountRepository)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _galleryRepository = galleryRepository;
             _colorRepository = colorRepository;
+            _discountRepository = discountRepository;
         }
 
         #region Products
@@ -707,6 +710,44 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
+        #endregion
+
+        #region Discount 
+        public async Task<List<DiscountViewModel>> GetAllDiscounts()
+        {
+            var items = await _discountRepository.GetAll();
+            List<DiscountViewModel> discounts = new List<DiscountViewModel>();
+            foreach (var item in items)
+            {
+                DiscountViewModel discount = new DiscountViewModel()
+                {
+                    Id = item.Id,
+                    Code = item.Code,
+                    StartDate = item.StartDate,
+                    ExpireDate = item.ExpireDate,
+                    Percent = item.Percent
+                };
+                discounts.Add(discount);
+            }
+
+
+            return discounts;
+        }
+
+        public async Task<List<ProductsForDiscountViewModel>> GetAllProductsForDiscount()
+        {
+            List<ProductsForDiscountViewModel> products = new List<ProductsForDiscountViewModel>();
+            var items = await _productRepository.GetAll();
+            foreach (var item in items)
+            {
+                ProductsForDiscountViewModel product = new ProductsForDiscountViewModel()
+                {
+                    Id = item.Id,
+                    Name = item.Name
+                };
+            }
+            return products;
+        }
         #endregion
     }
 }

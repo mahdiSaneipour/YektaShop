@@ -493,5 +493,20 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return RedirectToAction("Gallery", "Admin", new { Id = ProductId });
         }
         #endregion
+
+        #region Discount
+        public async Task<IActionResult> Discounts()
+        {
+            var items = await _productService.GetAllDiscounts();
+            return View(items);
+        }
+
+        public async Task<IActionResult> AddDiscount()
+        {
+            AddDiscountViewModel AddDiscount = new AddDiscountViewModel();
+            AddDiscount.Products = await _productService.GetAllProductsForDiscount();
+            return View(AddDiscount);
+        }
+        #endregion
     }
 }

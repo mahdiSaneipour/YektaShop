@@ -22,8 +22,10 @@ namespace BN_Project.Core.Tools
 
         public static string ConvertToShamsi(this DateTime value)
         {
-            PersianCalendar persianCalendar = new PersianCalendar();
-            string date = persianCalendar.GetYear(value) + "/" + persianCalendar.GetMonth(value) + "/" + persianCalendar.GetDayOfMonth(value);
+            PersianCalendar pc = new PersianCalendar();
+            string date = pc.GetYear(value) + "/" +
+                pc.GetMonth(value) + "/" +
+                pc.GetDayOfMonth(value);
 
             return date;
         }

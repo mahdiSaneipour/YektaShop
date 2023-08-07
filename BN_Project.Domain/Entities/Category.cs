@@ -1,5 +1,6 @@
 ﻿using BN_Project.Domain.Entities.Common;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BN_Project.Domain.Entities
 {
