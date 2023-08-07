@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BN_Project.Data.Migrations
 {
     [DbContext(typeof(BNContext))]
-    [Migration("20230805145619_UpdateTblDiscounts")]
-    partial class UpdateTblDiscounts
+    [Migration("20230806152921_addAllTbls")]
+    partial class addAllTbls
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,6 +123,35 @@ namespace BN_Project.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Discounts");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.DiscountProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DiscountsId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiscountsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("DiscountProduct");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Product", b =>
@@ -239,21 +268,6 @@ namespace BN_Project.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("DiscountProduct", b =>
-                {
-                    b.Property<int>("DiscountsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DiscountsId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("DiscountProduct");
-                });
-
             modelBuilder.Entity("BN_Project.Domain.Entities.Category", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Category", "ParentCategory")
@@ -271,6 +285,25 @@ namespace BN_Project.Data.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.DiscountProduct", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.Discount", "Discount")
+                        .WithMany("DiscountProduct")
+                        .HasForeignKey("DiscountsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BN_Project.Domain.Entities.Product", "Product")
+                        .WithMany("DiscountProduct")
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Discount");
 
                     b.Navigation("Product");
                 });
@@ -297,29 +330,21 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("DiscountProduct", b =>
-                {
-                    b.HasOne("BN_Project.Domain.Entities.Discount", null)
-                        .WithMany()
-                        .HasForeignKey("DiscountsId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("BN_Project.Domain.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BN_Project.Domain.Entities.Category", b =>
                 {
                     b.Navigation("SubCategories");
                 });
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
+                {
+                    b.Navigation("DiscountProduct");
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.Product", b =>
                 {
                     b.Navigation("Colors");
+
+                    b.Navigation("DiscountProduct");
                 });
 #pragma warning restore 612, 618
         }

@@ -38,10 +38,12 @@ namespace BN_Project.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Percent = table.Column<int>(type: "int", nullable: false)
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Percent = table.Column<int>(type: "int", nullable: false),
+                    Create = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,12 +127,16 @@ namespace BN_Project.Data.Migrations
                 name: "DiscountProduct",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     DiscountsId = table.Column<int>(type: "int", nullable: false),
-                    ProductsId = table.Column<int>(type: "int", nullable: false)
+                    ProductsId = table.Column<int>(type: "int", nullable: false),
+                    Create = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DiscountProduct", x => new { x.DiscountsId, x.ProductsId });
+                    table.PrimaryKey("PK_DiscountProduct", x => x.Id);
                     table.ForeignKey(
                         name: "FK_DiscountProduct_Discounts_DiscountsId",
                         column: x => x.DiscountsId,
@@ -176,6 +182,11 @@ namespace BN_Project.Data.Migrations
                 name: "IX_Colors_ProductId",
                 table: "Colors",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DiscountProduct_DiscountsId",
+                table: "DiscountProduct",
+                column: "DiscountsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DiscountProduct_ProductsId",

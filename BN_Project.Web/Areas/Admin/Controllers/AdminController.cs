@@ -1,5 +1,7 @@
 ﻿using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
+using BN_Project.Core.Tools;
+using BN_Project.Domain.Entities;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc;
 namespace BN_Project.Web.Areas.Admin.Controllers
@@ -298,6 +300,8 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         public async Task<IActionResult> EditCategory(int categoryId)
         {
             var item = await _productService.GetCategoryById(categoryId);
+            if (item.CategoryId == null)
+                item.CategoryId = 0;
             return View(item);
         }
 
@@ -381,7 +385,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         [Route("EditColor")]
         public async Task<IActionResult> EditColor(EditColorViewModel color)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var data = await _productService.GetEditColor(color.ColorId);
                 return View(data.Data);
@@ -401,7 +405,8 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 var data = await _productService.GetEditColor(color.ColorId);
                 return View(data.Data);
 
-            } else if (result.Status == Status.NotFound)
+            }
+            else if (result.Status == Status.NotFound)
             {
                 ModelState.AddModelError("ProductName", result.Message);
 
@@ -468,18 +473,93 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         #endregion
 
         #region Discount
+
+        [Route("Discounts")]
         public async Task<IActionResult> Discounts()
         {
             var items = await _productService.GetAllDiscounts();
             return View(items);
         }
 
+        [Route("AddDiscount")]
         public async Task<IActionResult> AddDiscount()
         {
             AddDiscountViewModel AddDiscount = new AddDiscountViewModel();
             AddDiscount.Products = await _productService.GetAllProductsForDiscount();
             return View(AddDiscount);
         }
+
+        [HttpPost]
+        [Route("AddDiscount")]
+        public async Task<IActionResult> AddDiscount(AddDiscountViewModel discount)
+        {
+            discount.StartDate = Convert.ToDateTime(discount.StartDate).ToMiladi();
+            discount.ExpireDate = Convert.ToDateTime(discount.ExpireDate).ToMiladi();
+
+            if (await _productService.AddDiscount(discount))
+            {
+                return RedirectToAction("Discounts", "Admin");
+            }
+            else
+            {
+                ModelState.AddModelError("Percent", "خطایی رخ داد لطفا دوباره امتحان کنید!");
+                return View(discount);
+            }
+        }
+
+        [Route("RemoveDiscount")]
+        public async Task<IActionResult> RemoveDiscount(int Id)
+        {
+            if (Id == 0)
+                return NotFound();
+            if (await _productService.RemoveDiscount(Id))
+            {
+                return RedirectToAction("Discounts", "Admin");
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [Route("ViewProductsForDiscount")]
+        public async Task<IActionResult> ViewProductsForDiscount(int Id)
+        {
+            if (Id == 0)
+                return NotFound();
+
+            var products = await _productService.GetListOfProducts(Id);
+
+            return View("ReturnProductsForDiscount", products);
+        }
+
+        [Route("EditDiscount/{Id}")]
+        public async Task<IActionResult> EditDiscount(int Id)
+        {
+            if (Id == 0)
+                return NotFound();
+            var item = await _productService.GetDiscountForEdit(Id);
+            item.Products = await _productService.GetAllProductsForDiscount();
+            return View(item);
+        }
+
+        [HttpPost]
+        [Route("EditDiscount")]
+        public async Task<IActionResult> EditDiscount(EditDiscountViewModel editDiscount)
+        {
+            editDiscount.StartDate = Convert.ToDateTime(editDiscount.StartDate).ToMiladi();
+            editDiscount.ExpireDate = Convert.ToDateTime(editDiscount.ExpireDate).ToMiladi();
+            if (await _productService.EditDiscount(editDiscount))
+            {
+                return RedirectToAction("Discounts", "Admin");
+            }
+            else
+            {
+                ModelState.AddModelError("Percent", "خطایی رخ داد لطفا دوباره امتحان کنید!");
+                return View(editDiscount);
+            }
+        }
+
         #endregion
     }
 }

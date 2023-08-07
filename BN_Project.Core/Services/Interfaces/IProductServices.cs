@@ -73,6 +73,14 @@ namespace BN_Project.Core.Services.Interfaces
         public Task<List<DiscountViewModel>> GetAllDiscounts();
 
         public Task<List<ProductsForDiscountViewModel>> GetAllProductsForDiscount();
+        public Task<bool> AddDiscount(AddDiscountViewModel discount);
+
+        public Task<bool> RemoveDiscount(int Id);
+
+        public Task<List<ProductsForDiscountViewModel>> GetListOfProducts(int Id);
+        public Task<EditDiscountViewModel> GetDiscountForEdit(int Id);
+
+        public Task<bool> EditDiscount(EditDiscountViewModel editDiscount);
         #endregion
     }
 }

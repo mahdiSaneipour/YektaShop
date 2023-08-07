@@ -6,6 +6,7 @@ using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Runtime.CompilerServices;
 
 namespace BN_Project.Core.Services.Implementations
 {
@@ -16,18 +17,21 @@ namespace BN_Project.Core.Services.Implementations
         private readonly IColorRepository _colorRepository;
         private readonly IGalleryRepository _galleryRepository;
         private readonly IDiscountRepository _discountRepository;
+        private readonly IDiscountProductRepository _discountProductRepository;
 
         public ProductServices(IProductRepository productRepository,
             ICategoryRepository categoryRepository,
             IGalleryRepository galleryRepository,
             IColorRepository colorRepository,
-            IDiscountRepository discountRepository)
+            IDiscountRepository discountRepository,
+            IDiscountProductRepository discountProductRepository)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _galleryRepository = galleryRepository;
             _colorRepository = colorRepository;
             _discountRepository = discountRepository;
+            _discountProductRepository = discountProductRepository;
         }
 
         #region Products
@@ -622,6 +626,12 @@ namespace BN_Project.Core.Services.Implementations
         {
             var items = await _discountRepository.GetAll();
             List<DiscountViewModel> discounts = new List<DiscountViewModel>();
+
+            //discounts.AddRange(items.Select(b => new DiscountViewModel
+            //{
+
+            //}).ToList());
+
             foreach (var item in items)
             {
                 DiscountViewModel discount = new DiscountViewModel()
@@ -650,8 +660,131 @@ namespace BN_Project.Core.Services.Implementations
                     Id = item.Id,
                     Name = item.Name
                 };
+
+                products.Add(product);
             }
             return products;
+        }
+
+        public async Task<bool> AddDiscount(AddDiscountViewModel discount)
+        {
+            if (discount.Percent < 0)
+                return false;
+            Discount item = new Discount()
+            {
+                Code = discount.Code,
+                StartDate = discount.StartDate,
+                ExpireDate = discount.ExpireDate,
+                Percent = discount.Percent,
+                DiscountProduct = discount.SelecetedGoods?.Select(b => new DiscountProduct
+                {
+                    ProductsId = b
+                }).ToList()
+            };
+
+            await _discountRepository.Insert(item);
+            await _discountRepository.SaveChanges();
+
+            return true;
+        }
+
+        public async Task<bool> RemoveDiscount(int Id)
+        {
+            var discount = await _discountRepository.GetDiscountWithProducts(Id);
+            discount.IsDelete = true;
+
+            foreach (var item in discount.DiscountProduct)
+            {
+                item.IsDelete = true;
+            }
+
+            _discountRepository.Update(discount);
+            await _discountRepository.SaveChanges();
+
+            return true;
+        }
+
+        public async Task<List<ProductsForDiscountViewModel>> GetListOfProducts(int Id)
+        {
+            List<ProductsForDiscountViewModel> products = new List<ProductsForDiscountViewModel>();
+
+            var discount = await _discountRepository.GetDiscountWithProducts(Id);
+
+            foreach (var item in discount.DiscountProduct)
+            {
+                ProductsForDiscountViewModel product = new ProductsForDiscountViewModel()
+                {
+                    Id = item.Product.Id,
+                    Name = item.Product.Name
+                };
+                products.Add(product);
+            }
+
+            return products;
+        }
+
+        public async Task<EditDiscountViewModel> GetDiscountForEdit(int Id)
+        {
+            var discount = await _discountRepository.GetDiscountWithProducts(Id);
+            EditDiscountViewModel editDiscount = new EditDiscountViewModel()
+            {
+                Code = discount.Code,
+                StartDate = discount.StartDate,
+                ExpireDate = discount.ExpireDate,
+                Percent = discount.Percent,
+                Id = discount.Id,
+                SelecetedGoods = discount.DiscountProduct.Select(n => n.ProductsId).ToList()
+            };
+
+            return editDiscount;
+        }
+
+        public async Task<bool> EditDiscount(EditDiscountViewModel editDiscount)
+        {
+            if (editDiscount.Percent != 0 && editDiscount.ExpireDate < editDiscount.StartDate)
+                return false;
+
+            var discount = await _discountRepository.GetDiscountWithProducts(editDiscount.Id);
+            discount.Code = editDiscount.Code;
+            discount.StartDate = editDiscount.StartDate;
+            discount.ExpireDate = editDiscount.ExpireDate;
+            discount.Percent = editDiscount.Percent;
+
+            foreach (var item in discount.DiscountProduct)
+            {
+                item.IsDelete = true;
+            }
+            foreach (var item in editDiscount.SelecetedGoods)
+            {
+                discount.DiscountProduct.Add(new DiscountProduct
+                {
+                    ProductsId = item,
+                    DiscountsId = discount.Id
+                });
+            }
+
+            _discountRepository.Update(discount);
+            await _discountRepository.SaveChanges();
+
+            //var discountProduct = await _discountProductRepository.GetAll(n => n.DiscountsId == discount.Id);
+            //foreach (var item in discountProduct)
+            //{
+            //    _discountProductRepository.Delete(item);
+            //}
+            //await _discountProductRepository.SaveChanges();
+
+            //if (editDiscount.SelecetedGoods != null && editDiscount.SelecetedGoods.Count() != 0)
+            //    foreach (var item in editDiscount.SelecetedGoods)
+            //    {
+            //        DiscountProduct DP = new DiscountProduct();
+            //        DP.ProductsId = item;
+            //        DP.DiscountsId = discount.Id;
+
+            //        await _discountProductRepository.Insert(DP);
+            //    }
+            //await _discountProductRepository.SaveChanges();
+
+            return true;
         }
         #endregion
     }

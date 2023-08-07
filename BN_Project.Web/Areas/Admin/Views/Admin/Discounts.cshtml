@@ -46,7 +46,7 @@
                         <td>@item.ExpireDate?.ConvertToShamsi()</td>
                         <td>@item.Percent</td>
                         <td>
-                            <a>
+                            <a asp-action="ViewProductsForDiscount" asp-controller="admin" asp-route-Id="@item.Id">
                                 مشاهده
                             </a>
                         </td>
@@ -101,3 +101,6 @@
         <!--Header Buttons End-->
     </div>
     }
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}

@@ -30,6 +30,12 @@ namespace BN_Project.Core.Tools
             return date;
         }
 
+        public static DateTime ToMiladi(this DateTime value)
+        {
+            PersianCalendar pc = new PersianCalendar();
+            return new DateTime(value.Year, value.Month, value.Day, pc);
+        }
+
         public static string EncodePasswordMd5(this string pass) //Encrypt using MD5   
         {
             Byte[] originalBytes;

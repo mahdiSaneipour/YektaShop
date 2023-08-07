@@ -19,6 +19,7 @@ namespace BN_Project.IoC
             services.AddScoped<IColorRepository, ColorRepository>();
             services.AddScoped<IGalleryRepository, GalleryRepository>();
             services.AddScoped<IDiscountRepository, DiscountRepository>();
+            services.AddScoped<IDiscountProductRepository, DiscountProductRepository>();
 
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IProductServices, ProductServices>();
