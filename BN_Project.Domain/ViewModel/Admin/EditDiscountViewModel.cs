@@ -1,10 +1,10 @@
-﻿using BN_Project.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BN_Project.Domain.ViewModel.Admin
 {
-    public class AddDiscountViewModel
+    public class EditDiscountViewModel
     {
+        public int Id { get; set; }
         [Display(Name = "کد تخفیف")]
         public string? Code { get; set; }
         [Display(Name = "تاریخ شروع")]

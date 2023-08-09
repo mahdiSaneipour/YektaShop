@@ -21,6 +21,10 @@ namespace BN_Project.Data.Context
         public DbSet<ProductGallery> ProductGallery { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<Discount> Discounts { get; set; }
+        public DbSet<DiscountProduct> DiscountProduct { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<TicketMessages> TicketMessages { get; set; }
+        public DbSet<Section> Sections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +36,10 @@ namespace BN_Project.Data.Context
             modelBuilder.Entity<Product>().HasQueryFilter(u => !u.IsDelete);
 
             modelBuilder.Entity<Color>().HasQueryFilter(u => !u.IsDelete);
+
+            modelBuilder.Entity<Discount>().HasQueryFilter(n => !n.IsDelete);
+
+            modelBuilder.Entity<DiscountProduct>().HasQueryFilter(n => !n.IsDelete);
 
             modelBuilder.Entity<ProductGallery>().HasQueryFilter(n => !n.IsDelete);
 

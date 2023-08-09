@@ -1,14 +1,15 @@
-﻿@model AddDiscountViewModel
+﻿@model EditDiscountViewModel
 @{
     Layout = "Admin/_AdminLayout";
-    ViewData["Title"] = "افزودن تخفیف";
+    ViewData["Title"] = "ویرایش تخفیف";
 }
 <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
 <link href="~/css/DatePicker/kamadatepicker.min.css" rel="stylesheet" />
 
 <div class="widget-body">
     <div id="registration-form">
-        <form method="post" asp-controller="Admin" asp-action="AddDiscount">
+        <form method="post" action="/Admin/EditDiscount">
+            <input type="hidden" asp-for="Id" />
 
             <div class="form-title">
                 افزودن تخفیف جدید
@@ -46,8 +47,8 @@
                 </span>
             </div>
 
-            <select data-placeholder="برای انتخاب کالا کلیک کنید" multiple class="chosen-select form-control"
-                    asp-for="SelecetedGoods">
+            <select data-placeholder="برای انتخاب کالا کلیک کنید" multiple
+                    class="chosen-select form-control" asp-for="SelecetedGoods">
                 <option value=""></option>
                 @foreach (var item in Model.Products)
                 {
@@ -57,11 +58,10 @@
                 }
             </select>
 
-            <button type="submit" class="btn btn-blue" style="margin-top: 15px;">افزودن تخفیف</button>
+            <button type="submit" class="btn btn-blue" style="margin-top: 15px;">ویرایش تخفیف</button>
         </form>
     </div>
 </div>
-
 
 @section breadcrumb {
     <div class="page-breadcrumbs">
@@ -70,7 +70,7 @@
                 <i class="fa fa-home"></i>
                 <a asp-action="Index">خانه</a>
             </li>
-            <li class="active">افزودن تخفیف</li>
+            <li class="active">ویرایش تخفیف</li>
         </ul>
     </div>
 }
@@ -79,7 +79,7 @@
     <div class="page-header position-relative">
         <div class="header-title">
             <h1>
-                افزودن تخفیف
+                ویرایش تخفیف
             </h1>
         </div>
         <!--Header Buttons-->
@@ -96,7 +96,7 @@
         </div>
         <!--Header Buttons End-->
     </div>
-    }
+}
 
 @section Scripts {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

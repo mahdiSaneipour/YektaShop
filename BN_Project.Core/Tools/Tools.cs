@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BN_Project.Core.Tools
 {
@@ -28,6 +24,12 @@ namespace BN_Project.Core.Tools
                 pc.GetDayOfMonth(value);
 
             return date;
+        }
+
+        public static DateTime ToMiladi(this DateTime value)
+        {
+            PersianCalendar pc = new PersianCalendar();
+            return new DateTime(value.Year, value.Month, value.Day, pc);
         }
 
         public static string EncodePasswordMd5(this string pass) //Encrypt using MD5   

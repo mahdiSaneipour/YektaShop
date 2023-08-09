@@ -19,10 +19,15 @@ namespace BN_Project.IoC
             services.AddScoped<IColorRepository, ColorRepository>();
             services.AddScoped<IGalleryRepository, GalleryRepository>();
             services.AddScoped<IDiscountRepository, DiscountRepository>();
+            services.AddScoped<IDiscountProductRepository, DiscountProductRepository>();
+            services.AddScoped<ITicketRepository, TicketRepository>();
+            services.AddScoped<ISectionRepository, SectionRepository>();
+            services.AddScoped<ITicketMessageRepository, TicketMessageRepository>();
 
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IViewRenderService, RenderViewToString>();
+            services.AddScoped<IProfileService, ProfileServices>();
         }
     }
 }

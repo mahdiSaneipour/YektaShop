@@ -8,6 +8,6 @@ namespace BN_Project.Domain.Entities
         public DateTime? StartDate { get; set; }
         public DateTime? ExpireDate { get; set; }
         public int Percent { get; set; }
-        public ICollection<Product>? Products { get; set; }
+        public ICollection<DiscountProduct>? DiscountProduct { get; set; }
     }
 }
