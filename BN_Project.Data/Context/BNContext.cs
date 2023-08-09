@@ -22,6 +22,9 @@ namespace BN_Project.Data.Context
         public DbSet<Color> Colors { get; set; }
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<DiscountProduct> DiscountProduct { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<TicketMessages> TicketMessages { get; set; }
+        public DbSet<Section> Sections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

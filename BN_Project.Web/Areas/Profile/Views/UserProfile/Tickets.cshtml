@@ -1,0 +1,95 @@
+﻿@using BN_Project.Core.Tools;
+@model List<TicketViewModel>
+@{
+    ViewData["Title"] = "تیکت ها";
+    Layout = "Profile/_ProfileLayout";
+}
+<div class="col-xl-9 col-lg-8 col-md-7">
+    <div class="alert alert-warning alert-dismissible fade show mb-5" role="alert">
+        <div>
+            سفارش شما در انتظار پرداخت است. برای جلوگیری از لغو سفارش، لطفا پرداخت را انجام دهید.
+            <a href="#" class="btn btn-sm btn-primary mx-3">سفارش های من</a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="ui-box bg-white mb-5">
+        <div class="ui-box-title align-items-center justify-content-between">
+            تیکتهای شما
+            <a asp-action="AddTicket" asp-controller="UserProfile" class="btn btn-outline-light">
+                تیکت جدید <i class="ri-add-line ms-2"></i>
+            </a>
+        </div>
+        @if (Model.Count() == 0)
+        {
+            <div class="ui-box-empty-content">
+                <div class="ui-box-empty-content-icon">
+                    <img src="./theme-assets/images/theme/orders.svg" alt="">
+                </div>
+                <div class="ui-box-empty-content-message">
+                    تیکتی تا به الان ایجاد نکرده اید.
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="ui-box-content">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>زمان ایجاد</th>
+                                <th>بخش</th>
+                                <th>موضوع</th>
+                                <th>وضعیت</th>
+                                <th>آخرین بروزرسانی</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int counter = 0;
+                                foreach (var item in Model)
+                                {
+                                    counter += 1;
+                                    <tr>
+                                        <td class="fa-num">@counter</td>
+                                        <td class="fa-num">@item.CreatedDate.ConvertToShamsi()</td>
+                                        <td class="fa-num">@item.Section</td>
+                                        <td class="fa-num">@item.Subject</td>
+                                        <td class="fa-num">
+                                            @switch (item.Status)
+                                            {
+                                                case "در حال بررسی":
+                                                    <span class="badge bg-warning rounded-pill">
+                                                        در حال
+                                                        بررسی
+                                                    </span>
+                                                    break;
+                                                case "پاسخ داده شد":
+                                                    <span class="badge bg-success rounded-pill">
+                                                        پاسخ داده
+                                                        شد
+                                                    </span>
+                                                    break;
+                                                case "بسته":
+                                                    <span class="badge bg-danger rounded-pill">بسته</span>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td class="fa-num">@item.LastUpdatedTime.ConvertToShamsi()</td>
+                                        <td>
+                                            <a asp-controller="UserProfile" asp-action="TicketDetails" asp-route-Id="@item.Id" class="btn btn-circle btn-info my-1">
+                                                <i class="ri-eye-line"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</div>

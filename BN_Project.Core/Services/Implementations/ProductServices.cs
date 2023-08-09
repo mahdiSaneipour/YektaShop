@@ -81,7 +81,7 @@ namespace BN_Project.Core.Services.Implementations
         {
             BaseResponse result = new BaseResponse();
 
-            if(await _productRepository.IsProductNameExist(addProduct.Title))
+            if (await _productRepository.IsProductNameExist(addProduct.Title))
             {
                 result.Status = Status.AlreadyHave;
                 result.Message = "محصولی با این نام موجود است";
@@ -191,7 +191,8 @@ namespace BN_Project.Core.Services.Implementations
                 result.Data = data;
                 result.Status = Status.Success;
                 result.Message = "محصوالات با موفقیت پیدا شدند";
-            } else
+            }
+            else
             {
                 result.Status = Status.NotFound;
                 result.Message = "هیچ محصولی پیدا نشد";
@@ -331,7 +332,7 @@ namespace BN_Project.Core.Services.Implementations
 
         public async Task<bool> AddCategory(AddCategoriesViewModel category)
         {
-            if(await _categoryRepository.IsCategoryNameExist(category.Name))
+            if (await _categoryRepository.IsCategoryNameExist(category.Name))
             {
                 return false;
             }
@@ -849,35 +850,18 @@ namespace BN_Project.Core.Services.Implementations
             {
                 item.IsDelete = true;
             }
-            foreach (var item in editDiscount.SelecetedGoods)
-            {
-                discount.DiscountProduct.Add(new DiscountProduct
+            if (editDiscount.SelecetedGoods != null && editDiscount.SelecetedGoods.Count() != 0)
+                foreach (var item in editDiscount.SelecetedGoods)
                 {
-                    ProductsId = item,
-                    DiscountsId = discount.Id
-                });
-            }
+                    discount.DiscountProduct.Add(new DiscountProduct
+                    {
+                        ProductsId = item,
+                        DiscountsId = discount.Id
+                    });
+                }
 
             _discountRepository.Update(discount);
             await _discountRepository.SaveChanges();
-
-            //var discountProduct = await _discountProductRepository.GetAll(n => n.DiscountsId == discount.Id);
-            //foreach (var item in discountProduct)
-            //{
-            //    _discountProductRepository.Delete(item);
-            //}
-            //await _discountProductRepository.SaveChanges();
-
-            //if (editDiscount.SelecetedGoods != null && editDiscount.SelecetedGoods.Count() != 0)
-            //    foreach (var item in editDiscount.SelecetedGoods)
-            //    {
-            //        DiscountProduct DP = new DiscountProduct();
-            //        DP.ProductsId = item;
-            //        DP.DiscountsId = discount.Id;
-
-            //        await _discountProductRepository.Insert(DP);
-            //    }
-            //await _discountProductRepository.SaveChanges();
 
             return true;
         }

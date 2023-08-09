@@ -2,6 +2,7 @@
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Core.Tools;
 using BN_Project.Domain.Entities;
+using BN_Project.Domain.Enum.Ticket;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
