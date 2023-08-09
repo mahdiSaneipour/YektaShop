@@ -33,6 +33,7 @@ namespace BN_Project.Web.Areas.Profile.Controllers
             var user = _userServices.GetUserInformationById(UserId).Result;
             return user;
         }
+
         private int GetCurrentUserId()
         {
             int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
@@ -165,6 +166,15 @@ namespace BN_Project.Web.Areas.Profile.Controllers
                 return NotFound();
             }
         }
+        #endregion
+
+        #region Order
+
+        public async Task<IActionResult> Orders()
+        {
+            return View();
+        }
+
         #endregion
     }
 }

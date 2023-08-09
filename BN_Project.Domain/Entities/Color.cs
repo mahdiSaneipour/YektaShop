@@ -24,5 +24,7 @@ namespace BN_Project.Domain.Entities
 
         [ForeignKey(nameof(ProductId))]
         public Product Product { get; set; }
+
+        public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

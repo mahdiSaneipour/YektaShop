@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BN_Project.Data.Migrations
 {
     [DbContext(typeof(BNContext))]
-    [Migration("20230808160956_addAllTbls")]
-    partial class addAllTbls
+    [Migration("20230809163541_EditOrderStatus")]
+    partial class EditOrderStatus
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -117,10 +117,15 @@ namespace BN_Project.Data.Migrations
                     b.Property<int>("Percent")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Discounts");
                 });
@@ -152,6 +157,74 @@ namespace BN_Project.Data.Migrations
                     b.HasIndex("ProductsId");
 
                     b.ToTable("DiscountProduct");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Discount")
+                        .HasColumnType("int");
+
+                    b.Property<long>("FinalPrice")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.OrderDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ColorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("Price")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColorId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Product", b =>
@@ -395,6 +468,13 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.Product", null)
+                        .WithMany("Discounts")
+                        .HasForeignKey("ProductId");
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.DiscountProduct", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Discount", "Discount")
@@ -414,6 +494,32 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.Order", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("OrderId");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.OrderDetail", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.Color", "Color")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BN_Project.Domain.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Color");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.Product", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Category", "Category")
@@ -428,7 +534,7 @@ namespace BN_Project.Data.Migrations
             modelBuilder.Entity("BN_Project.Domain.Entities.ProductGallery", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Product", "Product")
-                        .WithMany()
+                        .WithMany("Images")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -481,9 +587,19 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("SubCategories");
                 });
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.Color", b =>
+                {
+                    b.Navigation("OrderDetails");
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
                 {
                     b.Navigation("DiscountProduct");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Product", b =>
@@ -491,6 +607,10 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Colors");
 
                     b.Navigation("DiscountProduct");
+
+                    b.Navigation("Discounts");
+
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Section", b =>
