@@ -1591,7 +1591,7 @@ body.loaded .product-card .product-thumbnail a::before {
   position: absolute;
   font-family: remixicon;
   font-size: 18px;
-  color: #ccc;
+  color: #fff;
   border-color: #a499ff;
 }
 

@@ -14,7 +14,7 @@ namespace BN_Project.Domain.IRepository
 
         public Task<TEntity> GetSingle(Expression<Func<TEntity, bool>> where);
 
-        public Task<bool> IsThereAny();
+        public Task<bool> IsThereAny(Expression<Func<TEntity, bool>> where = null);
 
         public Task SaveChanges();
     }

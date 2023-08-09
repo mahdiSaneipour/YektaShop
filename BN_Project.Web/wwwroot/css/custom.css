@@ -63,4 +63,8 @@ span.input-icon.is-default {
 .product-card.product-card-horizontal .product-card-body {
     flex: 0 0 67%;
 }
+
+.product-gallery .product-options {
+    right: -10px;
+}
 /*# sourceMappingURL=custom.css.map */

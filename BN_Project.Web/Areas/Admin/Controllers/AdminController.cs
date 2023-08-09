@@ -461,12 +461,12 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return View(gallery);
         }
 
-        [Route("AddImage/{Id}")]
-        public IActionResult AddImage(int Id)
+        [Route("AddImage")]
+        public IActionResult AddImage(int imageId)
         {
             AddGalleryViewModel addGallery = new AddGalleryViewModel()
             {
-                ProductId = Id
+                ProductId = imageId
             };
             return View(addGallery);
         }
@@ -495,12 +495,15 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         #endregion
 
         #region Discount
+
+        [Route("Discounts")]
         public async Task<IActionResult> Discounts()
         {
             var items = await _productService.GetAllDiscounts();
             return View(items);
         }
 
+        [Route("AddDiscount")]
         public async Task<IActionResult> AddDiscount()
         {
             AddDiscountViewModel AddDiscount = new AddDiscountViewModel();

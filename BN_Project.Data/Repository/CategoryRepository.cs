@@ -31,7 +31,7 @@ namespace BN_Project.Data.Repository
 
         public async Task<string> GetNameById(int id)
         {
-            return await _context.Categories.Select(n => n.Title).FirstOrDefaultAsync();
+            return await _context.Categories.Where(c => c.Id == id).Select(n => n.Title).FirstOrDefaultAsync();
         }
 
         public async Task<int> GetParentIdBySubCategoryId(int id)

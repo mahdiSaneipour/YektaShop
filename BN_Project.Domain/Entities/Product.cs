@@ -26,6 +26,9 @@ namespace BN_Project.Domain.Entities
         public Category Category { get; set; }
 
         public ICollection<Color> Colors { get; set; }
+
         public ICollection<Discount>? Discounts { get; set; }
+
+        public ICollection<ProductGallery> Images { get; set; }
     }
 }
