@@ -55,11 +55,12 @@
                         </span>
                     </td>
                     <td>
-                        @if(Model[i-1].IsActive)
+                        @if (Model[i - 1].IsActive)
                         {
                             <i class="fa fa-check success" aria-hidden="true"></i>
 
-                        } else
+                        }
+                        else
                         {
                             <i class="fa fa-times danger" aria-hidden="true"></i>
                         }
@@ -73,10 +74,13 @@
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                             ویرایش
                         </a>
+                        <a class="btn btn-primary" asp-controller="Admin" asp-action="AddTicket" asp-route-Id="@Model[i-1].Id">
+                            <i class="menu-icon fa fa-comment-o" aria-hidden="true"></i>
+                            باز کردن تیکت
+                        </a>
                     </td>
                 </tr>
             }
-
         </tbody>
     </table>
 </div>

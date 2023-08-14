@@ -28,6 +28,7 @@ namespace BN_Project.Core.Services.Interfaces
         public void ChangeActivationCode(UserEntity user);
 
         public Task<bool> UpdateUserFullName(UpdateUserInfoViewModel userInfo);
+
         public Task<bool> UpdatePhoneNumber(UpdateUserInfoViewModel userInfo);
 
         public void DeleteAccount(int Id);
@@ -42,5 +43,8 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<BaseResponse> EditUsers(EditUserViewModel user);
 
+        public Task<List<TicketViewModel>> GetAllTickets();
+
+        public Task<bool> CloseTicket(int Id);
     }
 }

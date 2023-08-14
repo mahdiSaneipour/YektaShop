@@ -5,6 +5,11 @@ namespace BN_Project.Domain.Entities
 {
     public class Ticket : BaseEntity
     {
+        public Ticket()
+        {
+            TicketMessages = new List<TicketMessages>();
+        }
+
         public string Subject { get; set; }
         public int SectionId { get; set; }
         public string Priority { get; set; }

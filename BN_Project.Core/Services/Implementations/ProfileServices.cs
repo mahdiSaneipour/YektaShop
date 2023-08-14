@@ -2,7 +2,6 @@
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.UserProfile;
-using System.ServiceModel.Channels;
 
 namespace BN_Project.Core.Services.Implementations
 {
@@ -118,6 +117,10 @@ namespace BN_Project.Core.Services.Implementations
         {
             if (message.Message == null || message.TicketId == 0 || message.SenderId == 0)
                 return false;
+            var ticket = await _ticketRepository.GetSingle(n => n.Id == message.TicketId);
+            ticket.LastUpadate = DateTime.Now;
+            ticket.Status = "در حال بررسی";
+
             TicketMessages TicketMessage = new TicketMessages()
             {
                 IsAdminRead = false,
@@ -126,8 +129,79 @@ namespace BN_Project.Core.Services.Implementations
                 SenderId = message.SenderId,
                 Message = message.Message
             };
-            await _ticketMessageRepository.Insert(TicketMessage);
-            await _ticketMessageRepository.SaveChanges();
+
+            ticket.TicketMessages = new List<TicketMessages>();
+            ticket.TicketMessages.Add(TicketMessage);
+            _ticketRepository.Update(ticket);
+            await _ticketRepository.SaveChanges();
+
+            return true;
+        }
+
+        public async Task<bool> AddMessageForTicketFromAdmin(AddMessageViewModel message)
+        {
+            if (message.Message == null || message.TicketId == 0 || message.SenderId == 0)
+                return false;
+            var ticket = await _ticketRepository.GetSingle(n => n.Id == message.TicketId);
+            ticket.Status = "پاسخ داده شده";
+            ticket.LastUpadate = DateTime.Now;
+
+            TicketMessages TicketMessage = new TicketMessages()
+            {
+                IsAdminRead = true,
+                IsCustomerRead = false,
+                TicketId = message.TicketId,
+                SenderId = message.SenderId,
+                Message = message.Message
+            };
+
+            ticket.TicketMessages = new List<TicketMessages>();
+            ticket.TicketMessages.Add(TicketMessage);
+
+            _ticketRepository.Update(ticket);
+            await _ticketRepository.SaveChanges();
+
+            return true;
+        }
+
+        public async Task<bool> AddNewTicketAdmin(AddTicketViewModel ticket)
+        {
+            if (ticket.Subject == null || ticket.Message == null || ticket.SectionId == 0)
+                return false;
+            Ticket Ticket = new Ticket()
+            {
+                Subject = ticket.Subject,
+                SectionId = ticket.SectionId,
+                Status = "پاسخ داده شده",
+                LastUpadate = DateTime.Now,
+                OwnerId = ticket.OwnerId
+            };
+            Ticket.TicketMessages = new List<TicketMessages>();
+            Ticket.TicketMessages.Add(new TicketMessages
+            {
+                IsAdminRead = false,
+                IsCustomerRead = true,
+                SenderId = (int)ticket.SenderId,
+                Message = ticket.Message
+            });
+            switch (ticket.Priority)
+            {
+                case 0:
+                    Ticket.Priority = "عادی";
+                    break;
+                case 1:
+                    Ticket.Priority = "مهم";
+                    break;
+                case 2:
+                    Ticket.Priority = "خیلی مهم";
+                    break;
+                default:
+                    Ticket.Priority = "عادی";
+                    break;
+            }
+
+            await _ticketRepository.Insert(Ticket);
+            await _ticketRepository.SaveChanges();
 
             return true;
         }

@@ -1,26 +1,34 @@
 ﻿using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Core.Tools;
-using BN_Project.Domain.Entities;
-using BN_Project.Domain.Enum.Ticket;
 using BN_Project.Domain.ViewModel.Admin;
+using BN_Project.Domain.ViewModel.UserProfile;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Elfie.Serialization;
 
 namespace BN_Project.Web.Areas.Admin.Controllers
 {
+    [Authorize]
     [Area("Admin")]
     [Route("[Controller]")]
     public class AdminController : Controller
     {
         private readonly IUserServices _userService;
         private readonly IProductServices _productService;
+        private readonly IProfileService _profileService;
 
         public AdminController(IUserServices userService,
-            IProductServices productService)
+            IProductServices productService,
+            IProfileService profileService)
         {
             _userService = userService;
             _productService = productService;
+            _profileService = profileService;
+        }
+        private int GetCurrentUserId()
+        {
+            int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
+            return UserId;
         }
 
         public IActionResult Index()
@@ -191,7 +199,8 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 ViewData["SubCategories"] = await _productService.GetSubCategories(int.Parse(categories.Item1.FirstOrDefault().Value));
 
                 return View();
-            } else if(result.Status != Status.Success)
+            }
+            else if (result.Status != Status.Success)
             {
                 var categories = await _productService.GetParentCategories();
                 ViewData["Categories"] = categories.Item1;
@@ -222,7 +231,8 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             if (result.Status == Status.Success)
             {
                 model = result.Data;
-            } else
+            }
+            else
             {
                 return RedirectToAction("Products");
             }
@@ -241,7 +251,8 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             if (result.Status == Status.Success)
             {
                 return RedirectToAction("Products");
-            } else if (result.Status == Status.AlreadyHave)
+            }
+            else if (result.Status == Status.AlreadyHave)
             {
                 ModelState.AddModelError("Title", result.Message);
 
@@ -287,13 +298,13 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             var result = await _productService.AddCategory(category);
 
-            if(result)
+            if (result)
             {
                 return RedirectToAction("Categories", "Admin");
             }
             else
             {
-                ModelState.AddModelError("Name","دسته بندی با این نام وجود دارد");
+                ModelState.AddModelError("Name", "دسته بندی با این نام وجود دارد");
 
                 AddCategoriesViewModel AddCategory = new AddCategoriesViewModel()
                 {
@@ -328,13 +339,13 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             var result = await _productService.EditCategory(category);
 
-            if(result)
+            if (result)
             {
                 return RedirectToAction("Categories", "Admin");
             }
             else
             {
-                ModelState.AddModelError("Name","دسته بندی با این نام وجود دارد");
+                ModelState.AddModelError("Name", "دسته بندی با این نام وجود دارد");
                 var item = await _productService.GetCategoryById(category.Id);
                 return View(category);
             }
@@ -587,6 +598,82 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             }
         }
 
+        #endregion
+
+        #region Tickets
+        [Route("Tickets")]
+        public async Task<IActionResult> Tickets()
+        {
+            var items = await _userService.GetAllTickets();
+            return View(items);
+        }
+
+        [Route("CloseTicket")]
+        public async Task<IActionResult> CloseTicket(int Id)
+        {
+            if (await _userService.CloseTicket(Id))
+            {
+                return RedirectToAction("Tickets", "Admin");
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [Route("AddTicketMessages")]
+        public async Task<IActionResult> AddTicketMessages(int Id)
+        {
+            if (Id == 0)
+                return NotFound();
+            var item = await _profileService.GetTicketMessages(Id);
+            item.AddMessage = new AddMessageViewModel();
+            item.AddMessage.TicketId = Id;
+            item.AddMessage.SenderId = GetCurrentUserId();
+            return View(item);
+        }
+
+
+        [HttpPost]
+        [Route("SendMessage")]
+        public async Task<IActionResult> SendMessage(TicketMessagesViewModel Message)
+        {
+            if (await _profileService.AddMessageForTicketFromAdmin(Message.AddMessage))
+            {
+                return RedirectToAction("AddTicketMessages", new { Id = Message.AddMessage.TicketId });
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
+        [Route("AddTicket")]
+        public async Task<IActionResult> AddTicket(int Id)
+        {
+            if (Id == 0)
+                return NotFound();
+            AddTicketViewModel addTicket = new AddTicketViewModel();
+            addTicket.Sections = await _profileService.GetAllSectionsName();
+            addTicket.OwnerId = Id;
+            addTicket.SenderId = GetCurrentUserId();
+            return View(addTicket);
+        }
+
+        [HttpPost]
+        [Route("AddTicket")]
+        public async Task<IActionResult> AddTicket(AddTicketViewModel ticket)
+        {
+            if (await _profileService.AddNewTicketAdmin(ticket))
+            {
+                return RedirectToAction("Tickets");
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
         #endregion
     }
 }
