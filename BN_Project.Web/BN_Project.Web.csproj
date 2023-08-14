@@ -404,6 +404,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Account\Data\" />
+    <Folder Include="Areas\Account\Models\" />
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Profile\Data\" />
+    <Folder Include="Areas\Profile\Models\" />
     <Folder Include="Views\UserChangePass\" />
     <Folder Include="Views\UserProfile\" />
     <Folder Include="wwwroot\admin\js\DatePicker\" />

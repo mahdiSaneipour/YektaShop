@@ -37,9 +37,16 @@ namespace BN_Project.Data.Repository
             await _db.AddAsync(entity);
         }
 
-        public async Task<bool> IsThereAny()
+        public async Task<bool> IsThereAny(Expression<Func<TEntity, bool>> where = null)
         {
-            return await _db.AnyAsync();
+            if(where == null)
+            {
+                return await _db.AnyAsync();
+            }
+            else
+            {
+                return await _db.AnyAsync(where);
+            }
         }
 
         public async Task SaveChanges()

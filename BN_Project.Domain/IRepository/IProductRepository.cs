@@ -13,5 +13,7 @@ namespace BN_Project.Domain.IRepository
         public Task<Product> GetProductByIdWithIncludeCategory(int productId);
 
         public Task<List<Product>> GetProductsIncludeColorsByCategoryId(int categoryId);
+
+        public Task<Product> GetProductByIdWithIncludeCategoryAndColorAndImage(int productId);
     }
 }

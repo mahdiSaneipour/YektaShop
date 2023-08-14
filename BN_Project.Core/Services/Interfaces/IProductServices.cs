@@ -27,6 +27,8 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<BaseResponse> ProductReadyForAddAndEdit();
 
+        public Task<DataResponse<ShowProductViewModel>> GetProductForShowByProductId(int productId);
+
         #endregion
 
         #region Categories
@@ -67,6 +69,10 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<BaseResponse> DeleteColorById(int colorId);
 
+        public Task<long> GetPriceByColorId(int colorId);
+
+        public Task<long> GetCountByColorId(int colorId);
+
         #endregion
 
         #region Gallery
@@ -80,6 +86,7 @@ namespace BN_Project.Core.Services.Interfaces
         #endregion
 
         #region Discount
+
         public Task<List<DiscountViewModel>> GetAllDiscounts();
 
         public Task<List<ProductsForDiscountViewModel>> GetAllProductsForDiscount();
@@ -88,6 +95,7 @@ namespace BN_Project.Core.Services.Interfaces
         public Task<bool> RemoveDiscount(int Id);
 
         public Task<List<ProductsForDiscountViewModel>> GetListOfProducts(int Id);
+
         public Task<EditDiscountViewModel> GetDiscountForEdit(int Id);
 
         public Task<bool> EditDiscount(EditDiscountViewModel editDiscount);

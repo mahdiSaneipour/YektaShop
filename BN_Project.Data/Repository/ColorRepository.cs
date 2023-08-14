@@ -20,6 +20,16 @@ namespace BN_Project.Data.Repository
             return await _context.Colors.Include(c => c.Product).ToListAsync();
         }
 
+        public async Task<int> GetColorCountByColorId(int colorId)
+        {
+            return await _context.Colors.Where(c => c.Id == colorId).Select(c => c.Count).FirstOrDefaultAsync();
+        }
+
+        public async Task<long> GetColorPriceByColorId(int colorId)
+        {
+            return await _context.Colors.Where(c => c.Id == colorId).Select(c => c.Price).FirstOrDefaultAsync();
+        }
+
         public async Task<Color> GetColorWithProductInclude(int colorId)
         {
             return await _context.Colors.Include(c => c.Product).FirstOrDefaultAsync(c => c.Id == colorId);

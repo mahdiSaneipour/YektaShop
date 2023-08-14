@@ -46,5 +46,13 @@ namespace BN_Project.Data.Repository
         {
             return await _context.Products.Include(p => p.Colors).Where(p => p.CategoryId == categoryId).ToListAsync();
         }
+
+        public async Task<Product> GetProductByIdWithIncludeCategoryAndColorAndImage(int productId)
+        {
+            return await _context.Products.Include(p => p.Colors)
+                .Include(p => p.Category).ThenInclude(c => c.ParentCategory).ThenInclude(sc => sc.ParentCategory).ThenInclude(c => c.SubCategories)
+                .Include(p => p.Images).AsSplitQuery()
+                .FirstOrDefaultAsync(p => p.Id == productId);
+        }
     }
 }

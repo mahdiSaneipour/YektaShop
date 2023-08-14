@@ -477,12 +477,12 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return View(gallery);
         }
 
-        [Route("AddImage/{Id}")]
-        public IActionResult AddImage(int Id)
+        [Route("AddImage")]
+        public IActionResult AddImage(int imageId)
         {
             AddGalleryViewModel addGallery = new AddGalleryViewModel()
             {
-                ProductId = Id
+                ProductId = imageId
             };
             return View(addGallery);
         }

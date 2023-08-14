@@ -201,6 +201,57 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
+        public async Task<DataResponse<ShowProductViewModel>> GetProductForShowByProductId(int productId)
+        {
+            DataResponse<ShowProductViewModel> result = new DataResponse<ShowProductViewModel>();
+
+            var product = await _productRepository.GetProductByIdWithIncludeCategoryAndColorAndImage(productId);
+
+            List<Category> categories = new List<Category>();
+
+            categories.Add(product.Category);
+
+            if(product.Category.ParentCategory != null)
+            {
+                categories.Add(product.Category.ParentCategory);
+                if(product.Category.ParentCategory.ParentCategory != null)
+                {
+                    categories.Add(product.Category.ParentCategory.ParentCategory);
+                }
+            }
+
+            categories.Reverse();
+
+            if (product == null)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "محصولی با این ایدی پیدا نشد";
+            } else
+            {
+
+                ShowProductViewModel data = new ShowProductViewModel()
+                {
+                    Description = product.Description,
+                    Features = product.Features,
+                    Image = product.Image,
+                    Title = product.Name,
+                    Price = product.Price,
+                    Categories = categories,
+                    ProductId = product.Id,
+                    Colors = product.Colors.ToList(),
+                    Count = product.Colors.Sum(c => c.Count),
+                    Images = product.Images.Select(c => c.ImageName).ToList(),
+                    
+                };
+
+                result.Status = Status.Success;
+                result.Message = "محصول با موفقیت پیداشد";
+                result.Data = data;
+
+            }
+            return result;
+        }
+
         #endregion
 
         #region Categories
@@ -715,9 +766,19 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
+        public async Task<long> GetPriceByColorId(int colorId)
+        {
+            return await _colorRepository.GetColorPriceByColorId(colorId);
+        }
+
+        public async Task<long> GetCountByColorId(int colorId)
+        {
+            return await _colorRepository.GetColorCountByColorId(colorId);
+        }
         #endregion
 
         #region Discount 
+
         public async Task<List<DiscountViewModel>> GetAllDiscounts()
         {
             var items = await _discountRepository.GetAll();
