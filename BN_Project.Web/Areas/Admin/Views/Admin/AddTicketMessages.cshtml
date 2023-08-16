@@ -1,0 +1,97 @@
+﻿@model TicketMessagesViewModel
+@{
+    Layout = "Admin/_AdminLayout";
+    ViewData["Title"] = "جزئیات تیکت";
+}
+
+<div class="well with-header  with-footer">
+    <h1>@Model.SectionName</h1>
+    <br />
+    <table class="table table-hover table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    ارسال کننده
+                </th>
+                <th>
+                    تاریخ ارسال
+                </th>
+                <th>
+                    پیام ارسال شده
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int counter = 0;
+                foreach (var item in Model.TicketMessages)
+                {
+                    counter += 1;
+                    <tr>
+                        <td>@counter</td>
+                        <td>@((Model.OwnerId == item.senderId) ? "مشتری" : "ادمین")</td>
+                        <td>@item.SendDate.ConvertToShamsi()</td>
+                        <td>@item.Message</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @if (Model.Status == "بسته")
+    {
+        <p class="alert alert-danger" style="margin: 20px 0;">این تیکت بسته شده است!</p>
+    }
+    else
+    {
+        <form method="post" asp-action="SendMessage" asp-controller="Admin" style="margin: 30px 0;display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <input type="hidden" asp-for="AddMessage.TicketId" />
+            <input type="hidden" asp-for="AddMessage.SenderId" />
+
+            <label asp-for="AddMessage.Message"></label>
+            <textarea asp-for="AddMessage.Message" style="width: 100%;">
+                    </textarea>
+            <span asp-validation-for="AddMessage.Message"></span>
+
+            <button class="btn btn-primary" style="margin: 20px 0;" type="submit">ارسال پیام</button>
+        </form>
+
+    }
+</div>
+
+@section breadcrumb {
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a asp-action="Index">خانه</a>
+            </li>
+            <li class="active">جزئیات تیکت</li>
+        </ul>
+    </div>
+}
+
+@section pageHeader {
+    <div class="page-header position-relative">
+        <div class="header-title">
+            <h1>
+                جزئیات تیکت
+            </h1>
+        </div>
+        <!--Header Buttons-->
+        <div class="header-buttons">
+            <a class="sidebar-toggler" href="#">
+                <i class="fa fa-arrows-h"></i>
+            </a>
+            <a class="refresh" id="refresh-toggler" href="">
+                <i class="glyphicon glyphicon-refresh"></i>
+            </a>
+            <a class="fullscreen" id="fullscreen-toggler" href="#">
+                <i class="glyphicon glyphicon-fullscreen"></i>
+            </a>
+        </div>
+        <!--Header Buttons End-->
+    </div>
+}

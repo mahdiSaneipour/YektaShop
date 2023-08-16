@@ -13,9 +13,13 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<bool> AddNewTicket(AddTicketViewModel ticket);
 
+        public Task<bool> AddNewTicketAdmin(AddTicketViewModel ticket);
+
         public Task<TicketMessagesViewModel> GetTicketMessages(int ticketId);
 
         public Task<bool> AddMessageForTicket(AddMessageViewModel message);
+
+        public Task<bool> AddMessageForTicketFromAdmin(AddMessageViewModel message);
 
         public Task<DataResponse<List<BoxOrderListViewModel>>> GetBoxOrderList(OrderStatus orderStatus, int userId);
     }

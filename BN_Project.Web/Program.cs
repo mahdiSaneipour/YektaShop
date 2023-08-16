@@ -2,7 +2,6 @@ using BN_Project.Data.Context;
 using BN_Project.IoC;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;

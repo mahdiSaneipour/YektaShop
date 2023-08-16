@@ -29,6 +29,7 @@ namespace BN_Project.Web.Areas.Profile.Controllers
             return View();
         }
 
+        [NonAction]
         private DataResponse<UserInformationViewModel> GetCurrentUser()
         {
             int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
@@ -135,7 +136,7 @@ namespace BN_Project.Web.Areas.Profile.Controllers
             addTicket.OwnerId = GetCurrentUserId();
             return View(addTicket);
         }
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddTicket(AddTicketViewModel addTicket)
         {
             if (await _profileServices.AddNewTicket(addTicket))
@@ -163,7 +164,7 @@ namespace BN_Project.Web.Areas.Profile.Controllers
         {
             if (await _profileServices.AddMessageForTicket(message.AddMessage))
             {
-                return RedirectToAction("TicketDetails", new { Id = message.AddMessage.TicketId });
+                return RedirectToAction(nameof(TicketDetails), new { Id = message.AddMessage.TicketId });
             }
             else
             {

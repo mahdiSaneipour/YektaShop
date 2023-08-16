@@ -15,13 +15,16 @@ namespace BN_Project.Core.Services.Implementations
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ITicketRepository _ticketRepository;
 
         public UserServices(
             IAccountRepository accountRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            ITicketRepository ticketRepository)
         {
             _accountRepository = accountRepository;
             _userRepository = userRepository;
+            _ticketRepository = ticketRepository;
         }
 
         public async Task<DataResponse<UserEntity>> CreateUser(RegisterUserViewModel register)
@@ -434,5 +437,36 @@ namespace BN_Project.Core.Services.Implementations
                 return false;
             }
         }
+
+        #region Tickets
+        public async Task<List<TicketViewModel>> GetAllTickets()
+        {
+            var items = await _ticketRepository.GetAllWithRelation();
+            List<TicketViewModel> ticetks = new List<TicketViewModel>();
+            ticetks.AddRange(items.Select(n => new TicketViewModel
+            {
+                Id = n.Id,
+                CreatedDate = n.Create,
+                LastUpdatedTime = n.LastUpadate,
+                Section = n.Section.Name,
+                Status = n.Status,
+                Subject = n.Subject
+            }).ToList());
+
+            return ticetks;
+        }
+
+        public async Task<bool> CloseTicket(int Id)
+        {
+            if (Id == 0)
+                return false;
+            var item = await _ticketRepository.GetSingle(n => n.Id == Id);
+            item.Status = "بسته";
+
+            await _ticketRepository.SaveChanges();
+            return true;
+        }
+
+        #endregion
     }
 }
