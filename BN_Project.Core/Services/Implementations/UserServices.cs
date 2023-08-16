@@ -4,6 +4,7 @@ using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Core.Tools;
 using BN_Project.Domain.Entities;
+using BN_Project.Domain.Enum.Ticket;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Account;
 using BN_Project.Domain.ViewModel.Admin;
@@ -310,10 +311,14 @@ namespace BN_Project.Core.Services.Implementations
             //}
 
             var item = await _accountRepository.GetSingle(n => n.Id == user.Id);
-
-            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/avatar/normal", item.Avatar).RemoveFile();
-            Path.Combine(Directory.GetCurrentDirectory(), "wwroot/images/avatar/thumb", item.Avatar).RemoveFile();
-
+            try
+            {
+                Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/avatar/normal", item.Avatar).RemoveFile();
+                Path.Combine(Directory.GetCurrentDirectory(), "wwroot/images/avatar/thumb", item.Avatar).RemoveFile();
+            }
+            catch
+            {
+            }
 
             item.Id = user.Id;
 
@@ -449,7 +454,7 @@ namespace BN_Project.Core.Services.Implementations
                 CreatedDate = n.Create,
                 LastUpdatedTime = n.LastUpadate,
                 Section = n.Section.Name,
-                Status = n.Status,
+                Status = n.Status.GetDisplayName(),
                 Subject = n.Subject
             }).ToList());
 
@@ -461,7 +466,7 @@ namespace BN_Project.Core.Services.Implementations
             if (Id == 0)
                 return false;
             var item = await _ticketRepository.GetSingle(n => n.Id == Id);
-            item.Status = "بسته";
+            item.Status = TicketStatus.Closed;
 
             await _ticketRepository.SaveChanges();
             return true;

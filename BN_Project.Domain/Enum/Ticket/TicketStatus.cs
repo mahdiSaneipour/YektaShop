@@ -5,11 +5,11 @@ namespace BN_Project.Domain.Enum.Ticket
     public enum TicketStatus
     {
         [Display(Name = "درحال بررسی")]
-        Status1,
+        Pending,
         [Display(Name = "پاسخ داده شده")]
-        Status2,
+        Answered,
         [Display(Name = "بسته")]
-        Status3
+        Closed
     }
 }
  

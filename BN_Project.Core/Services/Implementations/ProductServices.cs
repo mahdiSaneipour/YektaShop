@@ -211,10 +211,10 @@ namespace BN_Project.Core.Services.Implementations
 
             categories.Add(product.Category);
 
-            if(product.Category.ParentCategory != null)
+            if (product.Category.ParentCategory != null)
             {
                 categories.Add(product.Category.ParentCategory);
-                if(product.Category.ParentCategory.ParentCategory != null)
+                if (product.Category.ParentCategory.ParentCategory != null)
                 {
                     categories.Add(product.Category.ParentCategory.ParentCategory);
                 }
@@ -226,7 +226,8 @@ namespace BN_Project.Core.Services.Implementations
             {
                 result.Status = Status.NotFound;
                 result.Message = "محصولی با این ایدی پیدا نشد";
-            } else
+            }
+            else
             {
 
                 ShowProductViewModel data = new ShowProductViewModel()
@@ -241,7 +242,7 @@ namespace BN_Project.Core.Services.Implementations
                     Colors = product.Colors.ToList(),
                     Count = product.Colors.Sum(c => c.Count),
                     Images = product.Images.Select(c => c.ImageName).ToList(),
-                    
+
                 };
 
                 result.Status = Status.Success;
@@ -383,11 +384,6 @@ namespace BN_Project.Core.Services.Implementations
 
         public async Task<bool> AddCategory(AddCategoriesViewModel category)
         {
-            if (await _categoryRepository.IsCategoryNameExist(category.Name))
-            {
-                return false;
-            }
-
             Category Category = new Category()
             {
                 Title = category.Name,
@@ -416,7 +412,7 @@ namespace BN_Project.Core.Services.Implementations
         {
             EditCategoryViewModel EditCategory = new EditCategoryViewModel();
 
-            EditCategory.Categories = (List<Category>)await _categoryRepository.GetAll();
+            EditCategory.Categories = (List<Category>)await _categoryRepository.GetAll(n => n.Id != Id);
 
             var item = await _categoryRepository.GetSingle(n => n.Id == Id);
 
@@ -431,11 +427,6 @@ namespace BN_Project.Core.Services.Implementations
 
         public async Task<bool> EditCategory(EditCategoryViewModel category)
         {
-            if (await _categoryRepository.IsCategoryNameExist(category.Name))
-            {
-                return false;
-            }
-
             var item = await _categoryRepository.GetSingle(n => n.Id == category.Id);
             item.Title = category.Name;
             item.ParentId = category.CategoryId;
@@ -444,7 +435,6 @@ namespace BN_Project.Core.Services.Implementations
             await _categoryRepository.SaveChanges();
 
             return true;
-
         }
 
         public async Task<List<Category>> GetAllCategoriesForHeader()

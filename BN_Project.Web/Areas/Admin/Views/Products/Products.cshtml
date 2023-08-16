@@ -1,0 +1,111 @@
+﻿@model IReadOnlyList<ProductListViewModel>
+@{
+    Layout = "Admin/_AdminLayout";
+    ViewData["Title"] = "محصولات";
+}
+
+<div class="well with-header  with-footer">
+    <a asp-action="AddProduct" class="btn btn-success">افزودن محصوال جدید</a>
+    <br />
+    <table class="table table-hover table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    نام محصول
+                </th>
+                <th>
+                    گروه بندی
+                </th>
+                <th>
+                    قیمت
+                </th>
+                <th>
+                    عملیات
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 1; i <= Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <span>
+                            @i
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            <a asp-controller="Admin" asp-action="Gallery" asp-route-Id="@Model[i-1].Id">
+                                @Model[i-1].Name
+                            </a>
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            @Model[i-1].Category
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            @Model[i-1].Price تومان
+                        </span>
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" asp-controller="Products" asp-area="Admin" asp-action="DeleteProduct" asp-route-productId="@Model[i-1].Id" onclick="is_delete(this)">
+                            <i class="fa fa-times"></i>
+                            حذف
+                        </a>
+                        <a class="btn btn-yellow" asp-controller="Products" asp-area="Admin" asp-action="EditProduct" asp-route-productId="@Model[i-1].Id">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            ویرایش
+                        </a>
+
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+@section breadcrumb {
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a asp-action="Index">خانه</a>
+            </li>
+            <li class="active">محصولات</li>
+        </ul>
+    </div>
+}
+
+@section pageHeader {
+    <div class="page-header position-relative">
+        <div class="header-title">
+            <h1>
+                محصولات
+            </h1>
+        </div>
+        <!--Header Buttons-->
+        <div class="header-buttons">
+            <a class="sidebar-toggler" href="#">
+                <i class="fa fa-arrows-h"></i>
+            </a>
+            <a class="refresh" id="refresh-toggler" href="">
+                <i class="glyphicon glyphicon-refresh"></i>
+            </a>
+            <a class="fullscreen" id="fullscreen-toggler" href="#">
+                <i class="glyphicon glyphicon-fullscreen"></i>
+            </a>
+        </div>
+        <!--Header Buttons End-->
+    </div>
+}
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}

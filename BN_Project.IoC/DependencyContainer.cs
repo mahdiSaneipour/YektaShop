@@ -27,7 +27,7 @@ namespace BN_Project.IoC
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IViewRenderService, RenderViewToString>();
-            services.AddScoped<IProfileService, ProfileServices>();
+            services.AddScoped<ITicketServices, TicketServices>();
         }
     }
 }

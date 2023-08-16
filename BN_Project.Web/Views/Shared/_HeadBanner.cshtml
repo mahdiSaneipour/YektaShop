@@ -6,7 +6,7 @@
                 <div class="navigation">
                     <div class="navigation-header">
                         <div class="logo-container logo-box">
-                            <a href="#" class="logo">
+                            <a asp-action="Index" asp-controller="Home" asp-area="" class="logo">
                                 <img src="~/images/logo.svg" width="120" alt="">
                                 <span class="logo-text">بررسی،انتخاب و خرید آنلاین</span>
                             </a>
@@ -84,19 +84,19 @@
                 <div class="navigation-overlay"></div>
             </div>
             <div class="logo">
-                <a href="#">
+                <a asp-action="Index" asp-controller="Home">
                     <img src="~/images/logo-dark.svg" alt="">
                 </a>
             </div>
         </div>
         <div class="user-options">
             <div class="user-option">
-                <a asp-action="Index" asp-controller="UserProfile" class="user-option-btn user-option-btn--account">
+                <a asp-action="Index" asp-controller="UserProfile" asp-area="UserProfile" class="user-option-btn user-option-btn--account">
                     <i class="ri-user-fill icon"></i>
                 </a>
             </div>
             <div class="user-option">
-                <a href="#" class="user-option-btn user-option-btn--account">
+                <a asp-action="Index" asp-controller="UserProfile" asp-area="UserProfile" class="user-option-btn user-option-btn--account">
                     <i class="ri-heart-3-fill icon"></i>
                     <span class="counter">۲</span>
                 </a>

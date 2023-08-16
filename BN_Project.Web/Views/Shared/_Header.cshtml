@@ -65,7 +65,7 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center flex-grow-1 pe-3">
                     <div class="logo-container logo-box me-3">
-                        <a href="index-1.html" class="logo">
+                        <a asp-action="Index" asp-controller="Home" asp-area="" class="logo">
                             <img src="~/images/logo.svg" width="120" alt="">
                             <span class="logo-text">بررسی،انتخاب و خرید آنلاین</span>
                         </a>
@@ -107,7 +107,7 @@
                 </div>
                 <div class="user-options">
                     <div class="user-option user-option--account">
-                        <a asp-controller="UserProfile" asp-action="Index" asp-area="Profile" class="user-option-btn user-option-btn--account">
+                        <a asp-controller="UserProfile" asp-action="Index" asp-area="UserProfile" class="user-option-btn user-option-btn--account">
                             <i class="ri-user-fill icon"></i>
                             <i class="ri-arrow-down-s-fill icon fs-7 text-muted"></i>
                         </a>
@@ -155,6 +155,12 @@
                                 </div>
                                 <ul class="nav nav-items-with-icon flex-column">
                                     <li class="nav-item">
+                                        <a class="nav-link" asp-area="Admin" asp-action="Index" asp-controller="Products">
+                                            <i class="nav-link-icon ri-file-list-3-line"></i>
+                                            صفحه ادمین
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="nav-link" href="#">
                                             <i class="nav-link-icon ri-file-list-3-line"></i>
                                             سفارش
@@ -168,7 +174,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" asp-controller="Account" asp-action="Logout">
+                                        <a class="nav-link" asp-area="Account" asp-controller="Account" asp-action="Logout">
                                             <i class="nav-link-icon ri-logout-box-r-line"></i>
                                             خروج
                                         </a>
@@ -178,7 +184,7 @@
                         </div>
                     </div>
                     <div class="user-option">
-                        <a href="#" class="user-option-btn user-option-btn--account">
+                        <a asp-action="Index" asp-controller="UserProfile" asp-area="UserProfile" class="user-option-btn user-option-btn--account">
                             <i class="ri-heart-3-fill icon"></i>
                             <span class="counter">۲</span>
                         </a>
@@ -317,7 +323,6 @@
         </div>
     </div>
     <!-- end of page-header-middle -->
-
     <!-- start of page-header-bottom -->
     <div class="page-header--bottom">
         <div class="container">
@@ -325,7 +330,7 @@
                 @await Component.InvokeAsync("MenuCategories")
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="index-1.html">خانه</a>
+                        <a class="nav-link" asp-action="Index" asp-controller="Home" asp-area="">خانه</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">وبلاگ</a>

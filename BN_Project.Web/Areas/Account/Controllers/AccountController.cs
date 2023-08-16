@@ -12,21 +12,23 @@ using System.Security.Claims;
 namespace BN_Project.Web.Areas.Account.Controllers
 {
     [Area("Account")]
+    [Route("Controller")]
     public class AccountController : Controller
     {
         private readonly IViewRenderService _viewRenderService;
-        private readonly IUserServices _userServices;
+        private readonly IUserServices _userServicess;
 
         public AccountController(
             IViewRenderService viewRenderService,
             IUserServices userServices)
         {
             _viewRenderService = viewRenderService;
-            _userServices = userServices;
+            _userServicess = userServices;
         }
 
         #region Login
 
+        [Route("Login")]
         public async Task<IActionResult> Login()
         {
             if (User.Identity.IsAuthenticated)
@@ -37,7 +39,8 @@ namespace BN_Project.Web.Areas.Account.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
+        [Route("Login")]
         public async Task<IActionResult> Login(LoginUserViewModel login)
         {
             /*if (ModelState.IsValid)
@@ -50,7 +53,7 @@ namespace BN_Project.Web.Areas.Account.Controllers
                 return RedirectToAction("/");
             }*/
 
-            var result = await _userServices.LoginUser(login);
+            var result = await _userServicess.LoginUser(login);
 
             switch (result.Status)
             {
@@ -101,16 +104,19 @@ namespace BN_Project.Web.Areas.Account.Controllers
         #endregion
 
         #region Register
+
+        [Route("Register")]
         public async Task<IActionResult> Register()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
+        [Route("Register")]
         public async Task<IActionResult> Register(RegisterUserViewModel register)
         {
 
-            var result = await _userServices.CreateUser(register);
+            var result = await _userServicess.CreateUser(register);
 
             switch (result.Status)
             {
@@ -157,10 +163,12 @@ namespace BN_Project.Web.Areas.Account.Controllers
         #endregion
 
         #region Confirmation
+
+        [Route("ConfirmEmail")]
         public IActionResult ConfirmEmail(string token)
         {
 
-            _userServices.IsTokenTrue(token);
+            _userServicess.IsTokenTrue(token);
 
             return Redirect("/");
         }
@@ -168,6 +176,7 @@ namespace BN_Project.Web.Areas.Account.Controllers
 
         #region Logout
 
+        [Route("Logout")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -179,15 +188,17 @@ namespace BN_Project.Web.Areas.Account.Controllers
 
         #region ForgotPassword
 
+        [Route("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
+        [Route("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotPassword)
         {
-            var result = await _userServices.ForgotPassword(forgotPassword.Email);
+            var result = await _userServicess.ForgotPassword(forgotPassword.Email);
 
             switch (result.Status)
             {
@@ -238,9 +249,10 @@ namespace BN_Project.Web.Areas.Account.Controllers
 
         #region ResetPassword
 
+        [Route("ResetPassword")]
         public async Task<IActionResult> ResetPassword(string token)
         {
-            var result = await _userServices.IsTokenTrue(token);
+            var result = await _userServicess.IsTokenTrue(token);
 
             if (result.Status == Status.Success)
             {
@@ -255,10 +267,11 @@ namespace BN_Project.Web.Areas.Account.Controllers
             return RedirectToAction("Login");
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
+        [Route("ResetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPassword)
         {
-            var result = await _userServices.ResetPassword(resetPassword);
+            var result = await _userServicess.ResetPassword(resetPassword);
 
             if (!result)
             {

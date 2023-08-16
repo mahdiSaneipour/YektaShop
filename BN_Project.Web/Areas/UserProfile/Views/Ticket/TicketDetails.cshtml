@@ -1,0 +1,83 @@
+﻿@using BN_Project.Core.Tools;
+@model TicketMessagesViewModel
+@{
+    Layout = "Profile/_ProfileLayout";
+    ViewData["Title"] = "جزئیات تیکت";
+}
+
+<div class="col-xl-9 col-lg-8 col-md-7">
+    <div class="alert alert-warning alert-dismissible fade show mb-5" role="alert">
+        <div>
+            سفارش شما در انتظار پرداخت است. برای جلوگیری از لغو سفارش، لطفا پرداخت را انجام دهید.
+            <a href="#" class="btn btn-sm btn-primary mx-3">سفارش های من</a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="ui-box bg-white mb-5">
+        <div class="ui-box-title">
+            @Model.SectionName
+        </div>
+        <div class="ui-box-content">
+            <div class="tickets">
+                @foreach (var item in Model.TicketMessages)
+                {
+                    if (item.senderId == Model.OwnerId)
+                    {
+                        <div class="ticket fa-num">
+                            <div class="avatar"></div>
+                            <div class="text">
+                                @item.Message
+                            </div>
+                            <div class="date">@item.SendDate.ConvertToShamsi()</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="ticket reply fa-num">
+                            <div class="avatar staff"></div>
+                            <div class="text">
+                                @item.Message
+                            </div>
+                            <div class="date">@item.SendDate.ConvertToShamsi()</div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="border-bottom my-4"></div>
+            <div class="ui-box-title p-0 mb-4">
+                ارسال پاسخ
+            </div>
+            @if (Model.Status == "پاسخ داده شده")
+            {
+                <form asp-controller="Ticket" asp-area="UserProfile" asp-action="SendMessage" class="add-ticket-form">
+                    <input type="hidden" asp-for="AddMessage.TicketId" />
+                    <input type="hidden" asp-for="AddMessage.SenderId" />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-element-row mb-5">
+                                <label class="label">پیام</label>
+                                <textarea rows="5" class="form-control" asp-for="AddMessage.Message"
+                                          placeholder="متن پیام"></textarea>
+                            </div>
+                            <span asp-validation-for="AddMessage.Message"></span>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-primary">
+                                ارسال پاسخ <i class="ri-ball-pen-line ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            }
+            else if (Model.Status == "بسته")
+            {
+                <p class="alert alert-danger">این تیکت بسته شده است!</p>
+            }
+            else
+            {
+                <p class="alert alert-info">در انتظار پاسخ!</p>
+            }
+        </div>
+    </div>
+</div>
