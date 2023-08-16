@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BN_Project.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddOrderAndOrderDetail : Migration
+    public partial class InitiatDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,7 +39,7 @@ namespace BN_Project.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FinalPrice = table.Column<long>(type: "bigint", nullable: false),
-                    IsFinally = table.Column<bool>(type: "bit", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     Discount = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: true),
                     Create = table.Column<DateTime>(type: "datetime2", nullable: false),

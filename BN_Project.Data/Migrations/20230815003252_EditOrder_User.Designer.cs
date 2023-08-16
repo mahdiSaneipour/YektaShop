@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BN_Project.Data.Migrations
 {
     [DbContext(typeof(BNContext))]
-    [Migration("20230809161055_AddOrderAndOrderDetail")]
-    partial class AddOrderAndOrderDetail
+    [Migration("20230815003252_EditOrder_User")]
+    partial class EditOrder_User
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,15 +179,15 @@ namespace BN_Project.Data.Migrations
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsFinally")
-                        .HasColumnType("bit");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -208,6 +208,9 @@ namespace BN_Project.Data.Migrations
 
                     b.Property<DateTime>("Create")
                         .HasColumnType("datetime2");
+
+                    b.Property<long>("FinalPrice")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
@@ -496,9 +499,13 @@ namespace BN_Project.Data.Migrations
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>
                 {
-                    b.HasOne("BN_Project.Domain.Entities.Order", null)
+                    b.HasOne("BN_Project.Domain.Entities.UserEntity", "User")
                         .WithMany("Orders")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.OrderDetail", b =>
@@ -510,7 +517,7 @@ namespace BN_Project.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("BN_Project.Domain.Entities.Order", "Order")
-                        .WithMany()
+                        .WithMany("OrderDetails")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -599,7 +606,7 @@ namespace BN_Project.Data.Migrations
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Product", b =>
@@ -621,6 +628,11 @@ namespace BN_Project.Data.Migrations
             modelBuilder.Entity("BN_Project.Domain.Entities.Ticket", b =>
                 {
                     b.Navigation("TicketMessages");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.UserEntity", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
