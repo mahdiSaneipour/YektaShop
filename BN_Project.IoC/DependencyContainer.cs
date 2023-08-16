@@ -22,6 +22,7 @@ namespace BN_Project.IoC
             services.AddScoped<IDiscountProductRepository, DiscountProductRepository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
             services.AddScoped<ISectionRepository, SectionRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ITicketMessageRepository, TicketMessageRepository>();
 
             services.AddScoped<IUserServices, UserServices>();

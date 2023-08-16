@@ -1,4 +1,5 @@
 ﻿using BN_Project.Core.Response.DataResponse;
+using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.ViewModel.UserProfile;
 using Microsoft.AspNetCore.Authorization;
@@ -91,6 +92,7 @@ namespace BN_Project.Web.Areas.Profile.Controllers
                 return NotFound();
             }
         }
+
         #endregion
 
         #region EditProfilePassword
@@ -132,7 +134,28 @@ namespace BN_Project.Web.Areas.Profile.Controllers
         [Route("Orders")]
         public async Task<IActionResult> Orders()
         {
-            return View();
+            int userId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
+            var result = await _profileServices.GetBoxOrderList(OrderStatus.AwaitingPayment, userId);
+            
+            if (result.Status == Status.Success)
+            {
+                return View(result.Data.FirstOrDefault());
+            } else if (result.Status == Status.NotFound)
+            {
+                return View(result);
+            }
+
+            return RedirectToAction("Profile");
+        }
+
+
+        [HttpGet("Profile/UserProfile/OtherOrders/{orderStatus}")]
+        public async Task<IActionResult> OtherOrders(OrderStatus orderStatus)
+        {
+            int userId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
+
+            var result = await _profileServices.GetBoxOrderList(orderStatus, userId);
+            return PartialView("../Shared/Profile/_OtherOrdersPartialView", result.Data);
         }
 
         #endregion

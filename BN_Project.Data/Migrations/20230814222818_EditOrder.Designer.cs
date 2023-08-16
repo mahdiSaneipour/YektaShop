@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BN_Project.Data.Migrations
 {
     [DbContext(typeof(BNContext))]
-    [Migration("20230815163124_addAllTbls")]
-    partial class addAllTbls
+    [Migration("20230814222818_EditOrder")]
+    partial class EditOrder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,15 +179,10 @@ namespace BN_Project.Data.Migrations
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
 
                     b.ToTable("Orders");
                 });
@@ -348,8 +343,9 @@ namespace BN_Project.Data.Migrations
                     b.Property<int>("SectionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Subject")
                         .IsRequired()
@@ -493,13 +489,6 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>
-                {
-                    b.HasOne("BN_Project.Domain.Entities.Order", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("OrderId");
-                });
-
             modelBuilder.Entity("BN_Project.Domain.Entities.OrderDetail", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Color", "Color")
@@ -509,7 +498,7 @@ namespace BN_Project.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("BN_Project.Domain.Entities.Order", "Order")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
