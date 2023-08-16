@@ -8,7 +8,7 @@
 
 <div class="widget-body">
     <div id="registration-form">
-        <form method="post" action="/Admin/EditDiscount">
+        <form method="post" asp-controller="Products" asp-area="Admin" asp-action="EditDiscount">
             <input type="hidden" asp-for="Id" />
 
             <div class="form-title">

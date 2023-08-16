@@ -9,7 +9,7 @@
 
 <div class="widget-body">
     <div id="registration-form">
-        <form method="post" asp-controller="Admin" asp-action="AddColor">
+        <form method="post" asp-controller="Products" asp-area="Admin" asp-action="AddColor">
 
             <div class="form-title">
                 ثبت رنگ جدید
@@ -38,7 +38,7 @@
             </div>
             <div class="form-group">
                 <span class="input-icon icon-right">
-                    <input type="number" asp-for="Count" class="form-control" placeholder="تعداد رنگ"/>
+                    <input type="number" asp-for="Count" class="form-control" placeholder="تعداد رنگ" />
                     <span asp-validation-for="Count"></span>
                     <i class="menu-icon fa fa-shopping-cart circular" aria-hidden="true"></i>
                 </span>

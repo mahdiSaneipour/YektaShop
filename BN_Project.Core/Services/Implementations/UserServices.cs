@@ -1,5 +1,4 @@
 ﻿using BN_Project.Core.Response;
-using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Core.Tools;
@@ -28,9 +27,9 @@ namespace BN_Project.Core.Services.Implementations
             _ticketRepository = ticketRepository;
         }
 
-        public async Task<DataResponse<UserEntity>> CreateUser(RegisterUserViewModel register)
+        public async Task<Response.DataResponse.DataResponse<UserEntity>> CreateUser(RegisterUserViewModel register)
         {
-            DataResponse<UserEntity> result = new DataResponse<UserEntity>();
+            Response.DataResponse.DataResponse<UserEntity> result = new Response.DataResponse.DataResponse<UserEntity>();
 
             var user = await _accountRepository.GetSingle(n => n.Email == register.Email);
 
@@ -60,9 +59,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<DataResponse<UserInformationViewModel>> GetUserInformationById(int Id)
+        public async Task<Response.DataResponse.DataResponse<UserInformationViewModel>> GetUserInformationById(int Id)
         {
-            DataResponse<UserInformationViewModel> result = new DataResponse<UserInformationViewModel>();
+            Response.DataResponse.DataResponse<UserInformationViewModel> result = new Response.DataResponse.DataResponse<UserInformationViewModel>();
             var user = await _accountRepository.GetSingle(n => n.Id == Id);
             result.Data = new UserInformationViewModel();
 
@@ -83,9 +82,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<DataResponse<UserEntity>> ForgotPassword(string email)
+        public async Task<Response.DataResponse.DataResponse<UserEntity>> ForgotPassword(string email)
         {
-            DataResponse<UserEntity> result = new DataResponse<UserEntity>();
+            Response.DataResponse.DataResponse<UserEntity> result = new Response.DataResponse.DataResponse<UserEntity>();
             var user = await _accountRepository.GetSingle(n => n.Email == email);
 
             if (user == null)
@@ -126,9 +125,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<DataResponse<UserEntity>> LoginUser(LoginUserViewModel login)
+        public async Task<Response.DataResponse.DataResponse<UserEntity>> LoginUser(LoginUserViewModel login)
         {
-            DataResponse<UserEntity> result = new DataResponse<UserEntity>();
+            Response.DataResponse.DataResponse<UserEntity> result = new Response.DataResponse.DataResponse<UserEntity>();
 
             var user = await _accountRepository.GetSingle(n => n.Email == login.Email);
 
@@ -355,9 +354,9 @@ namespace BN_Project.Core.Services.Implementations
             return EditUserVM;
         }
 
-        public async Task<DataResponse<IReadOnlyList<UserListViewModel>>> GetUsersForAdmin(int pageId)
+        public async Task<Response.DataResponse.DataResponse<IReadOnlyList<UserListViewModel>>> GetUsersForAdmin(int pageId)
         {
-            DataResponse<IReadOnlyList<UserListViewModel>> result = new DataResponse<IReadOnlyList<UserListViewModel>>();
+            Response.DataResponse.DataResponse<IReadOnlyList<UserListViewModel>> result = new Response.DataResponse.DataResponse<IReadOnlyList<UserListViewModel>>();
 
             List<UserListViewModel> data = new List<UserListViewModel>();
 

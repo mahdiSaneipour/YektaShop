@@ -1,5 +1,4 @@
 ﻿using BN_Project.Core.Response;
-using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.Entities;
@@ -7,7 +6,6 @@ using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Admin;
 using BN_Project.Domain.ViewModel.Product;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Runtime.CompilerServices;
 
 namespace BN_Project.Core.Services.Implementations
 {
@@ -18,28 +16,25 @@ namespace BN_Project.Core.Services.Implementations
         private readonly IColorRepository _colorRepository;
         private readonly IGalleryRepository _galleryRepository;
         private readonly IDiscountRepository _discountRepository;
-        private readonly IDiscountProductRepository _discountProductRepository;
 
         public ProductServices(IProductRepository productRepository,
             ICategoryRepository categoryRepository,
             IGalleryRepository galleryRepository,
             IColorRepository colorRepository,
-            IDiscountRepository discountRepository,
-            IDiscountProductRepository discountProductRepository)
+            IDiscountRepository discountRepository)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _galleryRepository = galleryRepository;
             _colorRepository = colorRepository;
             _discountRepository = discountRepository;
-            _discountProductRepository = discountProductRepository;
         }
 
         #region Products
 
-        public async Task<DataResponse<IReadOnlyList<ProductListViewModel>>> GetProducts(int pageId = 1)
+        public async Task<Response.DataResponse.DataResponse<IReadOnlyList<ProductListViewModel>>> GetProducts(int pageId = 1)
         {
-            DataResponse<IReadOnlyList<ProductListViewModel>> result = new DataResponse<IReadOnlyList<ProductListViewModel>>();
+            Response.DataResponse.DataResponse<IReadOnlyList<ProductListViewModel>> result = new Response.DataResponse.DataResponse<IReadOnlyList<ProductListViewModel>>();
 
             List<ProductListViewModel> data = new List<ProductListViewModel>();
 
@@ -108,9 +103,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<DataResponse<EditProductViewModel>> GetProductForEdit(int productId)
+        public async Task<Response.DataResponse.DataResponse<EditProductViewModel>> GetProductForEdit(int productId)
         {
-            DataResponse<EditProductViewModel> result = new DataResponse<EditProductViewModel>();
+            Response.DataResponse.DataResponse<EditProductViewModel> result = new Response.DataResponse.DataResponse<EditProductViewModel>();
 
             var product = await _productRepository.GetProductByIdWithIncludeCategory(productId);
 
@@ -146,9 +141,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<DataResponse<List<string>>> SearchProductByName(string name)
+        public async Task<Response.DataResponse.DataResponse<List<string>>> SearchProductByName(string name)
         {
-            DataResponse<List<string>> result = new DataResponse<List<string>>();
+            Response.DataResponse.DataResponse<List<string>> result = new Response.DataResponse.DataResponse<List<string>>();
             List<string> data = await _productRepository.SearchProductAndReturnName(name);
 
             if (data == null)
@@ -166,9 +161,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<DataResponse<List<ListProductViewModel>>> GetProductsListShowByCategoryId(int categoryId)
+        public async Task<Response.DataResponse.DataResponse<List<ListProductViewModel>>> GetProductsListShowByCategoryId(int categoryId)
         {
-            DataResponse<List<ListProductViewModel>> result = new DataResponse<List<ListProductViewModel>>();
+            Response.DataResponse.DataResponse<List<ListProductViewModel>> result = new Response.DataResponse.DataResponse<List<ListProductViewModel>>();
 
             var products = await _productRepository.GetProductsIncludeColorsByCategoryId(categoryId);
 
@@ -201,9 +196,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<DataResponse<ShowProductViewModel>> GetProductForShowByProductId(int productId)
+        public async Task<Response.DataResponse.DataResponse<ShowProductViewModel>> GetProductForShowByProductId(int productId)
         {
-            DataResponse<ShowProductViewModel> result = new DataResponse<ShowProductViewModel>();
+            Response.DataResponse.DataResponse<ShowProductViewModel> result = new Response.DataResponse.DataResponse<ShowProductViewModel>();
 
             var product = await _productRepository.GetProductByIdWithIncludeCategoryAndColorAndImage(productId);
 
@@ -444,9 +439,9 @@ namespace BN_Project.Core.Services.Implementations
             return categories;
         }
 
-        public async Task<DataResponse<List<string>>> SearchCategoriesByName(string name)
+        public async Task<Response.DataResponse.DataResponse<List<string>>> SearchCategoriesByName(string name)
         {
-            DataResponse<List<string>> result = new DataResponse<List<string>>();
+            Response.DataResponse.DataResponse<List<string>> result = new Response.DataResponse.DataResponse<List<string>>();
             List<string> data = await _categoryRepository.SearchCategoriesByName(name);
 
             if (data == null)
@@ -525,9 +520,9 @@ namespace BN_Project.Core.Services.Implementations
 
         #region Colors
 
-        public async Task<DataResponse<IReadOnlyList<ListColorViewModel>>> GetAllColors(int pageId)
+        public async Task<Response.DataResponse.DataResponse<IReadOnlyList<ListColorViewModel>>> GetAllColors(int pageId)
         {
-            DataResponse<IReadOnlyList<ListColorViewModel>> result = new DataResponse<IReadOnlyList<ListColorViewModel>>();
+            Response.DataResponse.DataResponse<IReadOnlyList<ListColorViewModel>> result = new Response.DataResponse.DataResponse<IReadOnlyList<ListColorViewModel>>();
 
             List<ListColorViewModel> data = new List<ListColorViewModel>();
 
@@ -615,9 +610,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<DataResponse<EditColorViewModel>> GetEditColor(int colorId)
+        public async Task<Response.DataResponse.DataResponse<EditColorViewModel>> GetEditColor(int colorId)
         {
-            DataResponse<EditColorViewModel> result = new DataResponse<EditColorViewModel>();
+            Response.DataResponse.DataResponse<EditColorViewModel> result = new Response.DataResponse.DataResponse<EditColorViewModel>();
 
             var color = await _colorRepository.GetColorWithProductInclude(colorId);
 

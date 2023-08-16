@@ -3,6 +3,8 @@
     swal({
         title: 'آیا مطمئن هستید؟',
         text: 'این داده برای همیشه حذف خواهد شد!',
+        confirmButtonText: "تایید",
+        cancelButtonText: "لغو",
         showCancelButton: true,
     }).then((willDelete) => {
         console.log(willDelete);
