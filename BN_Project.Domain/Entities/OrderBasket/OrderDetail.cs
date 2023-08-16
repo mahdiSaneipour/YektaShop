@@ -14,6 +14,8 @@ namespace BN_Project.Domain.Entities
 
         public long Price { get; set; }
 
+        public long FinalPrice { get; set; }
+
         public int ColorId { get; set; }
 
         public int OrderId { get; set; }

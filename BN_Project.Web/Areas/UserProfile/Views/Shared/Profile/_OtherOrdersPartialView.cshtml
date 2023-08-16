@@ -1,0 +1,83 @@
+﻿@model List<BoxOrderListViewModel>
+
+@if (Model.Count == 0)
+{
+    <div class="ui-box-empty-content">
+        <div class="ui-box-empty-content-icon">
+            <img src="~/images/theme/orders.svg" alt="">
+        </div>
+        <div class="ui-box-empty-content-message">
+            سفارش فعالی در این بخش وجود ندارد.
+        </div>
+    </div>
+}
+else
+{
+    @foreach (var order in Model)
+    {
+        <div class="user-order-items">
+            <div class="user-order-item">
+                <div class="user-order-item-header">
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-4 col-md-auto col-sm-6">
+                                <span class="user-order-meta fa-num">@order.CreateDate.ConvertToShamsi()</span>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-auto col-sm-6">
+                                <span class="user-order-meta">@order.OrderId</span>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-auto col-sm-6">
+                                @switch (order.Status)
+                                {
+                                    case OrderStatus.AwaitingPayment:
+                                        <span class="user-order-meta">در انتظار پرداخت</span>
+                                        break;
+
+                                    case OrderStatus.Processing:
+                                        <span class="user-order-meta">در حال پردازش</span>
+                                        break;
+
+                                    case OrderStatus.Delivered:
+                                        <span class="user-order-meta">تحویل داده شده</span>
+                                        break;
+
+                                    case OrderStatus.Returned:
+                                        <span class="user-order-meta">مرجوعی</span>
+                                        break;
+
+                                    case OrderStatus.Canceled:
+                                        <span class="user-order-meta">لغو شده</span>
+                                        break;
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-muted fw-bold">مبلغ کل:</span>
+                        <span class="fw-bold fa-num">
+                            @order.FinalPrice.ToString("#,0")
+                            <span>تومان</span>
+                        </span>
+                    </div>
+                    <a href="#" class="btn btn-link fw-bold user-order-detail-link">
+                        جزئیات
+                        سفارش <i class="ri-arrow-left-s-fill"></i>
+                    </a>
+                </div>
+                <div class="user-order-item-content">
+                    <div class="mb-3">
+                        <span class="text-dark fa-num">مرسوله 1 از 1</span>
+                    </div>
+                    <div class="user-order-item-products">
+                        @foreach (var image in order.ProductImages)
+                        {
+                            <a href="#">
+                                <img src="~/images/products/thumb/@image" alt="">
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

@@ -1,9 +1,14 @@
-﻿using BN_Project.Core.Services.Interfaces;
+﻿using BN_Project.Core.Response.DataResponse;
+using BN_Project.Core.Services.Interfaces;
 using BN_Project.Core.Tools;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.Enum.Ticket;
+using BN_Project.Domain.Enum.Order;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.UserProfile;
+using BN_Project.Domain.ViewModel.UserProfile.Order;
+using System.Collections.Generic;
+using System.ServiceModel.Channels;
 
 namespace BN_Project.Core.Services.Implementations
 {
@@ -11,12 +16,20 @@ namespace BN_Project.Core.Services.Implementations
     {
         private readonly ITicketRepository _ticketRepository;
         private readonly ISectionRepository _sectionRepository;
+        private readonly ITicketMessageRepository _ticketMessageRepository;
+        private readonly IOrderRepository _orderRepository;
 
         public TicketServices(ITicketRepository ticketRepository,
             ISectionRepository sectionRepository)
+        public ProfileServices(ITicketRepository ticketRepository,
+            ISectionRepository sectionRepository,
+            ITicketMessageRepository ticketMessageRepository,
+            IOrderRepository orderRepository)
         {
             _ticketRepository = ticketRepository;
             _sectionRepository = sectionRepository;
+            _ticketMessageRepository = ticketMessageRepository;
+            _orderRepository = orderRepository;
         }
 
         public async Task<List<TicketViewModel>> GetAllTickets()
@@ -49,6 +62,8 @@ namespace BN_Project.Core.Services.Implementations
 
             return Sections;
         }
+
+        #region Ticket 
 
         public async Task<bool> AddNewTicket(AddTicketViewModel ticket)
         {
@@ -202,5 +217,47 @@ namespace BN_Project.Core.Services.Implementations
 
             return true;
         }
+
+        #endregion
+
+        #region Order 
+
+        public async Task<DataResponse<List<BoxOrderListViewModel>>> GetBoxOrderList(OrderStatus orderStatus, int userId)
+        {
+            DataResponse<List<BoxOrderListViewModel>> result = new DataResponse<List<BoxOrderListViewModel>>();
+
+            var orders = await _orderRepository.GetOrderBoxByStatusWithIncludeOrderDetail(orderStatus, userId);
+
+            if(orders.Count == 0)
+            {
+                result.Data = new List<BoxOrderListViewModel>();
+                result.Status = Response.Status.Status.NotFound;
+                result.Message = "سفارشی پیدا نشد";
+
+            } else
+            {
+                List<BoxOrderListViewModel> data = new List<BoxOrderListViewModel>();
+                foreach (var order in orders)
+                {
+                    data.Add(new BoxOrderListViewModel()
+                    {
+                        CreateDate = order.Create,
+                        FinalPrice = order.FinalPrice,
+                        OrderId = order.Id,
+                        Status = OrderStatus.AwaitingPayment,
+                        ProductImages = await _orderRepository.GetProductImagesByOrderId(order.Id)
+                    });
+                }
+
+                result.Data = data;
+                result.Status = Response.Status.Status.Success;
+                result.Message = "سفارش ها پیدا شدند";
+            }
+
+
+            return result;
+        }
+
+        #endregion
     }
 }

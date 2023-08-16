@@ -6,7 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BN_Project.Data.Migrations
 {
     /// <inheritdoc />
+<<<<<<<< HEAD:BN_Project.Data/Migrations/20230815163124_addAllTbls.cs
     public partial class addAllTbls : Migration
+========
+    public partial class InitiatDB : Migration
+>>>>>>>> d6d619c6ee7483a8704c48a709f5158c1b0b4a89:BN_Project.Data/Migrations/20230814222301_InitiatDB.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
