@@ -1,4 +1,5 @@
 ﻿using BN_Project.Domain.Entities;
+using BN_Project.Domain.Entities.Comment;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,46 +17,30 @@ namespace BN_Project.Data.Context
         }
 
         public DbSet<UserEntity> Users { get; set; }
-
         public DbSet<Category> Categories { get; set; }
-
         public DbSet<Product> Products { get; set; }
-
         public DbSet<ProductGallery> ProductGallery { get; set; }
-
         public DbSet<Color> Colors { get; set; }
-
         public DbSet<Discount> Discounts { get; set; }
-
         public DbSet<DiscountProduct> DiscountProduct { get; set; }
-
         public DbSet<Ticket> Tickets { get; set; }
-
         public DbSet<TicketMessages> TicketMessages { get; set; }
-
         public DbSet<Section> Sections { get; set; }
-
         public DbSet<Order> Orders { get; set; }
-
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Strength> Strengths { get; set; }
+        public DbSet<WeakPoint> WeakPoints { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<UserEntity>().HasQueryFilter(u => !u.IsDelete);
-
             modelBuilder.Entity<Category>().HasQueryFilter(u => !u.IsDelete);
-
             modelBuilder.Entity<Product>().HasQueryFilter(u => !u.IsDelete);
-
             modelBuilder.Entity<Color>().HasQueryFilter(u => !u.IsDelete);
-
             modelBuilder.Entity<Discount>().HasQueryFilter(n => !n.IsDelete);
-
             modelBuilder.Entity<DiscountProduct>().HasQueryFilter(n => !n.IsDelete);
-
             modelBuilder.Entity<ProductGallery>().HasQueryFilter(n => !n.IsDelete);
-
 
             var cascadeFKs = modelBuilder
                             .Model
@@ -73,7 +58,6 @@ namespace BN_Project.Data.Context
                 .WithMany(n => n.SubCategories)
                 .HasForeignKey(n => n.ParentId)
                 .OnDelete(DeleteBehavior.NoAction);
-
 
             base.OnModelCreating(modelBuilder);
         }

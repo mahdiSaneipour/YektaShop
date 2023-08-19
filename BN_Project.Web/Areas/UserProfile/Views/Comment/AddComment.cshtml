@@ -1,0 +1,192 @@
+﻿@using BN_Project.Domain.ViewModel.UserProfile.Comment;
+@model AddCommentViewModel
+@{
+    Layout = "Profile/_ProfileLayoutNoSideBar";
+    ViewData["Title"] = "افزودن دیدگاه";
+}
+<link rel="stylesheet" href="~/css/tagify/tagify.css" />
+
+<div class="container">
+    <nav class="mb-5" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home" asp-area="">خانه</a></li>
+            <li class="breadcrumb-item"><a href="#">کالای دیجیتال</a></li>
+            <li class="breadcrumb-item"><a href="#">موبایل</a></li>
+            <li class="breadcrumb-item active"><span>@Model.ProductName</span></li>
+        </ol>
+    </nav>
+    <div class="ui-box bg-white product-detail-container mb-5">
+        <form asp-area="UserProfile" asp-action="AddComment" method="post" asp-controller="Comment" class="ui-box-content">
+            <input type="hidden" asp-for="ProductId" />
+            <div class="row mb-3">
+                <div class="col-lg-4 mb-lg-0 mb-4">
+                    <div class="product-gallery">
+                        <div class="gallery-img-container">
+                            <div class="gallery-img">
+                                <img src="~/images/products/normal/@Model.ProductImage" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 mb-4">
+                    <h2 class="product-title">
+                        @Model.ProductName
+                    </h2>
+                    <div class="product-en mb-3">
+                        <span>@Model.ProductName</span>
+                    </div>
+                    <div class="comments-product-attributes px-3">
+                        <div class="row">
+                            <div class="col-lg-6 mb-3">
+                                <div class="comments-product-attributes-title">کیفیت ساخت</div>
+                                <input id="ex19" type="text" data-provide="slider" asp-for="BuildQuality"
+                                       data-slider-ticks="[1, 2, 3, 4, 5]"
+                                       data-slider-ticks-labels='["خیلی بد", "بد", "معمولی","خوب","عالی"]'
+                                       data-slider-min="1" data-slider-max="5" data-slider-step="1"
+                                       data-slider-value="3" data-slider-tooltip="hide" />
+                                <span asp-validation-for="BuildQuality"></span>
+
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <div class="comments-product-attributes-title">
+                                    ارزش خرید به نسبت قیمت
+                                </div>
+                                <input id="ex20" type="text" data-provide="slider" asp-for="ValueOfPurches"
+                                       data-slider-ticks="[1, 2, 3, 4, 5]"
+                                       data-slider-ticks-labels='["خیلی بد", "بد", "معمولی","خوب","عالی"]'
+                                       data-slider-min="1" data-slider-max="5" data-slider-step="1"
+                                       data-slider-value="3" data-slider-tooltip="hide" />
+                                <span asp-validation-for="ValueOfPurches"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mb-3">
+                                <div class="comments-product-attributes-title">نوآوری</div>
+                                <input id="ex21" type="text" data-provide="slider" asp-for="Innovation"
+                                       data-slider-ticks="[1, 2, 3, 4, 5]"
+                                       data-slider-ticks-labels='["خیلی بد", "بد", "معمولی","خوب","عالی"]'
+                                       data-slider-min="1" data-slider-max="5" data-slider-step="1"
+                                       data-slider-value="3" data-slider-tooltip="hide" />
+                                <span asp-validation-for="Innovation"></span>
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <div class="comments-product-attributes-title">امکانات و قابلیت ها</div>
+                                <input id="ex22" type="text" data-provide="slider" asp-for="Fetures"
+                                       data-slider-ticks="[1, 2, 3, 4, 5]"
+                                       data-slider-ticks-labels='["خیلی بد", "بد", "معمولی","خوب","عالی"]'
+                                       data-slider-min="1" data-slider-max="5" data-slider-step="1"
+                                       data-slider-value="3" data-slider-tooltip="hide" />
+                                <span asp-validation-for="Fetures"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mb-3">
+                                <div class="comments-product-attributes-title">سهولت استفاده</div>
+                                <input id="ex23" type="text" data-provide="slider" asp-for="EaseOfUse"
+                                       data-slider-ticks="[1, 2, 3, 4, 5]"
+                                       data-slider-ticks-labels='["خیلی بد", "بد", "معمولی","خوب","عالی"]'
+                                       data-slider-min="1" data-slider-max="5" data-slider-step="1"
+                                       data-slider-value="3" data-slider-tooltip="hide" />
+                                <span asp-validation-for="EaseOfUse"></span>
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <div class="comments-product-attributes-title">طراحی و ظاهر</div>
+                                <input id="ex24" type="text" data-provide="slider" asp-for="Apparent"
+                                       data-slider-ticks="[1, 2, 3, 4, 5]"
+                                       data-slider-ticks-labels='["خیلی بد", "بد", "معمولی","خوب","عالی"]'
+                                       data-slider-min="1" data-slider-max="5" data-slider-step="1"
+                                       data-slider-value="3" data-slider-tooltip="hide" />
+                                <span asp-validation-for="Apparent"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="fs-5 fw-bold text-dark mb-3">
+                        دیگران را با نوشتن نظرات خود، برای انتخاب این محصول راهنمایی کنید.
+                    </div>
+                    <div class="fs-7 fw-bold text-info mb-3">
+                        لطفا پیش از ارسال نظر، خلاصه قوانین زیر را مطالعه کنید:
+                    </div>
+                    <ul class="ps-4 text-secondary">
+                        <li class="mb-3">
+                            لازم است محتوای ارسالی منطبق برعرف و شئونات جامعه و با بیانی رسمی و
+                            عاری از لحن
+                            تند، تمسخرو توهین باشد.
+                        </li>
+                        <li class="mb-3">
+                            از ارسال لینک‌های سایت‌های دیگر و ارایه‌ی اطلاعات شخصی خودتان مثل
+                            شماره تماس،
+                            ایمیل و آی‌دی شبکه‌های اجتماعی پرهیز کنید.
+                        </li>
+                        <li class="mb-3">
+                            در نظر داشته باشید هدف نهایی از ارائه‌ی نظر درباره‌ی کالا ارائه‌ی
+                            اطلاعات مشخص و
+                            دقیق برای راهنمایی سایر کاربران در فرآیند خرید یک محصول توسط ایشان است.
+                        </li>
+                        <li class="mb-3">
+                            با توجه به ساختار بخش نظرات، از پرسیدن سوال یا درخواست راهنمایی در
+                            این بخش
+                            خودداری کرده و سوالات خود را در بخش «پرسش و پاسخ» مطرح کنید.
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-5 mb-md-0 mb-4">
+                    <div class="add-comment-product">
+                        <div class="form-element-row mb-3">
+                            <label class="label">عنوان نظر شما</label>
+                            <input type="text" class="form-control" asp-for="Title"
+                                   placeholder="عنوان نظر خود را بنویسید..">
+                            <span asp-validation-for="Title"></span>
+                        </div>
+                        <div class="form-element-row mb-3">
+                            <label class="label">نقاط قوت</label>
+                            <div class="add-point-container">
+                                <textarea rows="5" class="tags form-control p-3" asp-for="Strength"></textarea>
+                                <span asp-validation-for="Strength"></span>
+                            </div>
+                        </div>
+                        <div class="form-element-row mb-3">
+                            <label class="label">نقاط ضعف</label>
+                            <div class="add-point-container">
+                                <textarea rows="5" class="tags form-control p-3" asp-for="WeakPoints"></textarea>
+                                <span asp-validation-for="WeakPoints"></span>
+                            </div>
+                        </div>
+                        <div class="form-element-row mb-3">
+                            <label class="label">متن نظر شما (اجباری)</label>
+                            <textarea rows="5" class="form-control" asp-for="CommentMessage"
+                                      placeholder="متن نظر خود را بنویسید.."></textarea>
+                            <span asp-validation-for="CommentMessage"></span>
+                        </div>
+                        <div class="text-end mb-3">
+                            <button class="btn btn-primary" type="submit">
+                                ثبت نظر <i class="ri-send-plane-fill ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                        <div class="my-2">
+                            با “ثبت نظر” موافقت خود را با <a href="#" class="link">قوانین انتشار نظرات</a>
+                            در سایت اعلام می‌کنم.
+                        </div>
+                        <div class="my-2">
+                            <a href="#" class="link">انصراف و بازگشت</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/tagify/jQuery.tagify.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $('.tags').tagify();
+    </script>
+                            }

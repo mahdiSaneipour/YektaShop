@@ -19,8 +19,6 @@ namespace BN_Project.Web.Controllers
             return View();
         }
 
-        [HttpGet, ValidateAntiForgeryToken]
-        [Route("ProductsGroup/{categoryId}/{orderBy?}")]
         public async Task<IActionResult> ProductsGroup(int categoryId, OrderByEnum? orderBy = OrderByEnum.Newest)
         {
             var result = await _productServices.GetProductsListShowByCategoryId(categoryId);
@@ -33,8 +31,6 @@ namespace BN_Project.Web.Controllers
             return Redirect("/");
         }
 
-        [HttpGet, ValidateAntiForgeryToken]
-        [Route("ShowProduct/{productId}")]
         public async Task<IActionResult> ShowProduct(int productId)
         {
             var result = await _productServices.GetProductForShowByProductId(productId);

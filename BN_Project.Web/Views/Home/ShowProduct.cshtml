@@ -1302,10 +1302,10 @@
                                     </div>
                                 </div>
                                 <div class="mb-2">دیدگاه خود را درباره این کالا بیان کنید</div>
-                                <button class="btn btn-block btn-outline-primary">
+                                <a class="btn btn-block btn-outline-primary" asp-action="AddComment" asp-controller="Comment" asp-area="UserProfile" asp-route-Id="@Model.ProductId">
                                     افزودن
                                     دیدگاه
-                                </button>
+                                </a>
                             </div>
                             <!-- end of comments-sidebar -->
                         </div>

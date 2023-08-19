@@ -18,10 +18,7 @@ namespace BN_Project.Core.Services.Implementations
         private readonly ISectionRepository _sectionRepository;
         private readonly ITicketMessageRepository _ticketMessageRepository;
         private readonly IOrderRepository _orderRepository;
-
         public TicketServices(ITicketRepository ticketRepository,
-            ISectionRepository sectionRepository)
-        public ProfileServices(ITicketRepository ticketRepository,
             ISectionRepository sectionRepository,
             ITicketMessageRepository ticketMessageRepository,
             IOrderRepository orderRepository)
@@ -222,9 +219,9 @@ namespace BN_Project.Core.Services.Implementations
 
         #region Order 
 
-        public async Task<DataResponse<List<BoxOrderListViewModel>>> GetBoxOrderList(OrderStatus orderStatus, int userId)
+        public async Task<Response.DataResponse.DataResponse<List<BoxOrderListViewModel>>> GetBoxOrderList(OrderStatus orderStatus, int userId)
         {
-            DataResponse<List<BoxOrderListViewModel>> result = new DataResponse<List<BoxOrderListViewModel>>();
+            Response.DataResponse.DataResponse<List<BoxOrderListViewModel>> result = new Response.DataResponse.DataResponse<List<BoxOrderListViewModel>>();
 
             var orders = await _orderRepository.GetOrderBoxByStatusWithIncludeOrderDetail(orderStatus, userId);
 

@@ -1,6 +1,7 @@
 ﻿using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
+using BN_Project.Domain.Enum.Order;
 using BN_Project.Domain.ViewModel.UserProfile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +14,13 @@ namespace BN_Project.Web.Areas.Profile.Controllers
     public class UserProfileController : Controller
     {
         private readonly IUserServices _userServicess;
-        private readonly ITicketServices _profileServices;
+        private readonly ITicketServices _ticketServices;
 
         public UserProfileController(IUserServices UserServices,
-            ITicketServices profileServices)
+            ITicketServices ticketServices)
         {
             _userServicess = UserServices;
-            _profileServices = profileServices;
+            _ticketServices = ticketServices;
         }
 
         [Route("Index")]
@@ -135,7 +136,7 @@ namespace BN_Project.Web.Areas.Profile.Controllers
         public async Task<IActionResult> Orders()
         {
             int userId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
-            var result = await _profileServices.GetBoxOrderList(OrderStatus.AwaitingPayment, userId);
+            var result = await _ticketServices.GetBoxOrderList(OrderStatus.AwaitingPayment, userId);
             
             if (result.Status == Status.Success)
             {
@@ -154,7 +155,7 @@ namespace BN_Project.Web.Areas.Profile.Controllers
         {
             int userId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
 
-            var result = await _profileServices.GetBoxOrderList(orderStatus, userId);
+            var result = await _ticketServices.GetBoxOrderList(orderStatus, userId);
             return PartialView("../Shared/Profile/_OtherOrdersPartialView", result.Data);
         }
 

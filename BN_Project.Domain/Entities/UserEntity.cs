@@ -1,11 +1,5 @@
 ﻿using BN_Project.Domain.Entities.Common;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BN_Project.Domain.Entities
 {
@@ -27,5 +21,7 @@ namespace BN_Project.Domain.Entities
 
         [InverseProperty("User")]
         public List<Order> Orders { get; set; }
+        public ICollection<Comment.Comment> Comments { get; set; }
+
     }
 }
