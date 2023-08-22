@@ -277,7 +277,8 @@
                         </div>
                     </div>
                     <div class="product-seller--add-to-cart">
-                        <a href="#" class="btn btn-primary w-100" data-toast data-toast-type="success"
+                        <a id="add-to-basket" asp-area="UserProfile" asp-controller="UserOrder"
+                        asp-action="AddProductToBasket" asp-route-colorId="@Model.Colors.FirstOrDefault(c => c.IsDefault).Id" class="btn btn-primary w-100" data-toast data-toast-type="success"
                            data-toast-color="green" data-toast-position="topRight"
                            data-toast-icon="ri-check-fill" data-toast-title="موفق!"
                            data-toast-message="به سبد اضافه شد!">

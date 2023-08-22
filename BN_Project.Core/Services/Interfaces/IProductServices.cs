@@ -29,6 +29,8 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<DataResponse<ShowProductViewModel>> GetProductForShowByProductId(int productId);
 
+        public Task<DataResponse<Product>> GetProductWithIncludesByColorId(int colorId);
+
         #endregion
 
         #region Categories
@@ -73,6 +75,10 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<long> GetCountByColorId(int colorId);
 
+        public Task<BaseResponse> ChangeColorCount(int colorId, int count, bool action);
+
+        public Task<bool> IsThatMuchColorExist(int colorId, int count);
+
         #endregion
 
         #region Gallery
@@ -90,6 +96,7 @@ namespace BN_Project.Core.Services.Interfaces
         public Task<List<DiscountViewModel>> GetAllDiscounts();
 
         public Task<List<ProductsForDiscountViewModel>> GetAllProductsForDiscount();
+
         public Task<bool> AddDiscount(AddDiscountViewModel discount);
 
         public Task<bool> RemoveDiscount(int Id);
@@ -99,6 +106,9 @@ namespace BN_Project.Core.Services.Interfaces
         public Task<EditDiscountViewModel> GetDiscountForEdit(int Id);
 
         public Task<bool> EditDiscount(EditDiscountViewModel editDiscount);
+
+        public Task<long> GetPriceWithDiscountByColorId(int colorId);
+
         #endregion
     }
 }

@@ -1,10 +1,5 @@
 ﻿using BN_Project.Domain.Entities.Common;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BN_Project.Domain.Entities
 {
@@ -19,6 +14,8 @@ namespace BN_Project.Domain.Entities
         public int ColorId { get; set; }
 
         public int OrderId { get; set; }
+
+        public DateTime ExpireTime { get; set; } = DateTime.Now.AddDays(2);
 
         [ForeignKey(nameof(ColorId))]
         public Color Color { get; set; }

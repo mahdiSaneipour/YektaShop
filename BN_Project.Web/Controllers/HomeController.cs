@@ -19,7 +19,7 @@ namespace BN_Project.Web.Controllers
             return View();
         }
 
-        [HttpGet, ValidateAntiForgeryToken]
+        [HttpGet]
         [Route("ProductsGroup/{categoryId}/{orderBy?}")]
         public async Task<IActionResult> ProductsGroup(int categoryId, OrderByEnum? orderBy = OrderByEnum.Newest)
         {
@@ -33,7 +33,7 @@ namespace BN_Project.Web.Controllers
             return Redirect("/");
         }
 
-        [HttpGet, ValidateAntiForgeryToken]
+        [HttpGet]
         [Route("ShowProduct/{productId}")]
         public async Task<IActionResult> ShowProduct(int productId)
         {

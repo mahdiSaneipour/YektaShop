@@ -3,6 +3,7 @@ const showPrice = document.querySelector("#show-price");
 const showCount = document.querySelector("#show-count");
 const sellSection = document.querySelector("#sell-section");
 const notAvailable = document.querySelector("#not-available");
+const addToBasket = document.querySelector("#add-to-basket");
 
 
 for (var i = 0; i < radios.length; i++) {
@@ -19,16 +20,14 @@ for (var i = 0; i < radios.length; i++) {
                 showPrice.innerHTML = commafy(this.response.price);
             }
         }
-    });
 
-    radios[i].addEventListener("click", function () {
-        var xhr = new XMLHttpRequest();
+        var xhr2 = new XMLHttpRequest();
 
-        xhr.responseType = 'json';
-        xhr.open('GET', '/Api/ProductApi/GetCountByColorId/' + this.id, true);
-        xhr.send();
+        xhr2.responseType = 'json';
+        xhr2.open('GET', '/Api/ProductApi/GetCountByColorId/' + this.id, true);
+        xhr2.send();
 
-        xhr.onreadystatechange = async function () {
+        xhr2.onreadystatechange = async function () {
 
             if (this.readyState == 4 && this.status == 200) {
 
@@ -48,7 +47,10 @@ for (var i = 0; i < radios.length; i++) {
                     notAvailable.style.display = "block";
                 }
             }
+
         }
+        addToBasket.href = "../UserOrder/AddProductToBasket/" + this.id;
+
     });
 }
 

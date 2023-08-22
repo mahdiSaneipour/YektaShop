@@ -6,6 +6,7 @@
         NotValid,
         NotFound,
         AlreadyHave,
+        DontHave,
         AlreadyHavePhoneNumber,
         NotMatch,
         NotActive,

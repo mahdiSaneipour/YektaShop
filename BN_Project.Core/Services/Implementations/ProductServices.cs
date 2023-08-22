@@ -1,4 +1,5 @@
 ﻿using BN_Project.Core.Response;
+using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.Entities;
@@ -32,9 +33,9 @@ namespace BN_Project.Core.Services.Implementations
 
         #region Products
 
-        public async Task<Response.DataResponse.DataResponse<IReadOnlyList<ProductListViewModel>>> GetProducts(int pageId = 1)
+        public async Task<DataResponse<IReadOnlyList<ProductListViewModel>>> GetProducts(int pageId = 1)
         {
-            Response.DataResponse.DataResponse<IReadOnlyList<ProductListViewModel>> result = new Response.DataResponse.DataResponse<IReadOnlyList<ProductListViewModel>>();
+            DataResponse<IReadOnlyList<ProductListViewModel>> result = new DataResponse<IReadOnlyList<ProductListViewModel>>();
 
             List<ProductListViewModel> data = new List<ProductListViewModel>();
 
@@ -103,9 +104,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<Response.DataResponse.DataResponse<EditProductViewModel>> GetProductForEdit(int productId)
+        public async Task<DataResponse<EditProductViewModel>> GetProductForEdit(int productId)
         {
-            Response.DataResponse.DataResponse<EditProductViewModel> result = new Response.DataResponse.DataResponse<EditProductViewModel>();
+            DataResponse<EditProductViewModel> result = new DataResponse<EditProductViewModel>();
 
             var product = await _productRepository.GetProductByIdWithIncludeCategory(productId);
 
@@ -141,9 +142,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<Response.DataResponse.DataResponse<List<string>>> SearchProductByName(string name)
+        public async Task<DataResponse<List<string>>> SearchProductByName(string name)
         {
-            Response.DataResponse.DataResponse<List<string>> result = new Response.DataResponse.DataResponse<List<string>>();
+            DataResponse<List<string>> result = new DataResponse<List<string>>();
             List<string> data = await _productRepository.SearchProductAndReturnName(name);
 
             if (data == null)
@@ -161,9 +162,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<Response.DataResponse.DataResponse<List<ListProductViewModel>>> GetProductsListShowByCategoryId(int categoryId)
+        public async Task<DataResponse<List<ListProductViewModel>>> GetProductsListShowByCategoryId(int categoryId)
         {
-            Response.DataResponse.DataResponse<List<ListProductViewModel>> result = new Response.DataResponse.DataResponse<List<ListProductViewModel>>();
+            DataResponse<List<ListProductViewModel>> result = new DataResponse<List<ListProductViewModel>>();
 
             var products = await _productRepository.GetProductsIncludeColorsByCategoryId(categoryId);
 
@@ -196,9 +197,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<Response.DataResponse.DataResponse<ShowProductViewModel>> GetProductForShowByProductId(int productId)
+        public async Task<DataResponse<ShowProductViewModel>> GetProductForShowByProductId(int productId)
         {
-            Response.DataResponse.DataResponse<ShowProductViewModel> result = new Response.DataResponse.DataResponse<ShowProductViewModel>();
+            DataResponse<ShowProductViewModel> result = new DataResponse<ShowProductViewModel>();
 
             var product = await _productRepository.GetProductByIdWithIncludeCategoryAndColorAndImage(productId);
 
@@ -217,7 +218,7 @@ namespace BN_Project.Core.Services.Implementations
 
             categories.Reverse();
 
-            if (product == null)
+            if (product == null && product.Colors == null)
             {
                 result.Status = Status.NotFound;
                 result.Message = "محصولی با این ایدی پیدا نشد";
@@ -245,6 +246,37 @@ namespace BN_Project.Core.Services.Implementations
                 result.Data = data;
 
             }
+            return result;
+        }
+
+        public async Task<DataResponse<Product>> GetProductWithIncludesByColorId(int colorId)
+        {
+            DataResponse<Product> result = new DataResponse<Product>();
+
+            int productId = await _colorRepository.GetProductIdByColorId(colorId);
+
+            if (productId == 0)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "رنگی با این ایدی پیدا نشد";
+
+                return result;
+            }
+
+            var product = await _productRepository.GetProductByIdWithIncludeDiscount(productId);
+
+            if (product == null)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "محصولی با این ایدی پیدا نشد";
+
+                return result;
+            }
+
+            result.Status = Status.Success;
+            result.Message = "محصول با موفقیت پیدا شد";
+            result.Data = product;
+
             return result;
         }
 
@@ -439,9 +471,9 @@ namespace BN_Project.Core.Services.Implementations
             return categories;
         }
 
-        public async Task<Response.DataResponse.DataResponse<List<string>>> SearchCategoriesByName(string name)
+        public async Task<DataResponse<List<string>>> SearchCategoriesByName(string name)
         {
-            Response.DataResponse.DataResponse<List<string>> result = new Response.DataResponse.DataResponse<List<string>>();
+            DataResponse<List<string>> result = new DataResponse<List<string>>();
             List<string> data = await _categoryRepository.SearchCategoriesByName(name);
 
             if (data == null)
@@ -520,9 +552,9 @@ namespace BN_Project.Core.Services.Implementations
 
         #region Colors
 
-        public async Task<Response.DataResponse.DataResponse<IReadOnlyList<ListColorViewModel>>> GetAllColors(int pageId)
+        public async Task<DataResponse<IReadOnlyList<ListColorViewModel>>> GetAllColors(int pageId)
         {
-            Response.DataResponse.DataResponse<IReadOnlyList<ListColorViewModel>> result = new Response.DataResponse.DataResponse<IReadOnlyList<ListColorViewModel>>();
+            DataResponse<IReadOnlyList<ListColorViewModel>> result = new DataResponse<IReadOnlyList<ListColorViewModel>>();
 
             List<ListColorViewModel> data = new List<ListColorViewModel>();
 
@@ -610,9 +642,9 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<Response.DataResponse.DataResponse<EditColorViewModel>> GetEditColor(int colorId)
+        public async Task<DataResponse<EditColorViewModel>> GetEditColor(int colorId)
         {
-            Response.DataResponse.DataResponse<EditColorViewModel> result = new Response.DataResponse.DataResponse<EditColorViewModel>();
+            DataResponse<EditColorViewModel> result = new DataResponse<EditColorViewModel>();
 
             var color = await _colorRepository.GetColorWithProductInclude(colorId);
 
@@ -760,6 +792,43 @@ namespace BN_Project.Core.Services.Implementations
         {
             return await _colorRepository.GetColorCountByColorId(colorId);
         }
+
+        public async Task<BaseResponse> ChangeColorCount(int colorId, int count, bool action)
+        {
+            BaseResponse result = new BaseResponse();
+
+            var color = await _colorRepository.GetSingle(c => c.Id == colorId);
+
+            if(color == null)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "رنگی با این ایدی پیدا نشد";
+
+                return result;
+            }
+
+            if (action)
+            {
+                color.Count = color.Count + count;
+            } else
+            {
+                color.Count = color.Count - count;
+            }
+
+            _colorRepository.Update(color);
+            await _colorRepository.SaveChanges();
+
+            result.Status = Status.Success;
+            result.Message = "تعداد با موفقیت تغییر کرد";
+
+            return result;
+        }
+
+        public Task<bool> IsThatMuchColorExist(int colorId, int count)
+        {
+            return _colorRepository.IsThereAny(c => c.Id == colorId && c.Count >= count);
+        }
+
         #endregion
 
         #region Discount 
@@ -911,6 +980,17 @@ namespace BN_Project.Core.Services.Implementations
 
             return true;
         }
+
+        public async Task<long> GetPriceWithDiscountByColorId(int colorId)
+        {
+            int discount = await _colorRepository.GetDiscountPercentByColorId(colorId);
+            long basePrice = await _colorRepository.GetColorPriceByColorId(colorId);
+
+            var price = Tools.Tools.PercentagePrice(basePrice, discount);
+
+            return price;
+        }
+
         #endregion
     }
 }

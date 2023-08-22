@@ -6,13 +6,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BN_Project.Data.Repository
 {
-    public class OrderRepository : IOrderRepository
+    public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
         private readonly BNContext _context;
 
-        public OrderRepository(BNContext context)
+        public OrderRepository(BNContext context) : base (context)
         {
             _context = context;
+        }
+
+        public async Task<Order> GetBasketOrderWithIncludeOrderDetailsAndProductAndDiscountAndColorByUserId(int userId)
+        {
+            return await _context.Orders.Where(o => o.UserId == userId && o.Status == 0).Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Color).ThenInclude(c => c.Product)
+                .ThenInclude(p => p.Discounts).FirstOrDefaultAsync();
         }
 
         public async Task<List<Order>> GetOrderBoxByStatusWithIncludeOrderDetail(OrderStatus orderStatus, int userId)

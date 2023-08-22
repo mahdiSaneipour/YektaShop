@@ -3,7 +3,7 @@
 tabs.forEach((element, index) => {
     element.addEventListener("click", function () {
 
-        var url = "OtherOrders/" + element.id;
+        var url = "../UserOrder/OtherOrders/" + element.id;
 
         $.ajax({
             type: "GET", //Method type

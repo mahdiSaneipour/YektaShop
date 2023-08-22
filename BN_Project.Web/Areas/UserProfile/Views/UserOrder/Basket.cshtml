@@ -1,0 +1,255 @@
+﻿@model List<BoxBasketListViewModel>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xl-9 col-lg-8">
+            <!-- start of nav-tabs -->
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link fs-6 fw-bold active" id="nav-1-tab" data-bs-toggle="tab" data-bs-target="#nav-1" type="button" role="tab" aria-controls="nav-1" aria-selected="true">
+                        سبد خرید
+                        <span class="counter fa-num">@Model.Count</span>
+                    </button>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                @if (Model.Count == 0)
+                {
+                    <!-- start of tab-pane -->
+                    <div class="tab-pane py-4 fade show active" id="nav-1" role="tabpanel"
+                         aria-labelledby="nav-1-tab">
+                        <div class="ui-box bg-white">
+                            <div class="ui-box-empty-content">
+                                <div class="ui-box-empty-content-icon">
+                                    <img src="~/images/theme/cart-empty.png" alt="">
+                                </div>
+                                <div class="ui-box-empty-content-message text-center">
+                                    <div class="mb-3">سبد خرید شما خالی است!</div>
+                                    <p class="text-secondary text-decoration-none fs-7 fw-bold">
+                                        می‌توانید برای مشاهده محصولات بیشتر به صفحات زیر بروید
+                                    </p>
+                                    <div class="d-flex justify-content-center flex-wrap">
+                                        <a href="#" class="link fs-7 fw-bold border-bottom-0 m-2">
+                                            تخفیف‌ها و
+                                            پیشنهادها
+                                        </a>
+                                        <a href="#" class="link fs-7 fw-bold border-bottom-0 m-2">
+                                            محصولات
+                                            پرفروش
+                                            روز
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end of tab-pane -->
+                    <!-- start of tab-pane -->
+                    <div class="tab-pane py-4 fade" id="nav-2" role="tabpanel" aria-labelledby="nav-2-tab">
+                        <div class="ui-box bg-white">
+                            <div class="ui-box-empty-content">
+                                <div class="ui-box-empty-content-icon">
+                                    <img src="~/images/theme/cart-empty-sfl.png" alt="">
+                                </div>
+                                <div class="ui-box-empty-content-message text-center">
+                                    <div class="mb-3">لیست خرید بعدی شما خالی است!</div>
+                                    <div class="col-8 mx-auto">
+                                        <p class="text-secondary text-decoration-none fs-7 fw-bold">
+                                            شما می‌توانید محصولاتی که به سبد خرید خود افزوده‌اید و فعلا قصد خرید
+                                            آن‌ها را ندارید، در لیست خرید بعدی قرار داده و هر زمان مایل بودید
+                                            آن‌ها
+                                            را به سبد خرید اضافه کرده و خرید آن‌ها را تکمیل کنید.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end of tab-pane -->
+                }
+                else
+                {
+                    <div class="ui-box bg-white p-2">
+                        <div class="ui-box-content">
+                            <!-- start of cart-items -->
+                            <div class="cart-items">
+                                <!-- start of cart-item -->
+                                @foreach (var item in Model)
+                                {
+                                    <div class="cart-item">
+                                        <div class="cart-item--thumbnail">
+                                            <a href="#">
+                                                <img src="~/images/Products/thumb/@item.Image" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="cart-item--detail">
+                                            <h2 class="cart-item--title mb-2">
+                                                <a asp-controller="Home" asp-action="ShowProduct" asp-route-productId="@item.ProductId">
+                                                    @item.Name
+                                                </a>
+                                            </h2>
+                                            <div class="cart-item--variant mb-2">
+                                                <span class="color" style="background-color: @item.Hex"></span>
+                                                <span class="ms-1">@item.ColorName</span>
+                                            </div>
+                                            <div class="cart-item--data mb-4">
+                                                <ul>
+                                                    <li>
+                                                        <i class="ri-shield-check-fill text-secondary"></i><span>
+                                                            گارانتی
+                                                            اصالت و
+                                                            سلامت فیزیکی
+                                                            کالا
+                                                        </span>
+                                                    </li>
+                                                    <li>
+                                                        <i class="ri-store-3-fill text-secondary"></i><span>
+                                                            اسم
+                                                            فروشگاه
+                                                        </span>
+                                                    </li>
+                                                    <li>
+                                                        @if (item.Count != 0)
+                                                        {
+                                                            <i class="ri-checkbox-multiple-fill text-primary"></i>
+                                                            <span>
+                                                                موجود
+                                                                در
+                                                                انبار
+                                                            </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="ri-checkbox-multiple-fill text-primary danger"></i>
+                                                            <span>
+                                                                فعلا در انبار موجود نیست
+                                                            </span>
+                                                        }
+                                                        <span class="text-secondary mx-2">|</span>
+                                                        <i class="ri-truck-fill text-danger"></i><span>
+                                                            ارسال
+                                                            (نحوه
+                                                            ارسال)
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="cart-item--price--actions">
+                                                <div class="cart-item--actions">
+                                                    <div class="num-block fa-num me-3">
+                                                        <div class="num-in">
+                                                            <a asp-controller="UserOrder" asp-action="ChangeProductOrderCount" asp-route-orderDetailId="@item.OrderDetailId" asp-route-status="true">
+                                                                <div class="plus">
+                                                                    +
+                                                                </div>
+                                                            </a>
+                                                            <input type="text" class="in-num" value="@item.Count"
+                                                                   readonly="">
+                                                            <a asp-controller="UserOrder" asp-action="ChangeProductOrderCount" asp-route-orderDetailId="@item.OrderDetailId" asp-route-status="false">
+                                                                <div class="mines">
+                                                                    -
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-link btn-sm text-secondary">
+                                                        <a class="text-danger" asp-controller="UserOrder" asp-action="DeleteOrderDetail" asp-route-orderDetailId="@item.OrderDetailId">
+                                                            <i class="ri-delete-bin-5-line me-1"></i><span>حذف</span>
+                                                        </a>
+                                                    </button>
+                                                </div>
+                                                <div class="cart-item--price fa-num">
+
+                                                    @if (item.Discount != 0)
+                                                    {
+                                                        long totalPrice = item.Price + item.Discount;
+
+                                                        <div class="cart-item--discount">
+                                                            <span>تخفیف</span>
+                                                            <del>@totalPrice.ToString("#,0")</del>
+                                                            <span class="currency">تومان</span>
+                                                        </div>
+                                                    }
+                                                    <div class="cart-item--price-now">
+                                                        <span>@item.Price.ToString("#,0")</span>
+                                                        <span class="currency">تومان</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <!-- end of cart-items -->
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if(Model.Count != 0)
+        {
+            <div class="col-xl-3 col-lg-4">
+                <div class="ui-sticky ui-sticky-top">
+                    <!-- start of checkout-bill -->
+                    <div class="checkout-bill ui-box bg-white mb-5">
+                        @{
+                            long totalPrice = Model.Sum(p => p.Price) + Model.Sum(p => p.Discount);
+                        }
+                        <div class="checkout-bill-row">
+                            <div class="checkout-bill-row-label">قیمت کالاها (@Model.Count)</div>
+                            <div class="checkout-bill-row-value">
+                                <span class="fs-6"></span> @totalPrice.ToString("#,0") <span class="currency">تومان</span>
+                            </div>
+                        </div>
+                        <div class="checkout-bill-row">
+                            <div class="checkout-bill-row-label">تخفیف کالاها</div>
+                            <div class="checkout-bill-row-value">
+                                <span class="fs-6 text-danger">@Model.Sum(p => p.Discount).ToString("#,0")</span>
+                                <span class="currency text-danger">تومان</span>
+                            </div>
+                        </div>
+                        <div class="checkout-bill-row">
+                            <div class="checkout-bill-row-label">جمع سبد خرید</div>
+                            <div class="checkout-bill-row-value">
+                                <span class="fs-6">@Model.Sum(p => p.Price).ToString("#,0")</span> <span class="currency">تومان</span>
+                            </div>
+                        </div>
+                        <div class="checkout-bill-row checkout-bill-note">
+                            هزینه‌ی ارسال در ادامه بر اساس آدرس، زمان و نحوه‌ی ارسال انتخابی شما‌ محاسبه و به
+                            این مبلغ اضافه خواهد شد
+                        </div>
+                        <div class="checkout-bill-row checkout-bill-action">
+                            <a href="#" class="btn btn-block btn-primary">ادامه فرایند خرید</a>
+                        </div>
+                        <div class="checkout-bill-row checkout-bill-footer">
+                            <div class="checkout-bill-row-label">
+                                <span class="d-flex">
+                                    <i class="ri-copper-coin-fill text-warning me-1"></i>
+                                    <span class="fs-7">امتیاز باشگاه مشتریان</span>
+                                </span>
+                            </div>
+                            <div class="checkout-bill-row-value">۱۵۰ <span class="fs-7 fw-bold text-muted">امتیاز</span></div>
+                        </div>
+                    </div>
+                    <!-- end of checkout-bill -->
+                    <!-- start of widget -->
+                    <div class="widget p-0">
+                        <div class="widget-content widget--free-shipping">
+                            <div class="free-shipping--detail">
+                                <div class="title">ارسال رایگان سفارش</div>
+                                <div class="subtitle">سفارش‌های بالای ۳۰۰ هزار تومان</div>
+                            </div>
+                            <div class="free-shipping--banner">
+                                <img src="~/images/theme/free-shipping--banner.png" alt="ارسال رایگان سفارش">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end of widget -->
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+

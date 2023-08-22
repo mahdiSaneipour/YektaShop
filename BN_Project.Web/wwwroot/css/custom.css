@@ -67,4 +67,22 @@ span.input-icon.is-default {
 .product-gallery .product-options {
     right: -10px;
 }
+
+a {
+    text-decoration: none;
+}
+
+.plus {
+    width: 40px;
+    text-align: center;
+    font-size: 21px;
+    color: green;
+}
+
+.mines {
+    width: 40px;
+    text-align: center;
+    font-size: 21px;
+    color: red;
+}
 /*# sourceMappingURL=custom.css.map */

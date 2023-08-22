@@ -54,5 +54,10 @@ namespace BN_Project.Data.Repository
                 .Include(p => p.Images).AsSplitQuery()
                 .FirstOrDefaultAsync(p => p.Id == productId);
         }
+
+        public async Task<Product> GetProductByIdWithIncludeDiscount(int productId)
+        {
+            return await _context.Products.Where(p => p.Id == productId).Include(p => p.Discounts).FirstOrDefaultAsync();
+        }
     }
 }

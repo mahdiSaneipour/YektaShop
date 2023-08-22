@@ -56,6 +56,10 @@ namespace BN_Project.Data.Context
 
             modelBuilder.Entity<ProductGallery>().HasQueryFilter(n => !n.IsDelete);
 
+            modelBuilder.Entity<Order>().HasQueryFilter(n => !n.IsDelete);
+
+            modelBuilder.Entity<OrderDetail>().HasQueryFilter(n => !n.IsDelete);
+
 
             var cascadeFKs = modelBuilder
                             .Model

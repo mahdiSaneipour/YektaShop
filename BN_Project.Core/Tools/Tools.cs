@@ -18,6 +18,18 @@ namespace BN_Project.Core.Tools
             return Guid.NewGuid().ToString().Replace("-", "");
         }
 
+        public static long PercentagePrice(long price, int discount)
+        {
+            long result = price - ((price / 100) * discount);
+            return result;
+        }
+
+        public static long DiscountPrice(long price, int discount)
+        {
+            long result = ((price / 100) * discount);
+            return result;
+        }
+
         public static string ConvertToShamsi(this DateTime value)
         {
             PersianCalendar pc = new PersianCalendar();

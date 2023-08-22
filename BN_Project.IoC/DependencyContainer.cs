@@ -23,12 +23,14 @@ namespace BN_Project.IoC
             services.AddScoped<ITicketRepository, TicketRepository>();
             services.AddScoped<ISectionRepository, SectionRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             services.AddScoped<ITicketMessageRepository, TicketMessageRepository>();
 
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IViewRenderService, RenderViewToString>();
             services.AddScoped<ITicketServices, TicketServices>();
+            services.AddScoped<IOrderServices, OrderServices>();
         }
     }
 }
