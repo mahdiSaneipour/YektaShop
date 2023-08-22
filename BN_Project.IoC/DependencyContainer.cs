@@ -4,7 +4,9 @@ using BN_Project.Core.Services.Interfaces;
 using BN_Project.Data.Repository;
 using BN_Project.Domain.IRepository;
 using EP.Core.Tools.RenderViewToString;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace BN_Project.IoC
 {
@@ -25,11 +27,18 @@ namespace BN_Project.IoC
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             services.AddScoped<ITicketMessageRepository, TicketMessageRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IImpressionsRepository, ImpressionRepository>();
+            services.AddScoped<ICommentStrengthRepository, CommentStrengthRepository>();
+            services.AddScoped<ICommentWeakPointsRepository, CommentWeakPointsRepository>();
 
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IViewRenderService, RenderViewToString>();
             services.AddScoped<ITicketServices, TicketServices>();
+            services.AddScoped<ICommentServices, CommentServices>();
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IOrderServices, OrderServices>();
         }
     }

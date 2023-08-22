@@ -14,13 +14,13 @@ namespace BN_Project.Web.Areas.Profile.Controllers
     public class UserProfileController : Controller
     {
         private readonly IUserServices _userServicess;
-        private readonly ITicketServices _profileServices;
+        private readonly ITicketServices _ticketServices;
 
         public UserProfileController(IUserServices UserServices,
-            ITicketServices profileServices)
+            ITicketServices ticketServices)
         {
             _userServicess = UserServices;
-            _profileServices = profileServices;
+            _ticketServices = ticketServices;
         }
 
         [Route("Index")]

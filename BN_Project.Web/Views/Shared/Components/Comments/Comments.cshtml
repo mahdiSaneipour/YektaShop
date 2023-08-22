@@ -1,0 +1,54 @@
+﻿@using BN_Project.Domain.ViewModel.UserProfile.Comment;
+@using Microsoft.AspNetCore.Identity;
+@model List<ShowCommentsForUsersViewModel>
+
+<div class="comments">
+    @foreach (var item in Model)
+    {
+        <div class="comment">
+            <div class="comment-header">
+                <span>@item.CommentDate</span>
+                <span>@item.UserName</span>
+            </div>
+            <div class="comment-body">
+                <p>
+                    @item.Body
+                </p>
+                <ul>
+                    @foreach (var Advantage in item.Strength)
+                    {
+                        <li class="comment-evaluation positive">@Advantage</li>
+                    }
+                    @foreach (var DisAdvantage in item.WeakPoints)
+                    {
+                        <li class="comment-evaluation negative">@DisAdvantage</li>
+                    }
+
+                </ul>
+            </div>
+            <div class="comment-footer">
+                <span class="me-2">آیا این دیدگاه برایتان مفید بود؟</span>
+                @if (User.Claims.FirstOrDefault() != null)
+                {
+                    if (item.isThereImpression)
+                    {
+                        <button class="comment-like @((item.LikeOrDisLike)? "text-success":"")" onclick="LikeComment(this);" id="@item.Id">@item.Likes</button>
+                        <button class="comment-dislike @((item.LikeOrDisLike)? "":"text-danger")" onclick="DisLikeComment(this)" id="@item.Id">@item.DisLikes</button>
+                    }
+                    else
+                    {
+                        <button class="comment-like" onclick="LikeComment(this);" id="@item.Id">@item.Likes</button>
+                        <button class="comment-dislike" onclick="DisLikeComment(this)" id="@item.Id">@item.DisLikes</button>
+                    }
+
+                }
+                else
+                {
+                    <button class="comment-like" onclick="ShowAlert();">@item.Likes</button>
+                    <button class="comment-dislike" onclick="ShowAlert()">@item.DisLikes</button>
+                }
+
+            </div>
+        </div>
+    }
+</div>

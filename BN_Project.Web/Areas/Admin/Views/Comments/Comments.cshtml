@@ -1,0 +1,150 @@
+﻿@using BN_Project.Domain.ViewModel.UserProfile.Comment;
+@model List<ShowCommentsForAdminViewModel>
+@{
+    Layout = "Admin/_AdminLayout";
+    ViewData["Title"] = "کامنت ها";
+}
+
+<div class="well with-header  with-footer">
+    <br />
+    <table class="table table-hover table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    تاریخ ثبت
+                </th>
+                <th>
+                    موضوع کامنت
+                </th>
+                <td>
+                    وضعیت کامنت
+                </td>
+                <th>
+                    عملیات
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int counter = 0;
+                foreach (var item in Model)
+                {
+                    counter++;
+                    <tr>
+                        <td>@counter</td>
+                        <td>@item.CreateDate</td>
+                        <td>@item.Title</td>
+                        <td>
+                            @switch (item.Status)
+                            {
+                                case "تایید شده":
+                                    <span class="bolder text-success">
+                                        @item.Status
+                                    </span>
+                                    break;
+                                case "رد شده":
+                                    <span class="fw-bolder text-danger">
+                                        @item.Status
+                                    </span>
+                                    break;
+                                case "بررسی نشده":
+                                    <span class="fw-bolder text-muted">
+                                        @item.Status
+                                    </span>
+                                    break;
+                            }
+
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal@(item.CommnetId)">جزئیات</button>
+                            <a class="btn btn-success" asp-controller="Comments" asp-area="Admin" asp-action="ConfirmComment" asp-route-Id="@item.CommnetId" onclick="is_delete(this)">
+                                تایید نظر
+                            </a>
+                            <a class="btn btn-danger" asp-controller="Comments" asp-area="Admin" asp-action="CloseComment" asp-route-Id="@item.CommnetId" onclick="is_delete(this)">
+                                <i class="fa fa-times"></i>
+                                رد نظر
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @foreach (var item in Model)
+    {
+        <div class="modal fade" id="myModal@(item.CommnetId)" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">@item.Title</h4>
+                        <br />
+                        <span class="text-muted">@item.UserName</span>
+                        <br />
+                        <span class="text-muted">@item.CreateDate</span>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            @item.Body
+                            <ul class="list-unstyled">
+                                @foreach (var Advantage in item.Strength)
+                                {
+                                    <li class="comment-evaluation positive">+ @Advantage</li>
+                                }
+                                @foreach (var DisAdvantage in item.WeakPoints)
+                                {
+                                    <li class="comment-evaluation negative">- @DisAdvantage</li>
+                                }
+
+                            </ul>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+
+@section breadcrumb {
+    <div class="page-breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a asp-action="Index">خانه</a>
+            </li>
+            <li class="active">کامنت ها</li>
+        </ul>
+    </div>
+    }
+
+@section pageHeader {
+    <div class="page-header position-relative">
+        <div class="header-title">
+            <h1>
+                کامنت ها
+            </h1>
+        </div>
+        <div class="header-buttons">
+            <a class="sidebar-toggler" href="#">
+                <i class="fa fa-arrows-h"></i>
+            </a>
+            <a class="refresh" id="refresh-toggler" href="">
+                <i class="glyphicon glyphicon-refresh"></i>
+            </a>
+            <a class="fullscreen" id="fullscreen-toggler" href="#">
+                <i class="glyphicon glyphicon-fullscreen"></i>
+            </a>
+        </div>
+    </div>
+    }
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}

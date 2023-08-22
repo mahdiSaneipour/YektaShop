@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -74,6 +75,20 @@ namespace BN_Project.Core.Tools
                             .First()
                             .GetCustomAttribute<DisplayAttribute>()
                             .GetName();
+        }
+
+        public static decimal CalculateAvrage(this List<int> values)
+        {
+            decimal count = values.Count;
+            decimal total = values.Sum();
+            decimal result = total / count;
+
+            return Math.Round(result, 1);
+        }
+        public static decimal CalculateAvragePercent(this decimal value)
+        {
+            decimal result = (value * 100) / 5;
+            return Math.Round(result, 1);
         }
     }
 }

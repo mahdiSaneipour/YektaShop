@@ -16,8 +16,13 @@ namespace BN_Project.Core.Services.Implementations
     {
         private readonly ITicketRepository _ticketRepository;
         private readonly ISectionRepository _sectionRepository;
+        private readonly ITicketMessageRepository _ticketMessageRepository;
+        private readonly IOrderRepository _orderRepository;
 
         public TicketServices(ITicketRepository ticketRepository,
+            ISectionRepository sectionRepository,
+            ITicketMessageRepository ticketMessageRepository,
+            IOrderRepository orderRepository)
             ISectionRepository sectionRepository)
         {
             _ticketRepository = ticketRepository;
