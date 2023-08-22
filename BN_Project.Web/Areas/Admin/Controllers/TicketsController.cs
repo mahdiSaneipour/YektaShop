@@ -64,8 +64,6 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         [Route("SendMessage")]
         public async Task<IActionResult> SendMessage(TicketMessagesViewModel Message)
         {
-            if (!ModelState.IsValid)
-                return View();
             if (await _ticketServices.AddMessageForTicketFromAdmin(Message.AddMessage))
             {
                 return RedirectToAction(nameof(AddTicketMessages), new { Id = Message.AddMessage.TicketId });

@@ -48,7 +48,9 @@ namespace BN_Project.Core.Services.Implementations
         {
             List<ShowCommentsForUsersViewModel> comments = new List<ShowCommentsForUsersViewModel>();
             var commentList = await _commentRepository.GetCommentsWithRelations(n => n.IsConfirmed == true);
-            int userId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.Claims.FirstOrDefault().Value);
+            int userId = 0;
+            if (_httpContextAccessor.HttpContext.User.Claims.Any())
+                userId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.Claims.FirstOrDefault().Value);
 
             foreach (var item in commentList)
             {
@@ -274,6 +276,7 @@ namespace BN_Project.Core.Services.Implementations
                 ShowCommentsForUserPanelViewModel comment = new ShowCommentsForUserPanelViewModel()
                 {
                     Id = item.Id,
+                    ProductId = item.ProductId,
                     Body = item.Message,
                     Strength = item.Strengths.Select(n => n.Text).ToList(),
                     WeakPoints = item.WeakPoints.Select(n => n.Text).ToList(),
