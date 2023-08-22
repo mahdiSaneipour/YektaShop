@@ -1,0 +1,74 @@
+﻿@using BN_Project.Domain.ViewModel.UserProfile.Comment;
+@model AvrageRatingViewModel
+
+<div class="comments-sidebar">
+    <div class="comments-sidebar-rating">
+        <div class="comments-sidebar-rating-main me-2">@Model.totalAvrageRate</div>
+        <div class="comments-sidebar-rating-desc">از ۵</div>
+    </div>
+    <div class="comments-sidebar-rating-bottom">
+        <div class="stars-container justify-content-end">
+            <div class="stars-text ms-2">
+                از مجموع
+                @Model.TotalComments
+                امتیاز
+            </div>
+            <div class="stars">
+                <div class="stars-val" style="width: @Model.totalAvragePercent%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="content-expert-rating mt-4">
+        <div class="mb-3">
+            <div class="content-expert-rating-title">کیفیت ساخت</div>
+            <div class="content-expert-rating-value-wrapper">
+                <div class="content-expert-rating-value" style="width: @Model.BuildQualityPercent%;">
+                </div>
+                <div class="content-expert-rating-value-label">@Model.BuildQualityRate</div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="content-expert-rating-title">
+                ارزش خرید به نسبت قیمت
+            </div>
+            <div class="content-expert-rating-value-wrapper">
+                <div class="content-expert-rating-value" style="width: @Model.ValueOfPurchesPercent%;">
+                </div>
+                <div class="content-expert-rating-value-label">@Model.ValueOfPurchesRate</div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="content-expert-rating-title">نوآوری</div>
+            <div class="content-expert-rating-value-wrapper">
+                <div class="content-expert-rating-value" style="width: @Model.InnovationPercent%;">
+                </div>
+                <div class="content-expert-rating-value-label">@Model.InnovationRate</div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="content-expert-rating-title">امکانات و قابلیت ها</div>
+            <div class="content-expert-rating-value-wrapper">
+                <div class="content-expert-rating-value" style="width: @Model.FacilityPercent%;">
+                </div>
+                <div class="content-expert-rating-value-label">@Model.FacilityRate</div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="content-expert-rating-title">سهولت استفاده</div>
+            <div class="content-expert-rating-value-wrapper">
+                <div class="content-expert-rating-value" style="width: @Model.EaseOfUsePercent%;">
+                </div>
+                <div class="content-expert-rating-value-label">@Model.EaseOfUseRate</div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="content-expert-rating-title">طراحی و ظاهر</div>
+            <div class="content-expert-rating-value-wrapper">
+                <div class="content-expert-rating-value" style="width: @Model.ApperentPercent%;">
+                </div>
+                <div class="content-expert-rating-value-label">@Model.ApperentRate</div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-2">دیدگاه خود را درباره این کالا بیان کنید</div>
+</div>

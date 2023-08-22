@@ -31,6 +31,7 @@ namespace BN_Project.Data.Context
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Strength> Strengths { get; set; }
         public DbSet<WeakPoint> WeakPoints { get; set; }
+        public DbSet<Impression> Impressions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

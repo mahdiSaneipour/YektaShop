@@ -1,0 +1,70 @@
+﻿@using BN_Project.Domain.ViewModel.UserProfile.Comment;
+@model List<ShowCommentsForUserPanelViewModel>
+@{
+    ViewData["Title"] = "نظرات";
+    Layout = "Profile/_ProfileLayout";
+}
+
+<div class="col-xl-9 col-lg-8 col-md-7">
+    <div class="alert alert-warning alert-dismissible fade show mb-5" role="alert">
+        <div>
+            سفارش شما در انتظار پرداخت است. برای جلوگیری از لغو سفارش، لطفا پرداخت را انجام دهید.
+            <a href="#" class="btn btn-sm btn-primary mx-3">سفارش های من</a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="ui-box bg-white mb-5">
+        <div class="ui-box-title">نظرات</div>
+        <div class="ui-box-content comments">
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-6 mb-4">
+                        <div class="border rounded p-3">
+                            <a href="#" class="d-flex align-items-center link pb-3">
+                                <img src="~/images/products/thumb/@item.ProductImage" width="60" alt="">
+                                <span class="fs-7 fw-bold">
+                                    @item.ProductName
+                                </span>
+                            </a>
+                            <div class="comment">
+                                <div class="comment-header">
+                                    <span>@item.CommentDate</span>
+                                </div>
+                                <div class="comment-body">
+                                    <p>
+                                        @item.Body
+                                    </p>
+                                    <ul>
+                                        @foreach (var Advantages in item.Strength)
+                                        {
+                                            <li class="comment-evaluation positive">@Advantages</li>
+                                        }
+                                        @foreach (var DisAdvantages in item.WeakPoints)
+                                        {
+                                            <li class="comment-evaluation negative">@DisAdvantages</li>
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="comment-footer">
+                                        <button class="comment-like" disabled>@item.Likes</button>
+                                        <button class="comment-dislike" disabled>@item.DisLikes</button>
+                                    </div>
+                                    <a asp-action="RemoveComment" asp-route-Id="@item.Id"
+                                       onclick="is_delete(this)" class="btn btn-link text-danger">
+                                        حذف <i class="ri-delete-bin-5-line ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
+                                    }

@@ -1,56 +1,54 @@
-﻿@{
+﻿@model UserInformationViewModel
+@{
     ViewData["Title"] = "ویرایش مشخصات";
     Layout = "Profile/_ProfileLayout";
 }
 
-@model UserInformationViewModel
+<div class="col-xl-9 col-lg-8 col-md-7">
+    <div class="alert alert-warning alert-dismissible fade show mb-5" role="alert">
+        <div>
+            سفارش شما در انتظار پرداخت است. برای جلوگیری از لغو سفارش، لطفا پرداخت را انجام دهید.
+            <a href="#" class="btn btn-sm btn-primary mx-3">سفارش های من</a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <partial name="_UserInformationParial" model="Model" />
 
-
-                <div class="col-xl-9 col-lg-8 col-md-7">
-                    <div class="alert alert-warning alert-dismissible fade show mb-5" role="alert">
-                        <div>
-                            سفارش شما در انتظار پرداخت است. برای جلوگیری از لغو سفارش، لطفا پرداخت را انجام دهید.
-                            <a href="#" class="btn btn-sm btn-primary mx-3">سفارش های من</a>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <partial name="_UserInformationParial" model="Model" />
-
-                    <!-- start of personal-info-fullname-modal -->
-                    <form method="post" asp-controller="UserProfile" asp-action="UpdateFullName" class="remodal remodal-xs" data-remodal-id="personal-info-fullname-modal"
-                          data-remodal-options="hashTracking: false">
-                        <div class="remodal-header">
-                            <div class="remodal-title">نام و نام خانوادگی</div>
-                            <button data-remodal-action="close" class="remodal-close"></button>
-                        </div>
-                        <div class="remodal-content">
-                            <div class="form-element-row mb-3">
-                                <label class="label fs-7">نام و نام خانوادگی</label>
-                                <input type="text" class="form-control" placeholder="نام و نام خانوادگی" asp-for="FullName">
-                            </div>
-                            <span asp-validation-for="FullName"></span>
-                        </div>
-                        <div class="remodal-footer">
-                            <button class="btn btn-sm btn-primary px-3">ثبت اطلاعات</button>
-                        </div>
-                    </form>
-                    <!-- end of personal-info-fullname-modal -->
-                    <!-- start of personal-info-phone-number-modal -->
-                    <form method="post" class="remodal remodal-xs" data-remodal-id="personal-info-phone-number-modal"
-                          data-remodal-options="hashTracking: false" asp-controller="UserProfile" asp-action="UpdatePhoneNumber">
-                        <div class="remodal-header">
-                            <div class="remodal-title">شماره موبایل</div>
-                            <button data-remodal-action="close" class="remodal-close"></button>
-                        </div>
-                        <div class="remodal-content">
-                            <div class="form-element-row mb-3">
-                                <input type="text" class="form-control" placeholder="" asp-for="PhoneNumber">
-                            </div>
-                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                        </div>
-                        <div class="remodal-footer">
-                            <button class="btn btn-sm btn-primary px-3">تغییر شماره همراه</button>
-                        </div>
-                    </form>
-                    <!-- end of personal-info-phone-number-modal -->
-                </div>
+    <!-- start of personal-info-fullname-modal -->
+    <form method="post" asp-controller="UserProfile" asp-action="UpdateFullName" class="remodal remodal-xs" data-remodal-id="personal-info-fullname-modal"
+          data-remodal-options="hashTracking: false">
+        <div class="remodal-header">
+            <div class="remodal-title">نام و نام خانوادگی</div>
+            <button data-remodal-action="close" class="remodal-close"></button>
+        </div>
+        <div class="remodal-content">
+            <div class="form-element-row mb-3">
+                <label class="label fs-7">نام و نام خانوادگی</label>
+                <input type="text" class="form-control" placeholder="نام و نام خانوادگی" asp-for="FullName">
+            </div>
+            <span asp-validation-for="FullName"></span>
+        </div>
+        <div class="remodal-footer">
+            <button class="btn btn-sm btn-primary px-3">ثبت اطلاعات</button>
+        </div>
+    </form>
+    <!-- end of personal-info-fullname-modal -->
+    <!-- start of personal-info-phone-number-modal -->
+    <form method="post" class="remodal remodal-xs" data-remodal-id="personal-info-phone-number-modal"
+          data-remodal-options="hashTracking: false" asp-controller="UserProfile" asp-action="UpdatePhoneNumber">
+        <div class="remodal-header">
+            <div class="remodal-title">شماره موبایل</div>
+            <button data-remodal-action="close" class="remodal-close"></button>
+        </div>
+        <div class="remodal-content">
+            <div class="form-element-row mb-3">
+                <input type="text" class="form-control" placeholder="" asp-for="PhoneNumber">
+            </div>
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="remodal-footer">
+            <button class="btn btn-sm btn-primary px-3">تغییر شماره همراه</button>
+        </div>
+    </form>
+    <!-- end of personal-info-phone-number-modal -->
+</div>

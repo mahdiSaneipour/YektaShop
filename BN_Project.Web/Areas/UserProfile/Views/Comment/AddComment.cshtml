@@ -4,7 +4,22 @@
     Layout = "Profile/_ProfileLayoutNoSideBar";
     ViewData["Title"] = "افزودن دیدگاه";
 }
-<link rel="stylesheet" href="~/css/tagify/tagify.css" />
+@*<link rel="stylesheet" href="~/css/tagify/tagify.css" />*@
+<style>
+    .tag.label.label-info {
+        border: none;
+        background-color: lightgrey;
+        margin: 14px 5px;
+        padding: 5px 8px;
+        border-radius: 4px;
+    }
+
+    .bootstrap-tagsinput input {
+        border-radius: 5px;
+        border: 1px solid grey;
+        padding: 5px 8px;
+    }
+</style>
 
 <div class="container">
     <nav class="mb-5" aria-label="breadcrumb">
@@ -144,14 +159,20 @@
                         <div class="form-element-row mb-3">
                             <label class="label">نقاط قوت</label>
                             <div class="add-point-container">
-                                <textarea rows="5" class="tags form-control p-3" asp-for="Strength"></textarea>
+                                <div class="form-control p-3">
+                                    <input type="text" data-role="tagsinput"
+                                           asp-for="Strength" placeholder="افزودن نقطه قوت" />
+                                </div>
                                 <span asp-validation-for="Strength"></span>
                             </div>
                         </div>
                         <div class="form-element-row mb-3">
-                            <label class="label">نقاط ضعف</label>
+                            <label class="label">نقاط قوت</label>
                             <div class="add-point-container">
-                                <textarea rows="5" class="tags form-control p-3" asp-for="WeakPoints"></textarea>
+                                <div class="form-control p-3">
+                                    <input type="text" data-role="tagsinput"
+                                           asp-for="WeakPoints" placeholder="افزودن نقاط ضعف" />
+                                </div>
                                 <span asp-validation-for="WeakPoints"></span>
                             </div>
                         </div>
@@ -183,10 +204,11 @@
 </div>
 
 @section Scripts {
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @*    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/tagify/jQuery.tagify.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
     <script>
         $('.tags').tagify();
-    </script>
+    </script>*@
+    <script src="~/js/tagsInput/bootstrap-tagsinput.min.js"></script>
                             }

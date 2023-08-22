@@ -23,6 +23,19 @@ namespace BN_Project.Web.Areas.UserProfile.Controllers
             return UserId;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var comments = await _commentServices.GetAllCommentsForUserPanel();
+            return View(comments);
+        }
+
+        [Route("RemoveComment")]
+        public async Task<IActionResult> RemoveComment(int Id)
+        {
+            await _commentServices.DeleteCommentByUser(Id);
+            return RedirectToAction(nameof(Index));
+        }
+
         [Route("AddComment")]
         public async Task<IActionResult> AddComment(int Id)
         {
@@ -32,7 +45,7 @@ namespace BN_Project.Web.Areas.UserProfile.Controllers
             return View(item);
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         [Route("AddComment")]
         public async Task<IActionResult> AddComment(AddCommentViewModel comment)
         {

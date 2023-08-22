@@ -386,6 +386,9 @@
     <None Include="wwwroot\admin\swf\copy_csv_xls.swf" />
     <None Include="wwwroot\admin\swf\copy_csv_xls_pdf.swf" />
     <None Include="wwwroot\js\site.js" />
+    <None Include="wwwroot\js\tagsinput\bootstrap-tagsinput.js" />
+    <None Include="wwwroot\js\tagsinput\bootstrap-tagsinput.min.js" />
+    <None Include="wwwroot\js\tagsinput\bootstrap-tagsinput.min.js.map" />
   </ItemGroup>
 
   <ItemGroup>

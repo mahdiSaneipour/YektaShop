@@ -15,10 +15,12 @@ namespace BN_Project.Domain.Entities.Comment
         public string Message { get; set; }
         public int ProductId { get; set; }
         public int UserId { get; set; }
+        public bool? IsConfirmed { get; set; }
 
         #region Relations 
         public ICollection<Strength> Strengths { get; set; }
         public ICollection<WeakPoint> WeakPoints { get; set; }
+        public ICollection<Impression> Impressions { get; set; }
         [ForeignKey("UserId")]
         public UserEntity User { get; set; }
         [ForeignKey("ProductId")]

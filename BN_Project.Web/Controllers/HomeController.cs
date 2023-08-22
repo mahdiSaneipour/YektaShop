@@ -8,10 +8,20 @@ namespace BN_Project.Web.Controllers
     public class HomeController : Controller
     {
         private readonly IProductServices _productServices;
+        private readonly ICommentServices _commentServices;
 
-        public HomeController(IProductServices productServices)
+        public HomeController(IProductServices productServices,
+            ICommentServices commentServices)
         {
             _productServices = productServices;
+            _commentServices = commentServices;
+        }
+
+        [NonAction]
+        private int GetCurrentUserId()
+        {
+            int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
+            return UserId;
         }
 
         public IActionResult Index()
@@ -41,6 +51,20 @@ namespace BN_Project.Web.Controllers
             }
 
             return Redirect("/");
+        }
+
+        public async Task<IActionResult> LikeComment(int commentId)
+        {
+            int userId = GetCurrentUserId();
+            await _commentServices.LikeComment(commentId, userId);
+            return ViewComponent("Comments");
+        }
+
+        public async Task<IActionResult> DisLikeComment(int commentId)
+        {
+            int userId = GetCurrentUserId();
+            await _commentServices.DisLikeComment(commentId, userId);
+            return ViewComponent("Comments");
         }
     }
 }

@@ -4,6 +4,7 @@ using BN_Project.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BN_Project.Data.Migrations
 {
     [DbContext(typeof(BNContext))]
-    partial class BNContextModelSnapshot : ModelSnapshot
+    [Migration("20230819161734_addAllTbls")]
+    partial class addAllTbls
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,9 +120,6 @@ namespace BN_Project.Data.Migrations
                     b.Property<int>("Innovation")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsConfirmed")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
 
@@ -147,36 +147,6 @@ namespace BN_Project.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Impression", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CommentId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Create")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LikeOrDislike")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommentId");
-
-                    b.ToTable("Impressions");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Strength", b =>
@@ -630,17 +600,6 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Impression", b =>
-                {
-                    b.HasOne("BN_Project.Domain.Entities.Comment.Comment", "Comment")
-                        .WithMany("Impressions")
-                        .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Comment");
-                });
-
             modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Strength", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Comment.Comment", "Comment")
@@ -793,8 +752,6 @@ namespace BN_Project.Data.Migrations
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Comment", b =>
                 {
-                    b.Navigation("Impressions");
-
                     b.Navigation("Strengths");
 
                     b.Navigation("WeakPoints");

@@ -5,25 +5,24 @@
 namespace BN_Project.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class EditOrderDetails : Migration
+    public partial class UpdateTableComment : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<long>(
-                name: "FinalPrice",
-                table: "OrderDetails",
-                type: "bigint",
-                nullable: false,
-                defaultValue: 0L);
+            migrationBuilder.AddColumn<bool>(
+                name: "IsConfirmed",
+                table: "Comments",
+                type: "bit",
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "FinalPrice",
-                table: "OrderDetails");
+                name: "IsConfirmed",
+                table: "Comments");
         }
     }
 }
