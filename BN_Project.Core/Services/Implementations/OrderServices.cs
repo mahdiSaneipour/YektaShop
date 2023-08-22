@@ -30,6 +30,8 @@ namespace BN_Project.Core.Services.Implementations
             var order = await _orderRepository.GetSingle(o => o.UserId == userId 
             && o.Status == OrderStatus.AwaitingPayment);
 
+            var color = await _productServices.GetColorByColorId(colorId);
+
             var product = await _productServices.GetProductWithIncludesByColorId(colorId);
 
             if(product.Status != Status.Success)
@@ -40,7 +42,7 @@ namespace BN_Project.Core.Services.Implementations
                 return result;
             }
 
-            if (!await _productServices.IsThatMuchColorExist(colorId, 1))
+            if (color.Count >= 1)
             {
                 result.Status = Status.DontHave;
                 result.Message = "این تعداد رنگ موجود نیست";
@@ -48,14 +50,13 @@ namespace BN_Project.Core.Services.Implementations
                 return result;
             }
 
-            long price = await _productServices.GetPriceByColorId(colorId);
-            long finalPrice = await _productServices.GetPriceByColorId(colorId);
+            long price = color.Price;
+            long finalPrice = color.Price;
 
-            if (product.Data.Discounts.Count != 0)
+            if (await _productServices.AnyDiscount(colorId))
             {
-                finalPrice = Tools.Tools.PercentagePrice(finalPrice,
-                    product.Data.Discounts.OrderBy(d => d.Percent)
-                    .FirstOrDefault().Percent);
+                /*finalPrice = Tools.Tools.PercentagePrice(finalPrice,
+                    _productServices.GetDi);*/
             }
 
             if (order == null)
@@ -190,12 +191,12 @@ namespace BN_Project.Core.Services.Implementations
                 {
                     long discount = 0;
 
-                    if (order.Color.Product.Discounts.Count != 0)
+                    /*if (order.Color.Product.Discounts.Count != 0)
                     {
                         discount = Tools.Tools.DiscountPrice(order.Color.Price,
                             order.Color.Product.Discounts.OrderBy(d => d.Percent)
                             .FirstOrDefault().Percent) * order.Count;
-                    }
+                    }*/
 
                     data.Add(new BoxBasketListViewModel()
                     {
@@ -252,6 +253,33 @@ namespace BN_Project.Core.Services.Implementations
                 result.Message = "سفارش ها پیدا شدند";
             }
 
+
+            return result;
+        }
+
+        public async Task<DataResponse<FactorCompViewModel>> GetFactorCompModel(int userId)
+        {
+            DataResponse<FactorCompViewModel> result = new DataResponse<FactorCompViewModel>();
+
+            if(userId == 0)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "کاربری پیدا نشد";
+
+                return result;
+            }
+
+            var order = await _orderRepository.GetBasketOrderWithIncludeOrderDetailsAndProductAndDiscountAndColorByUserId(userId);
+
+            FactorCompViewModel data = new FactorCompViewModel();
+
+            data.Price = (int) order.FinalPrice;
+            data.TotalPrice = 0;
+            data.Discount = 0;
+
+            result.Status = Status.Success;
+            result.Message = "مقادیر با موفقیت پیدا شدند";
+            result.Data = data;
 
             return result;
         }

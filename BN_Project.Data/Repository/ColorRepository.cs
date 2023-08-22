@@ -17,8 +17,9 @@ namespace BN_Project.Data.Repository
 
         public async Task<bool> AnyDiscount(int colorId)
         {
-            return await _context.Colors.Include(c => c.Product).ThenInclude(p => p.Colors)
-                .AnyAsync(c => c.Product.Discounts == null);
+            return await _context.Colors.Where(c => c.Id == colorId).Include(c => c.Product)
+                .ThenInclude(c => c.DiscountProduct)
+                .AnyAsync(c => c.Product.DiscountProduct == null);
         }
 
         public async Task<IEnumerable<Color>> GetAllColorsWithProductInclude()
@@ -47,10 +48,15 @@ namespace BN_Project.Data.Repository
 
             if (await AnyDiscount(colorId))
             {
-                percent = await _context.Colors.Include(c => c.Product).ThenInclude(p => p.Discounts)
+                /*var product = await _context.Colors.Where(c => c.co).Include(c => c.Product);*/
+               /* percent = await _context.Colors.Include(c => c.Product)
+                    .ThenInclude(p => p.DiscountProduct).ThenInclude(p => p.Product)
                 .Where(c => c.Id == colorId).Select(c =>
-                c.Product.Discounts.OrderBy(c => c.Percent).FirstOrDefault().Percent)
-                .FirstOrDefaultAsync();
+                c.Product.DiscountProduct.OrderBy(c => c.Discount.Percent)
+                .FirstOrDefault().Discount.Percent)
+                .FirstOrDefaultAsync();*/
+
+                percent = 100;
             } else
             {
                 percent = 0;
