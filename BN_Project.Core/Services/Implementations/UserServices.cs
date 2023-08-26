@@ -8,6 +8,9 @@ using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Account;
 using BN_Project.Domain.ViewModel.Admin;
 using BN_Project.Domain.ViewModel.UserProfile;
+using BN_Project.Domain.ViewModel.UserProfile.Address;
+using BN_Project.Domain.ViewModel.UserProfile.Payment;
+using Microsoft.AspNetCore.Http;
 
 namespace BN_Project.Core.Services.Implementations
 {
@@ -16,15 +19,21 @@ namespace BN_Project.Core.Services.Implementations
         private readonly IAccountRepository _accountRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITicketRepository _ticketRepository;
+        private readonly IAddressRepository _addressRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserServices(
             IAccountRepository accountRepository,
             IUserRepository userRepository,
-            ITicketRepository ticketRepository)
+            ITicketRepository ticketRepository,
+            IAddressRepository addressRepository,
+            IHttpContextAccessor httpContextAccessor)
         {
             _accountRepository = accountRepository;
             _userRepository = userRepository;
             _ticketRepository = ticketRepository;
+            _addressRepository = addressRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Response.DataResponse.DataResponse<UserEntity>> CreateUser(RegisterUserViewModel register)
@@ -472,5 +481,87 @@ namespace BN_Project.Core.Services.Implementations
         }
 
         #endregion
+
+        #region Addresses
+        public async Task<List<GetAllAddressesViewModel>> GetAllAddresses(int userId)
+        {
+            var addresses = await _addressRepository.GetAll(n => n.UserId == userId);
+            List<GetAllAddressesViewModel> Addresses = new List<GetAllAddressesViewModel>();
+
+            Addresses.AddRange(addresses.Select(n => new GetAllAddressesViewModel
+            {
+                Id = n.Id,
+                Name = n.Name,
+                Family = n.Family,
+                State = n.State,
+                City = n.City,
+                PhoneNumber = n.PhoneNumber,
+                PostalCode = n.PostalCode,
+                IsDefault = n.IsDefalut
+            }).ToList());
+
+            return Addresses;
+        }
+
+        public async Task AddNewAddress(AddAddressViewModel address)
+        {
+            Address Address = new Address()
+            {
+                Name = address.Name,
+                Family = address.Family,
+                PhoneNumber = address.PhoneNumber,
+                State = address.State,
+                City = address.City,
+                UserId = address.UserId,
+                CompleteAddress = address.CompleteAddress,
+                PostalCode = address.PostalCode
+            };
+
+            await _addressRepository.Insert(Address);
+            await _addressRepository.SaveChanges();
+        }
+
+        public async Task RemoveAddress(int addressId)
+        {
+            var address = await _addressRepository.GetSingle(n => n.Id == addressId);
+            _addressRepository.Delete(address);
+
+            await _addressRepository.SaveChanges();
+        }
+
+        public async Task<PickAddressViewModel> GetAllAddressesForBasket(int userId)
+        {
+            PickAddressViewModel result = new PickAddressViewModel();
+            if (await _addressRepository.IsThereAny(n => n.UserId == userId && n.IsDefalut == true))
+            {
+                var address = await _addressRepository.GetSingle(n => n.UserId == userId && n.IsDefalut == true);
+
+                result.FullAddress = address.State + ", " + address.City;
+                result.FullName = address.Name + " " + address.Family;
+                result.PhoneNumber = address.PhoneNumber;
+                result.PostalCode = address.PostalCode;
+            }
+            return result;
+        }
+
+        public async Task SetAddressDefault(int addressId)
+        {
+            int userId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.Claims.FirstOrDefault().Value);
+            if (await _addressRepository.IsThereAny(n => n.UserId == userId && n.IsDefalut == true))
+            {
+                var address = await _addressRepository.GetAll(n => n.UserId == userId && n.IsDefalut == true);
+                foreach (var item in address)
+                {
+                    item.IsDefalut = false;
+                    _addressRepository.Update(item);
+                }
+            }
+            var defaultAddress = await _addressRepository.GetSingle(n => n.Id == addressId);
+            defaultAddress.IsDefalut = true;
+            _addressRepository.Update(defaultAddress);
+
+            await _addressRepository.SaveChanges();
+        }
     }
+    #endregion
 }

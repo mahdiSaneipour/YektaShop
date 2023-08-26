@@ -187,7 +187,7 @@
             </div>
         </div>
 
-        @if(Model.Count != 0)
+        @if (Model.Count != 0)
         {
             <div class="col-xl-3 col-lg-4">
                 <div class="ui-sticky ui-sticky-top">
@@ -220,7 +220,7 @@
                             این مبلغ اضافه خواهد شد
                         </div>
                         <div class="checkout-bill-row checkout-bill-action">
-                            <a href="#" class="btn btn-block btn-primary">ادامه فرایند خرید</a>
+                            <a asp-action="PickAddress" asp-controller="PaymentRequest" asp-area="UserProfile" class="btn btn-block btn-primary">ادامه مرحله پرداخت</a>
                         </div>
                         <div class="checkout-bill-row checkout-bill-footer">
                             <div class="checkout-bill-row-label">

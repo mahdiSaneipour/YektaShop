@@ -27,12 +27,12 @@ namespace BN_Project.Core.Services.Implementations
         {
             BaseResponse result = new BaseResponse();
 
-            var order = await _orderRepository.GetSingle(o => o.UserId == userId 
+            var order = await _orderRepository.GetSingle(o => o.UserId == userId
             && o.Status == OrderStatus.AwaitingPayment);
 
             var product = await _productServices.GetProductWithIncludesByColorId(colorId);
 
-            if(product.Status != Status.Success)
+            if (product.Status != Status.Success)
             {
                 result.Status = Status.NotValid;
                 result.Message = "رنگ کاربر معتبر نمیباشد";
@@ -78,9 +78,10 @@ namespace BN_Project.Core.Services.Implementations
                 };
 
                 await _orderRepository.Insert(newOrder);
-            } else
+            }
+            else
             {
-                if(await _orderDetailRepository.IsThereAny(od => od.ColorId == colorId 
+                if (await _orderDetailRepository.IsThereAny(od => od.ColorId == colorId
                 && od.OrderId == order.Id))
                 {
                     var orderDetail = await _orderDetailRepository.GetSingle(od => od.ColorId == colorId
@@ -89,7 +90,8 @@ namespace BN_Project.Core.Services.Implementations
                     orderDetail.Count++;
 
                     _orderDetailRepository.Update(orderDetail);
-                } else
+                }
+                else
                 {
                     OrderDetail orderDetail = new OrderDetail()
                     {
@@ -133,7 +135,8 @@ namespace BN_Project.Core.Services.Implementations
             if (status)
             {
                 orderDetail.Count++;
-            } else
+            }
+            else
             {
                 orderDetail.Count--;
             }
@@ -184,9 +187,10 @@ namespace BN_Project.Core.Services.Implementations
                 result.Status = Status.NotFound;
                 result.Message = "سبد خریدخالی میباشد";
                 result.Data = data;
-            } else
+            }
+            else
             {
-                foreach(var order in basket.OrderDetails)
+                foreach (var order in basket.OrderDetails)
                 {
                     long discount = 0;
 
@@ -209,7 +213,7 @@ namespace BN_Project.Core.Services.Implementations
                         Hex = order.Color.Hex,
                         Count = order.Count,
                         Discount = discount
-                    }); 
+                    });
                 }
 
                 result.Status = Status.Success;
@@ -254,6 +258,12 @@ namespace BN_Project.Core.Services.Implementations
 
 
             return result;
+        }
+
+        public async Task<long> GetFinalPriceForBasket(int userId)
+        {
+            var item = await _orderRepository.GetSingle(n => n.UserId == userId && n.Status == 0);
+            return item.FinalPrice;
         }
 
         public async Task<BaseResponse> SetPricesInOrderDetail(int orderDetailId)

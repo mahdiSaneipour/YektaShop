@@ -31,6 +31,7 @@ namespace BN_Project.IoC
             services.AddScoped<IImpressionsRepository, ImpressionRepository>();
             services.AddScoped<ICommentStrengthRepository, CommentStrengthRepository>();
             services.AddScoped<ICommentWeakPointsRepository, CommentWeakPointsRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
 
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IProductServices, ProductServices>();

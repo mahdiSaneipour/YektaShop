@@ -4,6 +4,8 @@ using BN_Project.Domain.Entities;
 using BN_Project.Domain.ViewModel.Account;
 using BN_Project.Domain.ViewModel.Admin;
 using BN_Project.Domain.ViewModel.UserProfile;
+using BN_Project.Domain.ViewModel.UserProfile.Address;
+using BN_Project.Domain.ViewModel.UserProfile.Payment;
 
 namespace BN_Project.Core.Services.Interfaces
 {
@@ -46,5 +48,15 @@ namespace BN_Project.Core.Services.Interfaces
         public Task<List<TicketViewModel>> GetAllTickets();
 
         public Task<bool> CloseTicket(int Id);
+
+        public Task<List<GetAllAddressesViewModel>> GetAllAddresses(int userId);
+
+        public Task AddNewAddress(AddAddressViewModel address);
+
+        public Task RemoveAddress(int addressId);
+
+        public Task<PickAddressViewModel> GetAllAddressesForBasket(int userId);
+
+        public Task SetAddressDefault(int addressId);
     }
 }

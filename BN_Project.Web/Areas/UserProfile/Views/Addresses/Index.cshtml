@@ -1,0 +1,116 @@
+﻿@using BN_Project.Domain.ViewModel.UserProfile.Address;
+@model List<GetAllAddressesViewModel>
+@{
+    ViewData["Title"] = "نشانی ها";
+    Layout = "Profile/_ProfileLayout";
+}
+
+<div class="col-xl-9 col-lg-8 col-md-7">
+    <div class="alert alert-warning alert-dismissible fade show mb-5" role="alert">
+        <div>
+            سفارش شما در انتظار پرداخت است. برای جلوگیری از لغو سفارش، لطفا پرداخت را انجام دهید.
+            <a href="#" class="btn btn-sm btn-primary mx-3">سفارش های من</a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="ui-box bg-white mb-5">
+        <div class="ui-box-title align-items-center justify-content-between">
+            آدرس های شما
+            <a asp-area="UserProfile" asp-controller="Addresses" asp-action="AddAddress"
+               class="btn btn-outline-light">آدرس جدید<i class="ri-add-line ms-2"></i></a>
+        </div>
+
+        @if (Model.Count() == 0)
+        {
+            <div class="ui-box-empty-content">
+                <div class="ui-box-empty-content-icon">
+                    <img src="./theme-assets/images/theme/orders.svg" alt="">
+                </div>
+                <div class="ui-box-empty-content-message">
+                    آدرسی تا به حال اضافه نکرده اید!
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="ui-box-content">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>نام</th>
+                                <th>شماره موبایل</th>
+                                <th>استان</th>
+                                <th>شهر</th>
+                                <th>کد پستی</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int counter = 0;
+                                foreach (var item in Model)
+                                {
+                                    counter++;
+                                    if (item.IsDefault == true)
+                                    {
+                                        <tr style="background-color: lightblue;">
+                                            <td>@counter</td>
+                                            <td>@item.Name @item.Family</td>
+                                            <td>@item.PhoneNumber</td>
+                                            <td>@item.State</td>
+                                            <td>@item.City</td>
+                                            <td>@item.PostalCode</td>
+                                            <td>
+                                                <a asp-area="UserProfile" asp-controller="Addresses" asp-action="RemoveAddress"
+                                                   asp-route-Id="@item.Id" onclick="is_delete(this)"
+                                                   class="btn btn-circle btn-danger my-1">
+                                                    <i class="ri-close-line"></i>
+                                                </a>
+
+                                                <a asp-area="UserProfile" asp-controller="Addresses" asp-action="SetDefault"
+                                                   asp-route-Id="@item.Id" onclick="is_delete(this)"
+                                                   class="btn btn-circle btn-primary my-1">
+                                                    <i class="fa fa-check-circle"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@counter</td>
+                                            <td>@item.Name @item.Family</td>
+                                            <td>@item.PhoneNumber</td>
+                                            <td>@item.State</td>
+                                            <td>@item.City</td>
+                                            <td>@item.PostalCode</td>
+                                            <td>
+                                                <a asp-area="UserProfile" asp-controller="Addresses" asp-action="RemoveAddress"
+                                                   asp-route-Id="@item.Id" onclick="is_delete(this)"
+                                                   class="btn btn-circle btn-danger my-1">
+                                                    <i class="ri-close-line"></i>
+                                                </a>
+
+                                                <a asp-area="UserProfile" asp-controller="Addresses" asp-action="SetDefault"
+                                                   asp-route-Id="@item.Id" onclick="is_delete(this)"
+                                                   class="btn btn-circle btn-primary my-1">
+                                                    <i class="fa fa-check-circle"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
+                                    }

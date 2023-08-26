@@ -23,7 +23,6 @@ namespace BN_Project.Core.Services.Implementations
             ISectionRepository sectionRepository,
             ITicketMessageRepository ticketMessageRepository,
             IOrderRepository orderRepository)
-            ISectionRepository sectionRepository)
         {
             _ticketRepository = ticketRepository;
             _sectionRepository = sectionRepository;

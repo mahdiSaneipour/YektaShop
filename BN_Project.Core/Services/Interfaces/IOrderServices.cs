@@ -1,8 +1,6 @@
 ﻿using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
-using BN_Project.Domain.Entities;
 using BN_Project.Domain.Enum.Order;
-using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.UserProfile.Order;
 
 namespace BN_Project.Core.Services.Interfaces
@@ -20,5 +18,6 @@ namespace BN_Project.Core.Services.Interfaces
         public Task<BaseResponse> AddProductToBasket(int colorId, int userId);
 
         public Task<BaseResponse> SetPricesInOrderDetail(int orderDetailId);
+        public Task<long> GetFinalPriceForBasket(int userId);
     }
 }
