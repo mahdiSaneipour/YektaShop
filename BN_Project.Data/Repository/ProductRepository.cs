@@ -57,7 +57,7 @@ namespace BN_Project.Data.Repository
 
         public async Task<Product> GetProductByIdWithIncludeDiscount(int productId)
         {
-            return await _context.Products.Where(p => p.Id == productId).Include(p => p.Discounts).FirstOrDefaultAsync();
+            return await _context.Products.Where(p => p.Id == productId).Include(p => p.DiscountProduct).ThenInclude(p => p.Discount).FirstOrDefaultAsync();
         }
     }
 }

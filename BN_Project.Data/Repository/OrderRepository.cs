@@ -19,7 +19,7 @@ namespace BN_Project.Data.Repository
         {
             return await _context.Orders.Where(o => o.UserId == userId && o.Status == 0).Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Color).ThenInclude(c => c.Product)
-                .ThenInclude(p => p.Discounts).FirstOrDefaultAsync();
+                .ThenInclude(p => p.DiscountProduct).FirstOrDefaultAsync();
         }
 
         public async Task<List<Order>> GetOrderBoxByStatusWithIncludeOrderDetail(OrderStatus orderStatus, int userId)

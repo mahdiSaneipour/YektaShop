@@ -829,6 +829,11 @@ namespace BN_Project.Core.Services.Implementations
             return _colorRepository.IsThereAny(c => c.Id == colorId && c.Count >= count);
         }
 
+        public async Task<Color> GetColorByColorId(int colorId)
+        {
+            return await _colorRepository.GetSingle(c => c.Id == colorId);
+        }
+
         #endregion
 
         #region Discount 
@@ -989,6 +994,16 @@ namespace BN_Project.Core.Services.Implementations
             var price = Tools.Tools.PercentagePrice(basePrice, discount);
 
             return price;
+        }
+
+        public Task<bool> AnyDiscount(int colorId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetDiscountByColorId(int colorId)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

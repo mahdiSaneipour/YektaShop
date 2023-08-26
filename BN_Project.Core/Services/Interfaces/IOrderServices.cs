@@ -19,5 +19,7 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<BaseResponse> SetPricesInOrderDetail(int orderDetailId);
         public Task<long> GetFinalPriceForBasket(int userId);
+
+        public Task<DataResponse<FactorCompViewModel>> GetFactorCompModel(int userId);
     }
 }
