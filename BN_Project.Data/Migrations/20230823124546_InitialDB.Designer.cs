@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BN_Project.Data.Migrations
 {
     [DbContext(typeof(BNContext))]
-    [Migration("20230820152343_AddTblImpressions")]
-    partial class AddTblImpressions
+    [Migration("20230823124546_InitialDB")]
+    partial class InitialDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,6 +119,9 @@ namespace BN_Project.Data.Migrations
 
                     b.Property<int>("Innovation")
                         .HasColumnType("int");
+
+                    b.Property<bool?>("IsConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
@@ -258,15 +261,10 @@ namespace BN_Project.Data.Migrations
                     b.Property<int>("Percent")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("Discounts");
                 });
@@ -348,6 +346,9 @@ namespace BN_Project.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpireTime")
                         .HasColumnType("datetime2");
 
                     b.Property<long>("FinalPrice")
@@ -663,13 +664,6 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Comment");
                 });
 
-            modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
-                {
-                    b.HasOne("BN_Project.Domain.Entities.Product", null)
-                        .WithMany("Discounts")
-                        .HasForeignKey("ProductId");
-                });
-
             modelBuilder.Entity("BN_Project.Domain.Entities.DiscountProduct", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Discount", "Discount")
@@ -817,8 +811,6 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("DiscountProduct");
-
-                    b.Navigation("Discounts");
 
                     b.Navigation("Images");
                 });

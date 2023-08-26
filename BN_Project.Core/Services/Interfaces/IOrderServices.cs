@@ -13,14 +13,16 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<DataResponse<List<BoxBasketListViewModel>>> GetBasketOrders(int userId);
 
-        public Task<BaseResponse> ChangeProductOrderCount(int orderDetailId, bool status);
+        public Task<BaseResponse> ChangeProductOrderCount(int orderDetailId, bool status, int count = 1);
 
         public Task<BaseResponse> DeleteOrderDetailByOrderDetailId(int orderDetailId);
 
-        public Task<BaseResponse> AddProductToBasket(int colorId, int userId);
+        public Task<BaseResponse> AddProductToBasket(int colorId);
 
         public Task<BaseResponse> SetPricesInOrderDetail(int orderDetailId);
 
         public Task<DataResponse<FactorCompViewModel>> GetFactorCompModel(int userId);
+
+        public Task<BaseResponse> SetPriceInOrder(int orderId);
     }
 }

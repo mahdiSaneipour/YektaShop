@@ -21,5 +21,27 @@ namespace BN_Project.Data.Repository
                 .ThenInclude(n => n.Product)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<int> GetPercentByDiscountId(int discountId)
+        {
+            return _context.Discounts.FirstOrDefaultAsync(d => d.Id == discountId).Result.Percent;
+        }
+
+        public async Task<bool> IsDiscountAvailable(int discountId)
+        {
+            var discount = await _context.Discounts.FirstOrDefaultAsync(d => d.Id == discountId);
+
+            if (discount == null)
+            {
+                return false;
+            }
+
+            if (discount.StartDate < DateTime.Now && DateTime.Now < discount.ExpireDate)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

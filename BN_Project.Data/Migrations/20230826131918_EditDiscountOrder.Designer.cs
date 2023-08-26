@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BN_Project.Data.Migrations
 {
     [DbContext(typeof(BNContext))]
-    [Migration("20230821153354_EditOrderDetail")]
-    partial class EditOrderDetail
+    [Migration("20230826131918_EditDiscountOrder")]
+    partial class EditDiscountOrder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,6 +94,150 @@ namespace BN_Project.Data.Migrations
                     b.ToTable("Colors");
                 });
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BuildQuality")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DesignAndAppearance")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EaseOfUse")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FeaturesAndCapabilities")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Innovation")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ValueForMoneyComparedToTHePrice")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Impression", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LikeOrDislike")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.ToTable("Impressions");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Strength", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.ToTable("Strengths");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Comment.WeakPoint", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.ToTable("WeakPoints");
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
                 {
                     b.Property<int>("Id")
@@ -117,15 +261,10 @@ namespace BN_Project.Data.Migrations
                     b.Property<int>("Percent")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("Discounts");
                 });
@@ -170,8 +309,8 @@ namespace BN_Project.Data.Migrations
                     b.Property<DateTime>("Create")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Discount")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("FinalPrice")
                         .HasColumnType("bigint");
@@ -473,11 +612,56 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
+            modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Comment", b =>
                 {
-                    b.HasOne("BN_Project.Domain.Entities.Product", null)
-                        .WithMany("Discounts")
-                        .HasForeignKey("ProductId");
+                    b.HasOne("BN_Project.Domain.Entities.Product", "Product")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BN_Project.Domain.Entities.UserEntity", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Impression", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.Comment.Comment", "Comment")
+                        .WithMany("Impressions")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Strength", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.Comment.Comment", "Comment")
+                        .WithMany("Strengths")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Comment.WeakPoint", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.Comment.Comment", "Comment")
+                        .WithMany("WeakPoints")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.DiscountProduct", b =>
@@ -601,6 +785,15 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("OrderDetails");
                 });
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.Comment.Comment", b =>
+                {
+                    b.Navigation("Impressions");
+
+                    b.Navigation("Strengths");
+
+                    b.Navigation("WeakPoints");
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
                 {
                     b.Navigation("DiscountProduct");
@@ -615,9 +808,9 @@ namespace BN_Project.Data.Migrations
                 {
                     b.Navigation("Colors");
 
-                    b.Navigation("DiscountProduct");
+                    b.Navigation("Comments");
 
-                    b.Navigation("Discounts");
+                    b.Navigation("DiscountProduct");
 
                     b.Navigation("Images");
                 });
@@ -634,6 +827,8 @@ namespace BN_Project.Data.Migrations
 
             modelBuilder.Entity("BN_Project.Domain.Entities.UserEntity", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618

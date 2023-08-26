@@ -1,11 +1,6 @@
 ﻿using BN_Project.Domain.Entities.Common;
 using BN_Project.Domain.Enum.Order;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BN_Project.Domain.Entities
 {
@@ -15,7 +10,7 @@ namespace BN_Project.Domain.Entities
 
         public OrderStatus Status { get; set; }
 
-        public int Discount { get; set; }
+        public decimal Discount { get; set; }
 
         public ICollection<OrderDetail> OrderDetails { get; set; }
 

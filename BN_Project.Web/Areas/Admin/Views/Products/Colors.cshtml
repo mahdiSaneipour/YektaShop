@@ -82,11 +82,11 @@
                         }
                     </td>
                     <td>
-                        <a class="btn btn-danger" asp-controller="Admin" asp-action="DeleteColorById" asp-route-colorId="@Model[i-1].Id" onclick="is_delete(this)">
+                        <a class="btn btn-danger" asp-controller="Products" asp-action="DeleteColorById" asp-route-colorId="@Model[i-1].Id" onclick="is_delete(this)">
                             <i class="fa fa-times"></i>
                             حذف
                         </a>
-                        <a class="btn btn-yellow" asp-controller="Admin" asp-action="EditColor" asp-route-colorId="@Model[i-1].Id">
+                        <a class="btn btn-yellow" asp-controller="Products" asp-action="EditColor" asp-route-colorId="@Model[i-1].Id">
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                             ویرایش
                         </a>

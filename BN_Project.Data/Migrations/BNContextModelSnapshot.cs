@@ -258,15 +258,10 @@ namespace BN_Project.Data.Migrations
                     b.Property<int>("Percent")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("Discounts");
                 });
@@ -311,8 +306,8 @@ namespace BN_Project.Data.Migrations
                     b.Property<DateTime>("Create")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Discount")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("FinalPrice")
                         .HasColumnType("bigint");
@@ -348,6 +343,9 @@ namespace BN_Project.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpireTime")
                         .HasColumnType("datetime2");
 
                     b.Property<long>("FinalPrice")
@@ -663,13 +661,6 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Comment");
                 });
 
-            modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
-                {
-                    b.HasOne("BN_Project.Domain.Entities.Product", null)
-                        .WithMany("Discounts")
-                        .HasForeignKey("ProductId");
-                });
-
             modelBuilder.Entity("BN_Project.Domain.Entities.DiscountProduct", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Discount", "Discount")
@@ -817,8 +808,6 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("DiscountProduct");
-
-                    b.Navigation("Discounts");
 
                     b.Navigation("Images");
                 });

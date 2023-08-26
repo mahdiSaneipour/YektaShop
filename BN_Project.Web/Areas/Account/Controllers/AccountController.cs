@@ -12,7 +12,7 @@ using System.Security.Claims;
 namespace BN_Project.Web.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("Controller")]
+    [Route("[Controller]")]
     public class AccountController : Controller
     {
         private readonly IViewRenderService _viewRenderService;

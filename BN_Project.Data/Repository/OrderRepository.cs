@@ -27,6 +27,11 @@ namespace BN_Project.Data.Repository
             return await _context.Orders.Include(o => o.OrderDetails).Where(o => o.Status == orderStatus && o.UserId == userId).ToListAsync();
         }
 
+        public async Task<Order> GetOrderWithIncludeOrderDetail(int orderId)
+        {
+            return await _context.Orders.Include(c => c.OrderDetails).Where(o => o.Id == orderId).FirstOrDefaultAsync();
+        }
+
         public async Task<List<string>> GetProductImagesByOrderId(int orderId)
         {
             var result = _context.OrderDetails.Include(od => od.Color)
