@@ -33,6 +33,24 @@ namespace BN_Project.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Discounts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Percent = table.Column<int>(type: "int", nullable: false),
+                    Create = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Discounts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sections",
                 columns: table => new
                 {
@@ -95,23 +113,28 @@ namespace BN_Project.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FinalPrice = table.Column<long>(type: "bigint", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Discount = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Family = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CompleteAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    IsDefalut = table.Column<bool>(type: "bit", nullable: false),
                     Create = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_Users_UserId",
+                        name: "FK_Addresses_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -192,6 +215,7 @@ namespace BN_Project.Data.Migrations
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    IsConfirmed = table.Column<bool>(type: "bit", nullable: true),
                     Create = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -213,27 +237,31 @@ namespace BN_Project.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Discounts",
+                name: "DiscountProduct",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Percent = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: true),
+                    DiscountsId = table.Column<int>(type: "int", nullable: false),
+                    ProductsId = table.Column<int>(type: "int", nullable: false),
                     Create = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Discounts", x => x.Id);
+                    table.PrimaryKey("PK_DiscountProduct", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Discounts_Products_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_DiscountProduct_Discounts_DiscountsId",
+                        column: x => x.DiscountsId,
+                        principalTable: "Discounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DiscountProduct_Products_ProductsId",
+                        column: x => x.ProductsId,
                         principalTable: "Products",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -254,6 +282,37 @@ namespace BN_Project.Data.Migrations
                         name: "FK_ProductGallery_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddressId = table.Column<int>(type: "int", nullable: false),
+                    FinalPrice = table.Column<long>(type: "bigint", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Discount = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Create = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Orders_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -290,32 +349,24 @@ namespace BN_Project.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderDetails",
+                name: "Impressions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Count = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<long>(type: "bigint", nullable: false),
-                    FinalPrice = table.Column<long>(type: "bigint", nullable: false),
-                    ColorId = table.Column<int>(type: "int", nullable: false),
-                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    LikeOrDislike = table.Column<bool>(type: "bit", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    CommentId = table.Column<int>(type: "int", nullable: false),
                     Create = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderDetails", x => x.Id);
+                    table.PrimaryKey("PK_Impressions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderDetails_Colors_ColorId",
-                        column: x => x.ColorId,
-                        principalTable: "Colors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_OrderDetails_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
+                        name: "FK_Impressions_Comments_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -365,32 +416,41 @@ namespace BN_Project.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DiscountProduct",
+                name: "OrderDetails",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DiscountsId = table.Column<int>(type: "int", nullable: false),
-                    ProductsId = table.Column<int>(type: "int", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<long>(type: "bigint", nullable: false),
+                    FinalPrice = table.Column<long>(type: "bigint", nullable: false),
+                    ColorId = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    ExpireTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Create = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DiscountProduct", x => x.Id);
+                    table.PrimaryKey("PK_OrderDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DiscountProduct_Discounts_DiscountsId",
-                        column: x => x.DiscountsId,
-                        principalTable: "Discounts",
+                        name: "FK_OrderDetails_Colors_ColorId",
+                        column: x => x.ColorId,
+                        principalTable: "Colors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_DiscountProduct_Products_ProductsId",
-                        column: x => x.ProductsId,
-                        principalTable: "Products",
+                        name: "FK_OrderDetails_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_UserId",
+                table: "Addresses",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_ParentId",
@@ -423,9 +483,9 @@ namespace BN_Project.Data.Migrations
                 column: "ProductsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Discounts_ProductId",
-                table: "Discounts",
-                column: "ProductId");
+                name: "IX_Impressions_CommentId",
+                table: "Impressions",
+                column: "CommentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_ColorId",
@@ -436,6 +496,11 @@ namespace BN_Project.Data.Migrations
                 name: "IX_OrderDetails_OrderId",
                 table: "OrderDetails",
                 column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_AddressId",
+                table: "Orders",
+                column: "AddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
@@ -490,6 +555,9 @@ namespace BN_Project.Data.Migrations
                 name: "DiscountProduct");
 
             migrationBuilder.DropTable(
+                name: "Impressions");
+
+            migrationBuilder.DropTable(
                 name: "OrderDetails");
 
             migrationBuilder.DropTable(
@@ -518,6 +586,9 @@ namespace BN_Project.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "Sections");

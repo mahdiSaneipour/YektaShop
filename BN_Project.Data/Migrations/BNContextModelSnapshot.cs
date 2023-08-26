@@ -22,6 +22,61 @@ namespace BN_Project.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompleteAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Family")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDefalut")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -258,15 +313,10 @@ namespace BN_Project.Data.Migrations
                     b.Property<int>("Percent")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("Discounts");
                 });
@@ -308,6 +358,9 @@ namespace BN_Project.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Create")
                         .HasColumnType("datetime2");
 
@@ -327,6 +380,8 @@ namespace BN_Project.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("UserId");
 
@@ -348,6 +403,9 @@ namespace BN_Project.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpireTime")
                         .HasColumnType("datetime2");
 
                     b.Property<long>("FinalPrice")
@@ -590,6 +648,17 @@ namespace BN_Project.Data.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.Address", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.UserEntity", "UserEntity")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("UserEntity");
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.Category", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Category", "ParentCategory")
@@ -663,13 +732,6 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Comment");
                 });
 
-            modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
-                {
-                    b.HasOne("BN_Project.Domain.Entities.Product", null)
-                        .WithMany("Discounts")
-                        .HasForeignKey("ProductId");
-                });
-
             modelBuilder.Entity("BN_Project.Domain.Entities.DiscountProduct", b =>
                 {
                     b.HasOne("BN_Project.Domain.Entities.Discount", "Discount")
@@ -691,11 +753,19 @@ namespace BN_Project.Data.Migrations
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>
                 {
+                    b.HasOne("BN_Project.Domain.Entities.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("BN_Project.Domain.Entities.UserEntity", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Address");
 
                     b.Navigation("User");
                 });
@@ -817,8 +887,6 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("DiscountProduct");
-
-                    b.Navigation("Discounts");
 
                     b.Navigation("Images");
                 });
