@@ -19,15 +19,29 @@ namespace BN_Project.Core.Tools
             return Guid.NewGuid().ToString().Replace("-", "");
         }
 
-        public static long PercentagePrice(long price, int discount)
+        public static long PercentagePrice(long price, decimal discount)
         {
-            long result = price - ((price / 100) * discount);
+            long result = (long) (price - ((price / 100) * discount));
             return result;
         }
 
-        public static long DiscountPrice(long price, int discount)
+        public static long DiscountPrice(long price, decimal discount)
         {
-            long result = ((price / 100) * discount);
+            long result = (long) ((price / 100) * discount);
+            return result;
+        }
+
+        public static decimal HowManyPercent(long price, long finalPrice)
+        {
+            decimal result = price - finalPrice;
+            result = (result / price) * 100;
+            return Math.Round(result, 1);
+        }
+
+        public static long GetMainPriceFromDiscount(long finalPrice, decimal discount)
+        {
+            long result = (long)((finalPrice * 100) / (100 - discount));
+
             return result;
         }
 

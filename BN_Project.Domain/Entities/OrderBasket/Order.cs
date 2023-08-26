@@ -11,7 +11,7 @@ namespace BN_Project.Domain.Entities
 
         public OrderStatus Status { get; set; }
 
-        public int Discount { get; set; }
+        public decimal Discount { get; set; }
 
         public ICollection<OrderDetail> OrderDetails { get; set; }
 

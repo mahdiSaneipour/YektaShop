@@ -6,6 +6,7 @@ using BN_Project.Domain.Entities;
 using BN_Project.Domain.Enum.Order;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.UserProfile.Order;
+using Microsoft.AspNetCore.Http;
 
 namespace BN_Project.Core.Services.Implementations
 {
@@ -14,27 +15,29 @@ namespace BN_Project.Core.Services.Implementations
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderDetailRepository _orderDetailRepository;
         private readonly IProductServices _productServices;
+        private readonly IHttpContextAccessor _contextAccessor;
 
         public OrderServices(IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository
-            , IProductServices productServices)
+            , IProductServices productServices, IHttpContextAccessor contextAccessor)
         {
             _orderRepository = orderRepository;
             _orderDetailRepository = orderDetailRepository;
             _productServices = productServices;
+            _contextAccessor = contextAccessor;
         }
 
-        public async Task<BaseResponse> AddProductToBasket(int colorId, int userId)
+        public async Task<BaseResponse> AddProductToBasket(int colorId)
         {
             BaseResponse result = new BaseResponse();
 
-            var order = await _orderRepository.GetSingle(o => o.UserId == userId
+            int userId = Int32.Parse(_contextAccessor.HttpContext.User.Claims.FirstOrDefault().Value);
+
+            var order = await _orderRepository.GetSingle(o => o.UserId == userId 
             && o.Status == OrderStatus.AwaitingPayment);
 
             var color = await _productServices.GetColorByColorId(colorId);
 
-            var product = await _productServices.GetProductWithIncludesByColorId(colorId);
-
-            if (product.Status != Status.Success)
+            if (color.Count < 1)
             {
                 result.Status = Status.NotValid;
                 result.Message = "رنگ کاربر معتبر نمیباشد";
@@ -53,10 +56,10 @@ namespace BN_Project.Core.Services.Implementations
             long price = color.Price;
             long finalPrice = color.Price;
 
-            if (await _productServices.AnyDiscount(colorId))
+            if (await _productServices.AnyDiscountByColorId(colorId))
             {
-                /*finalPrice = Tools.Tools.PercentagePrice(finalPrice,
-                    _productServices.GetDi);*/
+                finalPrice = Tools.Tools.PercentagePrice(finalPrice,
+                await _productServices.GetDiscountPercentByColorId(colorId));
             }
 
             if (order == null)
@@ -79,8 +82,9 @@ namespace BN_Project.Core.Services.Implementations
                 };
 
                 await _orderRepository.Insert(newOrder);
-            }
-            else
+
+                order = newOrder;
+            } else
             {
                 if (await _orderDetailRepository.IsThereAny(od => od.ColorId == colorId
                 && od.OrderId == order.Id))
@@ -119,7 +123,7 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<BaseResponse> ChangeProductOrderCount(int orderDetailId, bool status)
+        public async Task<BaseResponse> ChangeProductOrderCount(int orderDetailId, bool status, int count = 1)
         {
             BaseResponse result = new BaseResponse();
 
@@ -135,11 +139,13 @@ namespace BN_Project.Core.Services.Implementations
 
             if (status)
             {
-                orderDetail.Count++;
-            }
-            else
+                orderDetail.Count += count;
+            } else
             {
-                orderDetail.Count--;
+                if(orderDetail.Count > 1)
+                {
+                    orderDetail.Count -= count;
+                }
             }
 
             await SetPricesInOrderDetail(orderDetailId);
@@ -194,12 +200,20 @@ namespace BN_Project.Core.Services.Implementations
                 foreach (var order in basket.OrderDetails)
                 {
                     long discount = 0;
+                    long finalPrice = 0;
 
-                    /*if (order.Color.Product.Discounts.Count != 0)
+                    finalPrice = order.FinalPrice;
+                    discount = order.Price - order.FinalPrice;
+
+                    /*if (await _productServices.AnyDiscountByColorId(order.ColorId))
                     {
                         discount = Tools.Tools.DiscountPrice(order.Color.Price,
-                            order.Color.Product.Discounts.OrderBy(d => d.Percent)
-                            .FirstOrDefault().Percent) * order.Count;
+                            await _productServices.GetDiscountPercentByColorId(order.ColorId));
+
+                        finalPrice = (order.Color.Price - discount) * order.Count;
+                    } else
+                    {
+                        finalPrice = order.Color.Price * order.Count;
                     }*/
 
                     data.Add(new BoxBasketListViewModel()
@@ -209,7 +223,7 @@ namespace BN_Project.Core.Services.Implementations
                         Image = order.Color.Product.Image,
                         Name = order.Color.Product.Name,
                         ColorName = order.Color.Name,
-                        Price = order.FinalPrice,
+                        Price = finalPrice,
                         ColorId = order.ColorId,
                         Hex = order.Color.Hex,
                         Count = order.Count,
@@ -277,9 +291,10 @@ namespace BN_Project.Core.Services.Implementations
 
             FactorCompViewModel data = new FactorCompViewModel();
 
-            data.Price = (int)order.FinalPrice;
-            data.TotalPrice = 0;
-            data.Discount = 0;
+            data.Price = (int) order.FinalPrice;
+            data.TotalPrice = (int) Tools.Tools.GetMainPriceFromDiscount(data.Price, order.Discount);
+            data.Discount = data.TotalPrice - data.Price;
+
 
             result.Status = Status.Success;
             result.Message = "مقادیر با موفقیت پیدا شدند";
@@ -317,8 +332,46 @@ namespace BN_Project.Core.Services.Implementations
             _orderDetailRepository.Update(orderDetail);
             await _orderDetailRepository.SaveChanges();
 
+            await SetPriceInOrder(orderDetail.OrderId);
+
             result.Status = Status.Success;
             result.Message = "قیمت محصول با موفقیت آپدیت شد";
+
+            return result;
+        }
+
+
+        public async Task<BaseResponse> SetPriceInOrder(int orderId)
+        {
+            BaseResponse result = new BaseResponse();
+
+            Order order = await _orderRepository.GetOrderWithIncludeOrderDetail(orderId);
+
+            if (order == null)
+            {
+                result.Status = Status.NotFound;
+                result.Message = "همچین فاکتوری پیدا نشد";
+
+                return result;
+            }
+
+            long finalPrice = 0;
+            long totalPrice = 0;
+
+            foreach(var orderDetail in order.OrderDetails)
+            {
+                finalPrice += orderDetail.FinalPrice;
+                totalPrice += orderDetail.Price;
+            }
+
+            order.FinalPrice = finalPrice;
+            order.Discount = Tools.Tools.HowManyPercent(totalPrice, finalPrice);
+
+            _orderRepository.Update(order);
+            await _orderRepository.SaveChanges();
+
+            result.Status = Status.Success;
+            result.Message = "فاکتور پیدا شد و آپدیت شد";
 
             return result;
         }

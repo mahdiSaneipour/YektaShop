@@ -88,9 +88,7 @@ namespace BN_Project.Web.Areas.UserProfile.Controllers
         [HttpGet("AddProductToBasket/{colorId}")]
         public async Task<IActionResult> AddProductToBasket(int colorId)
         {
-            int userId = Int32.Parse(User.Claims.FirstOrDefault().Value);
-
-            var result = await _orderServices.AddProductToBasket(colorId, userId);
+            var result = await _orderServices.AddProductToBasket(colorId);
 
             if (result.Status == Status.Success)
             {

@@ -364,8 +364,8 @@ namespace BN_Project.Data.Migrations
                     b.Property<DateTime>("Create")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Discount")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long>("FinalPrice")
                         .HasColumnType("bigint");

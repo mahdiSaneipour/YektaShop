@@ -15,13 +15,6 @@ namespace BN_Project.Data.Repository
             _context = context;
         }
 
-        public async Task<bool> AnyDiscount(int colorId)
-        {
-            return await _context.Colors.Where(c => c.Id == colorId).Include(c => c.Product)
-                .ThenInclude(c => c.DiscountProduct)
-                .AnyAsync(c => c.Product.DiscountProduct == null);
-        }
-
         public async Task<IEnumerable<Color>> GetAllColorsWithProductInclude()
         {
             return await _context.Colors.Include(c => c.Product).ToListAsync();
@@ -42,32 +35,15 @@ namespace BN_Project.Data.Repository
             return await _context.Colors.Include(c => c.Product).FirstOrDefaultAsync(c => c.Id == colorId);
         }
 
-        public async Task<int> GetDiscountPercentByColorId(int colorId)
-        {
-            int percent;
-
-            if (await AnyDiscount(colorId))
-            {
-                /*var product = await _context.Colors.Where(c => c.co).Include(c => c.Product);*/
-               /* percent = await _context.Colors.Include(c => c.Product)
-                    .ThenInclude(p => p.DiscountProduct).ThenInclude(p => p.Product)
-                .Where(c => c.Id == colorId).Select(c =>
-                c.Product.DiscountProduct.OrderBy(c => c.Discount.Percent)
-                .FirstOrDefault().Discount.Percent)
-                .FirstOrDefaultAsync();*/
-
-                percent = 100;
-            } else
-            {
-                percent = 0;
-            }
-
-            return percent;
-        }
-
         public async Task<List<string>> GetHexColorsByProductId(int productId)
         {
             return await _context.Colors.Where(c => c.ProductId == productId).Select(c => c.Hex).ToListAsync();
+        }
+
+        public async Task<Product> GetProductByColorIdWithIncluseDiscounts(int colorId)
+        {
+            return await _context.Colors.Where(c => c.Id == colorId).Include(c => c.Product)
+                .ThenInclude(p => p.DiscountProduct).ThenInclude(dp => dp.Discount).Select(c => c.Product).FirstOrDefaultAsync();
         }
 
         public async Task<int> GetProductIdByColorId(int colorId)

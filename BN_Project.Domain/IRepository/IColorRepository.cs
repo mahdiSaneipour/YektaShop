@@ -16,8 +16,6 @@ namespace BN_Project.Domain.IRepository
 
         public Task<int> GetProductIdByColorId(int colorId);
 
-        public Task<int> GetDiscountPercentByColorId(int colorId);
-
-        public Task<bool> AnyDiscount(int colorId);
+        public Task<Product> GetProductByColorIdWithIncluseDiscounts(int colorId);
     }
 }

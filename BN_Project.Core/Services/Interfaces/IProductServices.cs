@@ -79,11 +79,7 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<bool> IsThatMuchColorExist(int colorId, int count);
 
-        public Task<bool> AnyDiscount(int colorId);
-
         public Task<Color> GetColorByColorId(int colorId);
-
-        public Task<int> GetDiscountByColorId(int colorId);
 
         #endregion
 
@@ -114,6 +110,10 @@ namespace BN_Project.Core.Services.Interfaces
         public Task<bool> EditDiscount(EditDiscountViewModel editDiscount);
 
         public Task<long> GetPriceWithDiscountByColorId(int colorId);
+
+        public Task<bool> AnyDiscountByColorId(int colorId);
+
+        public Task<int> GetDiscountPercentByColorId(int colorId);
 
         #endregion
     }

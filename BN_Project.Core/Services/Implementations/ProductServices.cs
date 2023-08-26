@@ -988,7 +988,7 @@ namespace BN_Project.Core.Services.Implementations
 
         public async Task<long> GetPriceWithDiscountByColorId(int colorId)
         {
-            int discount = await _colorRepository.GetDiscountPercentByColorId(colorId);
+            int discount = await GetDiscountPercentByColorId(colorId);
             long basePrice = await _colorRepository.GetColorPriceByColorId(colorId);
 
             var price = Tools.Tools.PercentagePrice(basePrice, discount);
@@ -996,14 +996,68 @@ namespace BN_Project.Core.Services.Implementations
             return price;
         }
 
-        public Task<bool> AnyDiscount(int colorId)
+        public async Task<bool> AnyDiscountByColorId(int colorId)
         {
-            throw new NotImplementedException();
+            var product = await _colorRepository.GetProductByColorIdWithIncluseDiscounts(colorId);
+
+            bool result = false;
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            if (product.DiscountProduct == null)
+            {
+                return false;
+            }
+
+            List<int> discounts = product.DiscountProduct.Select(n => n.Discount.Id).ToList();
+
+            foreach (var discountId in discounts)
+            {
+                if (await _discountRepository.IsDiscountAvailable(discountId))
+                {
+                    result = true;
+                    break;
+                }
+            }
+
+            return result;
         }
 
-        public Task<int> GetDiscountByColorId(int colorId)
+        public async Task<int> GetDiscountPercentByColorId(int colorId)
         {
-            throw new NotImplementedException();
+            int percent;
+
+            if (await AnyDiscountByColorId(colorId))
+            {
+                var product = await _colorRepository.GetProductByColorIdWithIncluseDiscounts(colorId);
+
+                if (product == null)
+                {
+                    percent = 0;
+                }
+
+                List<int> discountsId = product.DiscountProduct.Select(dp => dp.Discount.Id).ToList();
+                List<int> percents = new List<int>();
+
+                foreach(var discountId in discountsId)
+                {
+                    if (await _discountRepository.IsDiscountAvailable(discountId))
+                    {
+                        percents.Add(await _discountRepository.GetPercentByDiscountId(discountId));
+                    }
+                }
+
+                percent = percents.Max();
+            }
+            else
+            {
+                percent = 0;
+            }
+
+            return percent;
         }
 
         #endregion
