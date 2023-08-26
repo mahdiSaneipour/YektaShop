@@ -34,8 +34,12 @@ namespace BN_Project.Web.Areas.Profile.Controllers
         }
 
         [Route("Pay")]
-        public async Task<IActionResult> Pay(PaymentRequestViewModel pay)
+        public async Task<IActionResult> Pay(int AddressId)
+        
+        
         {
+            PaymentRequestViewModel pay = new PaymentRequestViewModel();
+
             System.Net.ServicePointManager.Expect100Continue = false;
             PaymentGatewayImplementationServicePortTypeClient zp = new PaymentGatewayImplementationServicePortTypeClient();
 
@@ -43,7 +47,7 @@ namespace BN_Project.Web.Areas.Profile.Controllers
                 pay.Price,
                 pay.Description,
                 pay.Email,
-                pay.AdminPhoneNumber,
+                pay.PhoneNumber,
                 pay.RedirectAddress);
             if (Status.Body.Status == 100)
             {

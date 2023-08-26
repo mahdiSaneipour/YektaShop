@@ -29,7 +29,15 @@
                 این مبلغ اضافه خواهد شد
             </div>
             <div class="checkout-bill-row checkout-bill-action">
-                <a href="#" class="btn btn-block btn-primary">ادامه فرایند خرید</a>
+                @if (Model.AddressId == 0)
+                {
+                    <a asp-area="UserProfile" asp-controller="PaymentRequest" asp-action="PickAddress" class="btn btn-block btn-primary">ادامه فرایند خرید</a>
+                }
+                else
+                {
+                    <a asp-area="UserProfile" asp-controller="PaymentRequest" asp-action="Pay" asp-route-AddressId="@Model.AddressId" class="btn btn-block btn-primary">ادامه فرایند خرید</a>
+                }
+
             </div>
             <div class="checkout-bill-row checkout-bill-footer">
                 <div class="checkout-bill-row-label">

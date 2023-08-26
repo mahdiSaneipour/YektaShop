@@ -16,7 +16,7 @@ namespace BN_Project.Web.Components.Order
 
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(int AddressId = 0)
         {
             FactorCompViewModel data = new FactorCompViewModel();
 
@@ -25,6 +25,9 @@ namespace BN_Project.Web.Components.Order
             var result = await _orderServices.GetFactorCompModel(userId);
 
             data = result.Data;
+
+            if (AddressId != 0)
+                data.AddressId = AddressId;
 
             return View("Factor", data);
         }

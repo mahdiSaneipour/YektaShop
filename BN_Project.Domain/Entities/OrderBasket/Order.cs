@@ -1,16 +1,12 @@
 ﻿using BN_Project.Domain.Entities.Common;
 using BN_Project.Domain.Enum.Order;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BN_Project.Domain.Entities
 {
     public class Order : BaseEntity
     {
+        public int AddressId { get; set; }
         public long FinalPrice { get; set; }
 
         public OrderStatus Status { get; set; }
@@ -21,7 +17,12 @@ namespace BN_Project.Domain.Entities
 
         public int UserId { get; set; }
 
+        #region Relations
         [ForeignKey(nameof(UserId))]
         public UserEntity User { get; set; }
+
+        [ForeignKey(nameof(AddressId))]
+        public Address Address { get; set; }
+        #endregion
     }
 }

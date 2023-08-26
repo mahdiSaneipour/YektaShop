@@ -524,7 +524,8 @@ namespace BN_Project.Core.Services.Implementations
         public async Task RemoveAddress(int addressId)
         {
             var address = await _addressRepository.GetSingle(n => n.Id == addressId);
-            _addressRepository.Delete(address);
+            address.IsDelete = true;
+            _addressRepository.Update(address);
 
             await _addressRepository.SaveChanges();
         }
@@ -540,6 +541,7 @@ namespace BN_Project.Core.Services.Implementations
                 result.FullName = address.Name + " " + address.Family;
                 result.PhoneNumber = address.PhoneNumber;
                 result.PostalCode = address.PostalCode;
+                result.AddressId = address.Id;
             }
             return result;
         }

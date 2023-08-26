@@ -42,7 +42,7 @@ namespace BN_Project.Core.Services.Implementations
                 return result;
             }
 
-            if (color.Count >= 1)
+            if (color.Count < 1)
             {
                 result.Status = Status.DontHave;
                 result.Message = "این تعداد رنگ موجود نیست";
@@ -265,7 +265,7 @@ namespace BN_Project.Core.Services.Implementations
         {
             DataResponse<FactorCompViewModel> result = new DataResponse<FactorCompViewModel>();
 
-            if(userId == 0)
+            if (userId == 0)
             {
                 result.Status = Status.NotFound;
                 result.Message = "کاربری پیدا نشد";
@@ -277,7 +277,7 @@ namespace BN_Project.Core.Services.Implementations
 
             FactorCompViewModel data = new FactorCompViewModel();
 
-            data.Price = (int) order.FinalPrice;
+            data.Price = (int)order.FinalPrice;
             data.TotalPrice = 0;
             data.Discount = 0;
 
