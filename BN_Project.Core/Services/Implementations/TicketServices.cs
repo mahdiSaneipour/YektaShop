@@ -21,7 +21,8 @@ namespace BN_Project.Core.Services.Implementations
 
         public TicketServices(ITicketRepository ticketRepository,
             ISectionRepository sectionRepository,
-            ITicketMessageRepository ticketMessageRepository)
+            ITicketMessageRepository ticketMessageRepository,
+            IOrderRepository orderRepository)
         {
             _ticketRepository = ticketRepository;
             _sectionRepository = sectionRepository;

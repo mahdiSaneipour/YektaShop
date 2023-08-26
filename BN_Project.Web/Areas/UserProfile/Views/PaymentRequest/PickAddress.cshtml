@@ -1,0 +1,131 @@
+﻿@using BN_Project.Domain.ViewModel.UserProfile.Payment;
+@model PickAddressViewModel
+@{
+    ViewData["Title"] = "انتخاب آدرس";
+    Layout = "Profile/_ProfileLayoutNoSideBar";
+}
+<link rel="stylesheet" href="~/theme-assets/css/dependencies.css">
+<link rel="stylesheet" href="~/theme-assets/css/theme.css">
+<link rel="stylesheet" href="~/theme-assets/css/custom.css">
+
+<main class="page-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-9 col-lg-8 mb-lg-0 mb-4">
+                <!-- start of box => user-address-selected -->
+                <div class="ui-box bg-white user-address-selected mb-5">
+                    <div class="ui-box-title">آدرس تحویل سفارش</div>
+                    <div class="ui-box-content">
+                        <!-- start of user-addresses-container -->
+                        <div class="user-addresses-container">
+                            @if (Model.FullAddress == null)
+                            {
+                                <p class="alert alert-info">آدرس پیشفرضی موجود نیست لطفا یک آدرس پیشفرض انتخاب کنید.</p>
+                            }
+                            else
+                            {
+                                <div class="user-address">
+                                    <div class="user-address-recipient mb-2">@Model.FullAddress @Model.PhoneNumber @Model.PostalCode</div>
+                                    <span class="d-block user-contact-items fa-num mb-3">
+                                        <span class="user-contact-item">
+                                            <i class="ri-user-line icon"></i>
+                                            <span class="value">@Model.FullName</span>
+                                        </span>
+                                    </span>
+                                </div>
+                            }
+                            <a asp-area="UserProfile" asp-controller="Addresses" asp-action="Index" class="link border-bottom-0 fs-7 fw-bold">
+                                تغییر آدرس
+                                <i class="ri-arrow-left-s-fill"></i>
+                            </a>
+                        </div>
+                        <!-- end of user-addresses-container -->
+                    </div>
+                </div>
+                <!-- end of box => user-address-selected -->
+                <a asp-area="UserProfile" asp-controller="UserOrder" asp-action="Basket" class="link border-bottom-0">
+                    <i class="ri-arrow-right-s-fill"></i> بازگشت به سبد
+                    خرید
+                </a>
+            </div>
+            <div class="col-xl-3 col-lg-4">
+                <div class="ui-sticky ui-sticky-top">
+                    <!-- start of checkout-bill -->
+                    <div class="checkout-bill ui-box bg-white mb-5">
+                        <div class="checkout-bill-row">
+                            <div class="checkout-bill-row-label">قیمت کالاها (۴)</div>
+                            <div class="checkout-bill-row-value">
+                                <span class="fs-6">۴۲,۴۲۰,۰۰۰</span> <span class="currency">تومان</span>
+                            </div>
+                        </div>
+                        <div class="checkout-bill-row">
+                            <div class="checkout-bill-row-label">تخفیف کالاها</div>
+                            <div class="checkout-bill-row-value">
+                                <span class="fs-6 text-danger">۵,۰۰۰</span>
+                                <span class="currency text-danger">تومان</span>
+                            </div>
+                        </div>
+                        <div class="checkout-bill-row">
+                            <div class="checkout-bill-row-label">جمع سبد خرید</div>
+                            <div class="checkout-bill-row-value">
+                                <span class="fs-6">۴۲,۴۱۵,۰۰۰</span> <span class="currency">تومان</span>
+                            </div>
+                        </div>
+                        <div class="checkout-bill-row checkout-bill-note">
+                            هزینه‌ی ارسال در ادامه بر اساس آدرس، زمان و نحوه‌ی ارسال انتخابی شما‌ محاسبه و به
+                            این مبلغ اضافه خواهد شد
+                        </div>
+                        <div class="checkout-bill-row checkout-bill-action">
+                            <a href="#" class="btn btn-block btn-primary">ادامه فرایند خرید</a>
+                        </div>
+                        <div class="checkout-bill-row checkout-bill-footer">
+                            <div class="checkout-bill-row-label">
+                                <span class="d-flex">
+                                    <i class="ri-copper-coin-fill text-warning me-1"></i>
+                                    <span class="fs-7">امتیاز باشگاه مشتریان</span>
+                                </span>
+                            </div>
+                            <div class="checkout-bill-row-value">
+                                ۱۵۰ <span class="fs-7 fw-bold text-muted">امتیاز</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end of checkout-bill -->
+                    <!-- start of widget -->
+                    <div class="widget p-0">
+                        <div class="widget-content widget--free-shipping">
+                            <div class="free-shipping--detail">
+                                <div class="title">ارسال رایگان سفارش</div>
+                                <div class="subtitle">سفارش‌های بالای ۳۰۰ هزار تومان</div>
+                            </div>
+                            <div class="free-shipping--banner">
+                                <img src="./images/theme/free-shipping--banner.png"
+                                     alt="ارسال رایگان سفارش">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end of widget -->
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="~/theme-assets/js/dependencies/jquery-3.6.0.min.js"></script>
+    <script src="~/theme-assets/js/dependencies/swiper-bundle.min.js"></script>
+    <script src="~/theme-assets/js/dependencies/bootstrap.bundle.min.js"></script>
+    <script src="~/theme-assets/js/dependencies/bootstrap-slider.min.js"></script>
+    <script src="~/theme-assets/js/dependencies/jquery.countdown.min.js"></script>
+    <script src="~/theme-assets/js/dependencies/jquery.simple.timer.min.js"></script>
+    <script src="~/theme-assets/js/dependencies/iziToast.min.js"></script>
+    <script src="~/theme-assets/js/dependencies/fancybox.umd.js"></script>
+    <script src="~/theme-assets/js/dependencies/nouislider.min.js"></script>
+    <script src="~/theme-assets/js/dependencies/wNumb.js"></script>
+    <script src="~/theme-assets/js/dependencies/remodal.min.js"></script>
+    <script src="~/theme-assets/js/dependencies/select2.min.js"></script>
+    <script src="~/theme-assets/js/dependencies/simplebar.min.js"></script>
+    <script src="~/theme-assets/js/dependencies/zoomsl.min.js"></script>
+    <script src="~/theme-assets/js/theme.js"></script>
+    <script src="~/theme-assets/js/custom.js"></script>
+                    }

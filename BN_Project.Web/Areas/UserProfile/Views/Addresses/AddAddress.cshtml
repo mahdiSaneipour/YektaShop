@@ -1,0 +1,86 @@
+﻿@using BN_Project.Domain.ViewModel.UserProfile.Address;
+@model AddAddressViewModel
+@{
+    ViewData["Title"] = "افزودن نشانی";
+    Layout = "Profile/_ProfileLayout";
+}
+
+<div class="col-xl-9 col-lg-8 col-md-7">
+    <div class="alert alert-warning alert-dismissible fade show mb-5" role="alert">
+        <div>
+            سفارش شما در انتظار پرداخت است. برای جلوگیری از لغو سفارش، لطفا پرداخت را انجام دهید.
+            <a href="#" class="btn btn-sm btn-primary mx-3">سفارش های من</a>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="ui-box bg-white mb-5">
+        <div class="ui-box-title">ایجاد تیکت جدید</div>
+        <div class="ui-box-subtitle">
+            در صورت پر کردن فرم زیر با اطلاعات اشتباه مسئولیت هرگونه اتفاق با خریدار می باشد.
+        </div>
+        <div class="ui-box-content">
+            <form asp-action="AddAddress" asp-controller="Addresses" asp-area="UserProfile" class="add-ticket-form">
+                <input type="hidden" asp-for="UserId" />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-element-row mb-5">
+                            <label class="label">نام</label>
+                            <input type="text" class="form-control" placeholder="" asp-for="Name">
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-element-row mb-5">
+                            <label class="label">نام خانوادگی</label>
+                            <input type="text" class="form-control" placeholder="" asp-for="Family">
+                            <span asp-validation-for="Family"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-element-row mb-5">
+                            <label class="label">شماره تلفن</label>
+                            <input type="text" class="form-control" placeholder="" asp-for="PhoneNumber">
+                            <span asp-validation-for="PhoneNumber"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-element-row mb-5">
+                            <label class="label">استان</label>
+                            <input type="text" class="form-control" placeholder="" asp-for="State">
+                            <span asp-validation-for="State"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-element-row mb-5">
+                            <label class="label">شهر</label>
+                            <input type="text" class="form-control" placeholder="" asp-for="City">
+                            <span asp-validation-for="City"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-element-row mb-5">
+                            <label class="label">کدپستی</label>
+                            <input type="text" class="form-control" placeholder="" asp-for="PostalCode">
+                            <span asp-validation-for="PostalCode"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-element-row mb-5">
+                            <label class="label">پیام</label>
+                            <textarea rows="5" class="form-control" asp-for="CompleteAddress"
+                                      placeholder="آدرس کامل"></textarea>
+                            <span asp-validation-for="CompleteAddress"></span>
+                        </div>
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary px-4">
+                            ثبت نشانی <i class="ri-ball-pen-line ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

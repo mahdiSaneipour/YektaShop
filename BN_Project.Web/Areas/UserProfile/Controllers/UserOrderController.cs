@@ -1,6 +1,7 @@
 ﻿using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.Enum.Order;
+using BN_Project.Domain.ViewModel.UserProfile;
 using BN_Project.Domain.ViewModel.UserProfile.Order;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,13 @@ namespace BN_Project.Web.Areas.UserProfile.Controllers
         public UserOrderController(IOrderServices orderServices)
         {
             _orderServices = orderServices;
+        }
+
+        [NonAction]
+        private int GetCurrentUserId()
+        {
+            int UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
+            return UserId;
         }
 
         [Route("Orders")]
@@ -82,7 +90,7 @@ namespace BN_Project.Web.Areas.UserProfile.Controllers
         {
             var result = await _orderServices.AddProductToBasket(colorId);
 
-            if(result.Status == Status.Success)
+            if (result.Status == Status.Success)
             {
                 return RedirectToAction("Basket");
             }
