@@ -6,7 +6,7 @@ namespace BN_Project.Domain.Entities
 {
     public class Order : BaseEntity
     {
-        public int FinalPrice { get; set; }
+        public long FinalPrice { get; set; }
 
         public OrderStatus Status { get; set; }
 
@@ -16,10 +16,18 @@ namespace BN_Project.Domain.Entities
 
         public int UserId { get; set; }
 
+        public int AddressId { get; set; }
+
         public int? DiscountId { get; set; }
+
+        #region Relations
 
         [ForeignKey(nameof(UserId))]
         public UserEntity User { get; set; }
+
+        [ForeignKey(nameof(AddressId))]
+        public Address Address { get; set; }
+        #endregion
 
         [ForeignKey(nameof(DiscountId))]
         public Discount? Discount { get; set; }

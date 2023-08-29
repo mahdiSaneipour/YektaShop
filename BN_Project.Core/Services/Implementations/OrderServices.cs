@@ -40,6 +40,14 @@ namespace BN_Project.Core.Services.Implementations
 
             if (color.Count < 1)
             {
+                result.Status = Status.NotValid;
+                result.Message = "رنگ کاربر معتبر نمیباشد";
+
+                return result;
+            }
+
+            if (color.Count < 1)
+            {
                 result.Status = Status.DontHave;
                 result.Message = "این تعداد رنگ موجود نیست";
 
