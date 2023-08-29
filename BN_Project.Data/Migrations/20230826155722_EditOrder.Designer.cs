@@ -4,6 +4,7 @@ using BN_Project.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BN_Project.Data.Migrations
 {
     [DbContext(typeof(BNContext))]
-    partial class BNContextModelSnapshot : ModelSnapshot
+    [Migration("20230826155722_EditOrder")]
+    partial class EditOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -361,9 +364,6 @@ namespace BN_Project.Data.Migrations
                     b.Property<DateTime>("Create")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DiscountId")
-                        .HasColumnType("int");
-
                     b.Property<int>("FinalPrice")
                         .HasColumnType("int");
 
@@ -380,8 +380,6 @@ namespace BN_Project.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DiscountId");
 
                     b.HasIndex("UserId");
 
@@ -753,17 +751,11 @@ namespace BN_Project.Data.Migrations
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>
                 {
-                    b.HasOne("BN_Project.Domain.Entities.Discount", "Discount")
-                        .WithMany("Orders")
-                        .HasForeignKey("DiscountId");
-
                     b.HasOne("BN_Project.Domain.Entities.UserEntity", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Discount");
 
                     b.Navigation("User");
                 });
@@ -871,8 +863,6 @@ namespace BN_Project.Data.Migrations
             modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
                 {
                     b.Navigation("DiscountProduct");
-
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>

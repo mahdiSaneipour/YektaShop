@@ -783,17 +783,17 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<long> GetPriceByColorId(int colorId)
+        public async Task<int> GetPriceByColorId(int colorId)
         {
             return await _colorRepository.GetColorPriceByColorId(colorId);
         }
 
-        public async Task<long> GetCountByColorId(int colorId)
+        public async Task<int> GetCountByColorId(int colorId)
         {
             return await _colorRepository.GetColorCountByColorId(colorId);
         }
 
-        public async Task<BaseResponse> ChangeColorCount(int colorId, int count, bool action)
+        public async Task<BaseResponse> ChangeColorCount(int colorId, int count)
         {
             BaseResponse result = new BaseResponse();
 
@@ -807,13 +807,7 @@ namespace BN_Project.Core.Services.Implementations
                 return result;
             }
 
-            if (action)
-            {
-                color.Count = color.Count + count;
-            } else
-            {
-                color.Count = color.Count - count;
-            }
+            color.Count = color.Count + count;
 
             _colorRepository.Update(color);
             await _colorRepository.SaveChanges();
@@ -986,10 +980,10 @@ namespace BN_Project.Core.Services.Implementations
             return true;
         }
 
-        public async Task<long> GetPriceWithDiscountByColorId(int colorId)
+        public async Task<int> GetPriceWithDiscountByColorId(int colorId)
         {
             int discount = await GetDiscountPercentByColorId(colorId);
-            long basePrice = await _colorRepository.GetColorPriceByColorId(colorId);
+            int basePrice = await _colorRepository.GetColorPriceByColorId(colorId);
 
             var price = Tools.Tools.PercentagePrice(basePrice, discount);
 
@@ -998,7 +992,13 @@ namespace BN_Project.Core.Services.Implementations
 
         public async Task<bool> AnyDiscountByColorId(int colorId)
         {
-            var product = await _colorRepository.GetProductByColorIdWithIncluseDiscounts(colorId);
+            if(await _discountRepository.IsThereAny(d => d.DiscountProduct == null && d.Code == null
+                && d.StartDate <= DateTime.Now && DateTime.Now >= d.ExpireDate))
+            {
+                return true;
+            }
+
+            var product = await _colorRepository.GetProductByColorIdWithIncludeDiscounts(colorId);
 
             bool result = false;
 
@@ -1016,7 +1016,7 @@ namespace BN_Project.Core.Services.Implementations
 
             foreach (var discountId in discounts)
             {
-                if (await _discountRepository.IsDiscountAvailable(discountId))
+                if (await _discountRepository.IsDiscountAvailableForPublicProduct(discountId))
                 {
                     result = true;
                     break;
@@ -1032,7 +1032,7 @@ namespace BN_Project.Core.Services.Implementations
 
             if (await AnyDiscountByColorId(colorId))
             {
-                var product = await _colorRepository.GetProductByColorIdWithIncluseDiscounts(colorId);
+                var product = await _colorRepository.GetProductByColorIdWithIncludeDiscounts(colorId);
 
                 if (product == null)
                 {
@@ -1044,11 +1044,13 @@ namespace BN_Project.Core.Services.Implementations
 
                 foreach(var discountId in discountsId)
                 {
-                    if (await _discountRepository.IsDiscountAvailable(discountId))
+                    if (await _discountRepository.IsDiscountAvailableForPublicProduct(discountId))
                     {
                         percents.Add(await _discountRepository.GetPercentByDiscountId(discountId));
                     }
                 }
+
+                percents.AddRange(await _discountRepository.GetPublicDiscountsPercentList());
 
                 percent = percents.Max();
             }
@@ -1058,6 +1060,16 @@ namespace BN_Project.Core.Services.Implementations
             }
 
             return percent;
+        }
+
+        public async Task<bool> IsDiscountCodeValid(string discount)
+        {
+            return await _discountRepository.IsDiscountCodeValid(discount);
+        }
+
+        public async Task<Discount> GetDiscountByDiscountCodeWithIncludeProducts(string discount)
+        {
+            return await _discountRepository.GetDiscountByDiscountCodeWithIncludeProducts(discount);
         }
 
         #endregion

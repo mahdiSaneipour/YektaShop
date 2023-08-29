@@ -71,11 +71,11 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<BaseResponse> DeleteColorById(int colorId);
 
-        public Task<long> GetPriceByColorId(int colorId);
+        public Task<int> GetPriceByColorId(int colorId);
 
-        public Task<long> GetCountByColorId(int colorId);
+        public Task<int> GetCountByColorId(int colorId);
 
-        public Task<BaseResponse> ChangeColorCount(int colorId, int count, bool action);
+        public Task<BaseResponse> ChangeColorCount(int colorId, int count);
 
         public Task<bool> IsThatMuchColorExist(int colorId, int count);
 
@@ -109,11 +109,15 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<bool> EditDiscount(EditDiscountViewModel editDiscount);
 
-        public Task<long> GetPriceWithDiscountByColorId(int colorId);
+        public Task<int> GetPriceWithDiscountByColorId(int colorId);
 
         public Task<bool> AnyDiscountByColorId(int colorId);
 
         public Task<int> GetDiscountPercentByColorId(int colorId);
+
+        public Task<bool> IsDiscountCodeValid(string discount);
+
+        public Task<Discount> GetDiscountByDiscountCodeWithIncludeProducts(string discount);
 
         #endregion
     }

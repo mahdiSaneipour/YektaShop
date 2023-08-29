@@ -19,7 +19,7 @@ namespace BN_Project.Web.Api.Product
         [Route("GetPriceByColorId/{colorId}")]
         public async Task<IActionResult> GetPriceByColorId(int colorId)
         {
-            long price = await _productServices.GetPriceByColorId(colorId);
+            int price = await _productServices.GetPriceByColorId(colorId);
 
             return Ok(new { price = price });
         }

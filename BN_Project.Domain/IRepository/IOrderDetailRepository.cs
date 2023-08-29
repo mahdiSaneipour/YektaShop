@@ -4,5 +4,6 @@ namespace BN_Project.Domain.IRepository
 {
     public interface IOrderDetailRepository : IGenericRepositroy<OrderDetail>
     {
+        public Task<Order> GetOrderByOrderDetail(int orderDetailId);
     }
 }

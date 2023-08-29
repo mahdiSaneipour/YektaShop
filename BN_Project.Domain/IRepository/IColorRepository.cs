@@ -10,12 +10,12 @@ namespace BN_Project.Domain.IRepository
 
         public Task<List<string>> GetHexColorsByProductId(int productId);
 
-        public Task<long> GetColorPriceByColorId(int colorId);
+        public Task<int> GetColorPriceByColorId(int colorId);
 
         public Task<int> GetColorCountByColorId(int colorId);
 
         public Task<int> GetProductIdByColorId(int colorId);
 
-        public Task<Product> GetProductByColorIdWithIncluseDiscounts(int colorId);
+        public Task<Product> GetProductByColorIdWithIncludeDiscounts(int colorId);
     }
 }

@@ -13,5 +13,9 @@ namespace BN_Project.Domain.ViewModel.UserProfile.Order
         public int Discount { get; set; }
 
         public int TotalPrice { get; set; }
+
+        public int Count { get; set; }
+
+        public string DiscountCode { get; set; }
     }
 }

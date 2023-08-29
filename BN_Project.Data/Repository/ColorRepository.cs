@@ -25,7 +25,7 @@ namespace BN_Project.Data.Repository
             return await _context.Colors.Where(c => c.Id == colorId).Select(c => c.Count).FirstOrDefaultAsync();
         }
 
-        public async Task<long> GetColorPriceByColorId(int colorId)
+        public async Task<int> GetColorPriceByColorId(int colorId)
         {
             return await _context.Colors.Where(c => c.Id == colorId).Select(c => c.Price).FirstOrDefaultAsync();
         }
@@ -40,7 +40,7 @@ namespace BN_Project.Data.Repository
             return await _context.Colors.Where(c => c.ProductId == productId).Select(c => c.Hex).ToListAsync();
         }
 
-        public async Task<Product> GetProductByColorIdWithIncluseDiscounts(int colorId)
+        public async Task<Product> GetProductByColorIdWithIncludeDiscounts(int colorId)
         {
             return await _context.Colors.Where(c => c.Id == colorId).Include(c => c.Product)
                 .ThenInclude(p => p.DiscountProduct).ThenInclude(dp => dp.Discount).Select(c => c.Product).FirstOrDefaultAsync();

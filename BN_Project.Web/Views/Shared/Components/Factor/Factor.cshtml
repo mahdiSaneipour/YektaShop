@@ -6,7 +6,7 @@
         <div class="checkout-bill ui-box bg-white mb-5">
 
             <div class="checkout-bill-row">
-                <div class="checkout-bill-row-label">قیمت کالاها @Model.TotalPrice</div>
+                <div class="checkout-bill-row-label">قیمت کالاها @Model.Count</div>
                 <div class="checkout-bill-row-value">
                     <span class="fs-6"></span> @Model.TotalPrice.ToString("#,0") <span class="currency">تومان</span>
                 </div>
@@ -24,6 +24,14 @@
                     <span class="fs-6">@Model.Price.ToString("#,0")</span> <span class="currency">تومان</span>
                 </div>
             </div>
+            <form method="post" asp-action="ApplyDiscount">
+                <div class="checkout-bill-row">
+                    <input id="discount" value="@Model.DiscountCode" name="discount" type="text" class="form-control" placeholder="کد تخفیف">
+                </div>
+                <div class="checkout-bill-row">
+                    <button id="submit-discount" class="btn btn-primary">اعمال کد تخفیف</button>
+                </div>
+            </form>
             <div class="checkout-bill-row checkout-bill-note">
                 هزینه‌ی ارسال در ادامه بر اساس آدرس، زمان و نحوه‌ی ارسال انتخابی شما‌ محاسبه و به
                 این مبلغ اضافه خواهد شد

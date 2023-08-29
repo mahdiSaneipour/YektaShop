@@ -22,7 +22,7 @@ namespace BN_Project.Domain.ViewModel.Admin
 
         [Display(Name = "قیمت رنگ")]
         [Required(ErrorMessage = "پر کردن فیلد {0} اجباری میباشد")]
-        public long Price { get; set; }
+        public int Price { get; set; }
 
         [Display(Name = "تعدا رنگ")]
         [Required(ErrorMessage = "پر کردن فیلد {0} اجباری میباشد")]

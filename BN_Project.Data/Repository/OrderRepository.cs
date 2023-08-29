@@ -15,11 +15,27 @@ namespace BN_Project.Data.Repository
             _context = context;
         }
 
+        public async Task<int> GetBasketIdByUserId(int userId)
+        {
+            var result = await _context.Orders.FirstOrDefaultAsync(o => o.UserId == userId && o.Status == 0);
+
+            return result.Id;
+        }
+
+        public async Task<Order> GetBasketByIdByIncludes(int basketId)
+        {
+            return await _context.Orders.Where(o => o.Id == basketId)
+                .Include(o => o.Discount).Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Color).ThenInclude(c => c.Product)
+                .ThenInclude(p => p.DiscountProduct).AsSplitQuery().FirstOrDefaultAsync();
+        }
+
         public async Task<Order> GetBasketOrderWithIncludeOrderDetailsAndProductAndDiscountAndColorByUserId(int userId)
         {
-            return await _context.Orders.Where(o => o.UserId == userId && o.Status == 0).Include(o => o.OrderDetails)
+            return await _context.Orders.Where(o => o.UserId == userId && o.Status == 0)
+                .Include(o => o.Discount).Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Color).ThenInclude(c => c.Product)
-                .ThenInclude(p => p.DiscountProduct).FirstOrDefaultAsync();
+                .ThenInclude(p => p.DiscountProduct).AsSplitQuery().FirstOrDefaultAsync();
         }
 
         public async Task<List<Order>> GetOrderBoxByStatusWithIncludeOrderDetail(OrderStatus orderStatus, int userId)

@@ -69,10 +69,18 @@ namespace BN_Project.Web.Areas.UserProfile.Controllers
             return RedirectToAction("Orders");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ApplyDiscount(string discount)
+        {
+            await _orderServices.ApplyDiscount(discount);
+
+            return RedirectToAction("Basket");
+        }
+
         [HttpGet("ChangeProductOrderCount/{orderDetailId}/{status}")]
         public async Task<IActionResult> ChangeProductOrderCount(int orderDetailId, bool status)
         {
-            var result = await _orderServices.ChangeProductOrderCount(orderDetailId, status);
+            var result = await _orderServices.ChangeProductOrderCount(orderDetailId);
 
             return RedirectToAction("Basket");
         }
