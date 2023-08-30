@@ -481,7 +481,7 @@ namespace BN_Project.Core.Services.Implementations
 
             foreach(var orderDetail in basket.OrderDetails)
             {
-                if(orderDetail.Create.AddDays(2) < DateTime.Now)
+                if(orderDetail.ExpireTime >= DateTime.Now)
                 {
                     _orderDetailRepository.Delete(orderDetail);
                     await _orderDetailRepository.SaveChanges();

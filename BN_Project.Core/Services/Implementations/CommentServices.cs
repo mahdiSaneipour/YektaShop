@@ -2,6 +2,7 @@
 using BN_Project.Core.Tools;
 using BN_Project.Domain.Entities.Comment;
 using BN_Project.Domain.IRepository;
+using BN_Project.Domain.ViewModel.Product;
 using BN_Project.Domain.ViewModel.UserProfile.Comment;
 using Microsoft.AspNetCore.Http;
 
@@ -81,32 +82,32 @@ namespace BN_Project.Core.Services.Implementations
             return comments;
         }
 
-        public async Task<AvrageRatingViewModel> GetAllRatingPoints()
+        public async Task<AevrageRatingViewModel> GetAllRatingPoints()
         {
-            AvrageRatingViewModel avragePoints = new AvrageRatingViewModel();
+            AevrageRatingViewModel AveragePoints = new AevrageRatingViewModel();
             var Points = await _commentRepository.GetAllRatingPoints();
             if (Points.Count() != 0)
             {
-                avragePoints.TotalComments = Points.Count();
-                avragePoints.BuildQualityRate = Points.Select(n => n.BuildQuality).ToList().CalculateAvrage();
-                avragePoints.ValueOfPurchesRate = Points.Select(n => n.ValueForMoneyComparedToTHePrice).ToList().CalculateAvrage();
-                avragePoints.InnovationRate = Points.Select(n => n.Innovation).ToList().CalculateAvrage();
-                avragePoints.FacilityRate = Points.Select(n => n.FeaturesAndCapabilities).ToList().CalculateAvrage();
-                avragePoints.EaseOfUseRate = Points.Select(n => n.EaseOfUse).ToList().CalculateAvrage();
-                avragePoints.ApperentRate = Points.Select(n => n.DesignAndAppearance).ToList().CalculateAvrage();
-                avragePoints.totalAvrageRate = Math.Round((avragePoints.BuildQualityRate + avragePoints.ValueOfPurchesRate + avragePoints.InnovationRate + avragePoints.FacilityRate +
-                    avragePoints.EaseOfUseRate + avragePoints.ApperentRate) / 6, 1);
+                AveragePoints.TotalComments = Points.Count();
+                AveragePoints.BuildQualityRate = Points.Select(n => n.BuildQuality).ToList().CalculateAverage();
+                AveragePoints.ValueOfPurchesRate = Points.Select(n => n.ValueForMoneyComparedToTHePrice).ToList().CalculateAverage();
+                AveragePoints.InnovationRate = Points.Select(n => n.Innovation).ToList().CalculateAverage();
+                AveragePoints.FacilityRate = Points.Select(n => n.FeaturesAndCapabilities).ToList().CalculateAverage();
+                AveragePoints.EaseOfUseRate = Points.Select(n => n.EaseOfUse).ToList().CalculateAverage();
+                AveragePoints.ApperentRate = Points.Select(n => n.DesignAndAppearance).ToList().CalculateAverage();
+                AveragePoints.totalAverageRate = Math.Round((AveragePoints.BuildQualityRate + AveragePoints.ValueOfPurchesRate + AveragePoints.InnovationRate + AveragePoints.FacilityRate +
+                AveragePoints.EaseOfUseRate + AveragePoints.ApperentRate) / 6, 1);
 
-                avragePoints.BuildQualityPercent = avragePoints.BuildQualityRate.CalculateAvragePercent();
-                avragePoints.ValueOfPurchesPercent = avragePoints.ValueOfPurchesRate.CalculateAvragePercent();
-                avragePoints.InnovationPercent = avragePoints.InnovationRate.CalculateAvragePercent();
-                avragePoints.FacilityPercent = avragePoints.FacilityRate.CalculateAvragePercent();
-                avragePoints.EaseOfUsePercent = avragePoints.EaseOfUseRate.CalculateAvragePercent();
-                avragePoints.ApperentPercent = avragePoints.ApperentRate.CalculateAvragePercent();
-                avragePoints.totalAvragePercent = avragePoints.totalAvrageRate.CalculateAvragePercent();
+                AveragePoints.BuildQualityPercent = AveragePoints.BuildQualityRate.CalculateAveragePercent();
+                AveragePoints.ValueOfPurchesPercent = AveragePoints.ValueOfPurchesRate.CalculateAveragePercent();
+                AveragePoints.InnovationPercent = AveragePoints.InnovationRate.CalculateAveragePercent();
+                AveragePoints.FacilityPercent = AveragePoints.FacilityRate.CalculateAveragePercent();
+                AveragePoints.EaseOfUsePercent = AveragePoints.EaseOfUseRate.CalculateAveragePercent();
+                AveragePoints.ApperentPercent = AveragePoints.ApperentRate.CalculateAveragePercent();
+                AveragePoints.totalAveragePercent = AveragePoints.totalAverageRate.CalculateAveragePercent();
 
             }
-            return avragePoints;
+            return AveragePoints;
         }
 
         public async Task<bool> InsertComment(AddCommentViewModel comment, int userId)
@@ -331,6 +332,37 @@ namespace BN_Project.Core.Services.Implementations
             _commentRepository.Delete(comment);
 
             await _commentRepository.SaveChanges();
+        }
+
+        public async Task<AverageProductRaitingViewModel> GetAverageRatingForProduct(int ProductId)
+        {
+            AverageProductRaitingViewModel result = new AverageProductRaitingViewModel();
+
+            var comments = await _commentRepository.GetAll(c => c.ProductId == ProductId && c.IsConfirmed == true);
+
+            if(comments.Count() != 0)
+            {
+                List<decimal> average = new List<decimal>();
+
+                foreach (var comment in comments)
+                {
+                    int totalRate = comment.BuildQuality + comment.DesignAndAppearance +
+                        comment.EaseOfUse + comment.FeaturesAndCapabilities
+                        + comment.ValueForMoneyComparedToTHePrice + comment.Innovation;
+
+                    decimal averageRate = (decimal) totalRate / (decimal) 6;
+                    average.Add(Math.Round(averageRate, 1));
+                }
+
+                result.Rate = average.Sum() / average.Count();
+                result.Count = average.Count();
+            } else
+            {
+                result.Rate = 0;
+                result.Count = 0;
+            }
+
+            return result;
         }
     }
 }

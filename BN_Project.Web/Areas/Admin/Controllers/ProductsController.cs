@@ -18,6 +18,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             _productService = productService;
         }
 
+        [Route("Admin")]
         public IActionResult Index()
         {
             return View();

@@ -14,7 +14,15 @@ namespace BN_Project.Domain.ViewModel.Product
 
         public string Image { get; set; }
 
-        public long Price { get; set; }
+        public int Price { get; set; }
+
+        public int TotalPrice { get; set; }
+
+        public int DiscountPercent { get; set; }
+
+        public decimal AverageRate { get; set; }
+
+        public int RateCount { get; set; }
 
         public List<string> Colors { get; set; }
     }

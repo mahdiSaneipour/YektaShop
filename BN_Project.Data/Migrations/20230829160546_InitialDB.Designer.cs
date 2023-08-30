@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BN_Project.Data.Migrations
 {
     [DbContext(typeof(BNContext))]
-    [Migration("20230826155722_EditOrder")]
-    partial class EditOrder
+    [Migration("20230829160546_InitialDB")]
+    partial class InitialDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -361,8 +361,14 @@ namespace BN_Project.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Create")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("DiscountId")
+                        .HasColumnType("int");
 
                     b.Property<int>("FinalPrice")
                         .HasColumnType("int");
@@ -380,6 +386,10 @@ namespace BN_Project.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("DiscountId");
 
                     b.HasIndex("UserId");
 
@@ -460,8 +470,8 @@ namespace BN_Project.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Price")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -751,11 +761,25 @@ namespace BN_Project.Data.Migrations
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>
                 {
+                    b.HasOne("BN_Project.Domain.Entities.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BN_Project.Domain.Entities.Discount", "Discount")
+                        .WithMany("Orders")
+                        .HasForeignKey("DiscountId");
+
                     b.HasOne("BN_Project.Domain.Entities.UserEntity", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Discount");
 
                     b.Navigation("User");
                 });
@@ -863,6 +887,8 @@ namespace BN_Project.Data.Migrations
             modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
                 {
                     b.Navigation("DiscountProduct");
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>

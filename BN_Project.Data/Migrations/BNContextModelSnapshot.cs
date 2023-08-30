@@ -384,6 +384,8 @@ namespace BN_Project.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AddressId");
+
                     b.HasIndex("DiscountId");
 
                     b.HasIndex("UserId");
@@ -465,8 +467,8 @@ namespace BN_Project.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Price")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -756,6 +758,12 @@ namespace BN_Project.Data.Migrations
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>
                 {
+                    b.HasOne("BN_Project.Domain.Entities.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("BN_Project.Domain.Entities.Discount", "Discount")
                         .WithMany("Orders")
                         .HasForeignKey("DiscountId");
@@ -765,6 +773,8 @@ namespace BN_Project.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Address");
 
                     b.Navigation("Discount");
 

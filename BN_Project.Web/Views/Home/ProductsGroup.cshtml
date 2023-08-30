@@ -47,6 +47,13 @@
                                             }
                                         </div>
                                         <div class="product-price fa-num">
+                                            @if(product.DiscountPercent != 0)
+                                            {
+                                                <div class="d-flex align-items-center">
+                                                    <del class="price-old">@product.TotalPrice.ToString("#,0")</del>
+                                                    <span class="discount ms-2">%@product.DiscountPercent</span>
+                                                </div>
+                                            }
                                             <span class="price-now">@product.Price.ToString("#,0") <span class="currency">تومان</span></span>
                                         </div>
                                     </div>
@@ -67,8 +74,8 @@
                                             </div>
                                             <div class="product-rating fa-num">
                                                 <i class="ri-star-fill star"></i>
-                                                <strong>۴.۴</strong>
-                                                <span>(۴۳۶)</span>
+                                                <strong>@product.AverageRate</strong>
+                                                <span>(@product.RateCount)</span>
                                             </div>
                                         </div>
                                     </div>

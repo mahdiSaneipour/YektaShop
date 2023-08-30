@@ -7,7 +7,9 @@ namespace BN_Project.Domain.IRepository
     public interface ICommentRepository : IGenericRepositroy<Comment>
     {
         public Task<List<Comment>> GetCommentsWithRelations(Expression<Func<Comment, bool>> where = null);
+
         public Task<Comment> GetCommentWithRelations(Expression<Func<Comment, bool>> where);
+
         public Task<List<CommentRatingsViewModel>> GetAllRatingPoints();
     }
 }

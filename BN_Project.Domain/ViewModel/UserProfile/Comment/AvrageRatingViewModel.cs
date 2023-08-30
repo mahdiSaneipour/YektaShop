@@ -1,9 +1,9 @@
 ﻿namespace BN_Project.Domain.ViewModel.UserProfile.Comment
 {
-    public class AvrageRatingViewModel
+    public class AevrageRatingViewModel
     {
-        public decimal totalAvrageRate { get; set; }
-        public decimal totalAvragePercent { get; set; }
+        public decimal totalAverageRate { get; set; }
+        public decimal totalAveragePercent { get; set; }
 
         public decimal TotalComments { get; set; }
 

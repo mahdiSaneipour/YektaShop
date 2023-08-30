@@ -6,7 +6,7 @@ namespace BN_Project.Domain.Entities
 {
     public class Order : BaseEntity
     {
-        public long FinalPrice { get; set; }
+        public int FinalPrice { get; set; }
 
         public OrderStatus Status { get; set; }
 

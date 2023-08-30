@@ -91,7 +91,7 @@ namespace BN_Project.Core.Tools
                             .GetName();
         }
 
-        public static decimal CalculateAvrage(this List<int> values)
+        public static decimal CalculateAverage(this List<int> values)
         {
             decimal count = values.Count;
             decimal total = values.Sum();
@@ -99,7 +99,7 @@ namespace BN_Project.Core.Tools
 
             return Math.Round(result, 1);
         }
-        public static decimal CalculateAvragePercent(this decimal value)
+        public static decimal CalculateAveragePercent(this decimal value)
         {
             decimal result = (value * 100) / 5;
             return Math.Round(result, 1);

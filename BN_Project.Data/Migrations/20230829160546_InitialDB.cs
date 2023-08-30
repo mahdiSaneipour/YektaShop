@@ -96,7 +96,7 @@ namespace BN_Project.Data.Migrations
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Features = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<long>(type: "bigint", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     Create = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
@@ -182,7 +182,7 @@ namespace BN_Project.Data.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Hex = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Count = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<long>(type: "bigint", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
                     IsDefault = table.Column<bool>(type: "bit", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Create = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -292,11 +292,12 @@ namespace BN_Project.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AddressId = table.Column<int>(type: "int", nullable: false),
-                    FinalPrice = table.Column<long>(type: "bigint", nullable: false),
+                    FinalPrice = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    Discount = table.Column<int>(type: "int", nullable: false),
+                    TotalPrice = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    AddressId = table.Column<int>(type: "int", nullable: false),
+                    DiscountId = table.Column<int>(type: "int", nullable: true),
                     Create = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -309,6 +310,11 @@ namespace BN_Project.Data.Migrations
                         principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Orders_Discounts_DiscountId",
+                        column: x => x.DiscountId,
+                        principalTable: "Discounts",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_Users_UserId",
                         column: x => x.UserId,
@@ -344,38 +350,6 @@ namespace BN_Project.Data.Migrations
                         name: "FK_TicketMessages_Users_SenderId",
                         column: x => x.SenderId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Impressions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-<<<<<<<< HEAD:BN_Project.Data/Migrations/20230826160549_addAllTbls.cs
-                    LikeOrDislike = table.Column<bool>(type: "bit", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    CommentId = table.Column<int>(type: "int", nullable: false),
-========
-                    Count = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<long>(type: "bigint", nullable: false),
-                    FinalPrice = table.Column<long>(type: "bigint", nullable: false),
-                    ColorId = table.Column<int>(type: "int", nullable: false),
-                    OrderId = table.Column<int>(type: "int", nullable: false),
-                    ExpireTime = table.Column<DateTime>(type: "datetime2", nullable: false),
->>>>>>>> 27170f13e910c949cd54e50e5365547a6cb9c0c2:BN_Project.Data/Migrations/20230823124546_InitialDB.cs
-                    Create = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Impressions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Impressions_Comments_CommentId",
-                        column: x => x.CommentId,
-                        principalTable: "Comments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -447,7 +421,6 @@ namespace BN_Project.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-<<<<<<<< HEAD:BN_Project.Data/Migrations/20230826160549_addAllTbls.cs
             migrationBuilder.CreateTable(
                 name: "OrderDetails",
                 columns: table => new
@@ -455,8 +428,8 @@ namespace BN_Project.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Count = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<long>(type: "bigint", nullable: false),
-                    FinalPrice = table.Column<long>(type: "bigint", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    FinalPrice = table.Column<int>(type: "int", nullable: false),
                     ColorId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     ExpireTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -480,8 +453,6 @@ namespace BN_Project.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-========
->>>>>>>> 27170f13e910c949cd54e50e5365547a6cb9c0c2:BN_Project.Data/Migrations/20230823124546_InitialDB.cs
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_UserId",
                 table: "Addresses",
@@ -536,6 +507,11 @@ namespace BN_Project.Data.Migrations
                 name: "IX_Orders_AddressId",
                 table: "Orders",
                 column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_DiscountId",
+                table: "Orders",
+                column: "DiscountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
@@ -608,9 +584,6 @@ namespace BN_Project.Data.Migrations
                 name: "WeakPoints");
 
             migrationBuilder.DropTable(
-                name: "Discounts");
-
-            migrationBuilder.DropTable(
                 name: "Colors");
 
             migrationBuilder.DropTable(
@@ -624,6 +597,9 @@ namespace BN_Project.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Addresses");
+
+            migrationBuilder.DropTable(
+                name: "Discounts");
 
             migrationBuilder.DropTable(
                 name: "Sections");

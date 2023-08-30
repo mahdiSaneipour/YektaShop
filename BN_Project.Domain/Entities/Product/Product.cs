@@ -18,7 +18,7 @@ namespace BN_Project.Domain.Entities
 
         public string Description { get; set; }
 
-        public long Price { get; set; }
+        public int Price { get; set; }
 
         public int CategoryId { get; set; }
 

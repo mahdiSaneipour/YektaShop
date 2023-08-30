@@ -17,18 +17,21 @@ namespace BN_Project.Core.Services.Implementations
         private readonly IColorRepository _colorRepository;
         private readonly IGalleryRepository _galleryRepository;
         private readonly IDiscountRepository _discountRepository;
+        private readonly ICommentServices _commentServices;
 
         public ProductServices(IProductRepository productRepository,
             ICategoryRepository categoryRepository,
             IGalleryRepository galleryRepository,
             IColorRepository colorRepository,
-            IDiscountRepository discountRepository)
+            IDiscountRepository discountRepository,
+            ICommentServices commentServices)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _galleryRepository = galleryRepository;
             _colorRepository = colorRepository;
             _discountRepository = discountRepository;
+            _commentServices = commentServices;
         }
 
         #region Products
@@ -172,15 +175,36 @@ namespace BN_Project.Core.Services.Implementations
             {
                 List<ListProductViewModel> data = new List<ListProductViewModel>();
 
+
                 foreach (var product in products)
                 {
+                    var color = product.Colors.FirstOrDefault(c => c.IsDefault);
+
+                    if(color == null)
+                    {
+                        return result;
+                    }
+
+                    int percent = 0;
+
+                    if(await AnyDiscountByColorId(color.Id))
+                    {
+                        percent = await GetDiscountPercentByColorId(color.Id);
+                    }
+
+                    var comment = await _commentServices.GetAverageRatingForProduct(product.Id);
+
                     data.Add(new ListProductViewModel
                     {
                         Colors = await _colorRepository.GetHexColorsByProductId(product.Id),
                         ProductId = product.Id,
-                        Price = product.Price,
                         Image = product.Image,
                         Title = product.Name,
+                        DiscountPercent = percent,
+                        Price = Tools.Tools.PercentagePrice(color.Price, percent),
+                        TotalPrice = color.Price,
+                        AverageRate = comment.Rate,
+                        RateCount = comment.Count
                     });
                 }
 
@@ -225,6 +249,7 @@ namespace BN_Project.Core.Services.Implementations
             }
             else
             {
+                var comment = await _commentServices.GetAverageRatingForProduct(productId);
 
                 ShowProductViewModel data = new ShowProductViewModel()
                 {
@@ -232,11 +257,13 @@ namespace BN_Project.Core.Services.Implementations
                     Features = product.Features,
                     Image = product.Image,
                     Title = product.Name,
-                    Price = product.Price,
-                    Categories = categories,
                     ProductId = product.Id,
+                    Categories = categories,
+                    RateCount = comment.Count,
+                    AverageRate = comment.Rate,
                     Colors = product.Colors.ToList(),
-                    Count = product.Colors.Sum(c => c.Count),
+                    Price = product.Colors.FirstOrDefault(c => c.IsDefault).Price,
+                    Count = product.Colors.FirstOrDefault(c => c.IsDefault).Count,
                     Images = product.Images.Select(c => c.ImageName).ToList(),
 
                 };
@@ -621,6 +648,14 @@ namespace BN_Project.Core.Services.Implementations
                     await _colorRepository.SaveChanges();
                 }
 
+            } else
+            {
+                var defColor = await _colorRepository.GetSingle(n => n.ProductId == productId);
+
+                if (defColor == null)
+                {
+                    addColor.IsDefault = true;
+                }
             }
 
             Color color = new Color()

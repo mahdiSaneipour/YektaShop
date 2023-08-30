@@ -20,9 +20,9 @@ namespace BN_Project.Domain.ViewModel.UserProfile.Order
 
         public string Name { get; set; }
 
-        public long Price { get; set; }
+        public int Price { get; set; }
 
-        public long Discount { get; set; }
+        public int Discount { get; set; }
 
         public string Image { get; set; }
 
