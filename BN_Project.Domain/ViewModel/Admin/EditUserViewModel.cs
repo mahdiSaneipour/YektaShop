@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BN_Project.Domain.ViewModel.Product;
 
 namespace BN_Project.Domain.ViewModel.Admin
 {
@@ -33,5 +34,7 @@ namespace BN_Project.Domain.ViewModel.Admin
         [MinLength(8, ErrorMessage = "حداقل حروف رمز 8 رقم میباشد")]
         [Compare(nameof(Password), ErrorMessage = "{0} با {1} یکسان نمیباشند")]
         public string ConfirmPassword { get; set; }
+        public List<int>? SelectedRoles { get; set; }
+        public List<RolesForPickViewModel>? Roles { get; set; }
     }
 }

@@ -30,7 +30,6 @@ namespace BN_Project.Domain.ViewModel.Admin
         [MinLength(8, ErrorMessage = "حداقل حروف رمز 8 رقم میباشد")]
         [Compare(nameof(Password), ErrorMessage = "{0} با {1} یکسان نمیباشند")]
         public string ConfirmPassword { get; set; }
-        [Required(ErrorMessage = "این فیلد ضروری می باشد!")]
         public List<int>? SelectedRoles { get; set; }
         public List<RolesForPickViewModel>? Roles { get; set; }
     }

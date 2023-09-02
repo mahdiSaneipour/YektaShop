@@ -130,7 +130,7 @@ namespace BN_Project.Core.Services.Implementations
                 return result;
             }
 
-            if(count == 0 && orderDetail.Count <= count)
+            if (count == 0 && orderDetail.Count <= count)
             {
                 result.Status = Status.DontHave;
                 result.Message = "این تعداد حصول موجود نیست";
@@ -304,7 +304,7 @@ namespace BN_Project.Core.Services.Implementations
             }
 
             data.Count = count;
-            data.Price = order.FinalPrice;
+            data.Price = (int)order.FinalPrice;
             data.TotalPrice = order.TotalPrice;
             data.Discount = data.TotalPrice - data.Price;
             data.DiscountCode = ((order.Discount != null) ? order.Discount.Code : "");
@@ -319,7 +319,7 @@ namespace BN_Project.Core.Services.Implementations
         public async Task<int> GetFinalPriceForBasket(int userId)
         {
             var item = await _orderRepository.GetSingle(n => n.UserId == userId && n.Status == 0);
-            return item.FinalPrice;
+            return (int)item.FinalPrice;
         }
 
         public async Task<BaseResponse> SetPricesInOrderDetail(int orderDetailId)
@@ -435,7 +435,7 @@ namespace BN_Project.Core.Services.Implementations
 
             if (discountE.DiscountProduct == null)
             {
-                order.FinalPrice = Tools.Tools.PercentagePrice(order.FinalPrice, discountE.Percent);
+                order.FinalPrice = Tools.Tools.PercentagePrice((int)order.FinalPrice, discountE.Percent);
             }
             else
             {
@@ -479,9 +479,9 @@ namespace BN_Project.Core.Services.Implementations
 
             var basket = await _orderRepository.GetBasketByIdByIncludes(basketId);
 
-            foreach(var orderDetail in basket.OrderDetails)
+            foreach (var orderDetail in basket.OrderDetails)
             {
-                if(orderDetail.ExpireTime >= DateTime.Now)
+                if (orderDetail.ExpireTime >= DateTime.Now)
                 {
                     _orderDetailRepository.Delete(orderDetail);
                     await _orderDetailRepository.SaveChanges();

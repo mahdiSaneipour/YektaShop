@@ -95,7 +95,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         [Route("EditUser")]
         public async Task<IActionResult> EditUser(int userId)
         {
-            var item = await _userServices.GetUserById(userId);
+            EditUserViewModel item = await _userServices.GetUserById(userId);
             return View(item);
         }
         [PermissionCheker("EditUser_Users")]
@@ -105,7 +105,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(user);
             }
 
             var result = await _userServices.EditUsers(user);

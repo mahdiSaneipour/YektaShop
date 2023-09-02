@@ -18,8 +18,6 @@ namespace BN_Project.Domain.Entities
 
         public int UserId { get; set; }
 
-        public int AddressId { get; set; }
-
         public int? DiscountId { get; set; }
 
         #region Relations

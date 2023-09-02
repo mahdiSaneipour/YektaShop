@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BN_Project.Data.Migrations
 {
     [DbContext(typeof(BNContext))]
-<<<<<<<< HEAD:BN_Project.Data/Migrations/20230826160549_addAllTbls.Designer.cs
-    [Migration("20230826160549_addAllTbls")]
-    partial class addAllTbls
-========
-    [Migration("20230826131918_EditDiscountOrder")]
-    partial class EditDiscountOrder
->>>>>>>> 27170f13e910c949cd54e50e5365547a6cb9c0c2:BN_Project.Data/Migrations/20230826131918_EditDiscountOrder.Designer.cs
+    [Migration("20230902135744_addAllTables")]
+    partial class addAllTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,6 +80,455 @@ namespace BN_Project.Data.Migrations
                     b.ToTable("Addresses");
                 });
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.Authentication.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UniqeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Permissions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6128),
+                            IsDelete = false,
+                            Title = "مدیریت کامنت ها",
+                            UniqeName = "Comments_Management"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6144),
+                            IsDelete = false,
+                            ParentId = 1,
+                            Title = "کامنت ها",
+                            UniqeName = "Comments_Comments"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6145),
+                            IsDelete = false,
+                            ParentId = 1,
+                            Title = "تایید کامنت",
+                            UniqeName = "ConfirmComment_Comment"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6146),
+                            IsDelete = false,
+                            ParentId = 1,
+                            Title = "بستن کامنت",
+                            UniqeName = "CloseComment_Comment"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6173),
+                            IsDelete = false,
+                            Title = "مدیریت تیکت ها",
+                            UniqeName = "Tickets_Management"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6174),
+                            IsDelete = false,
+                            ParentId = 5,
+                            Title = "تیکت ها",
+                            UniqeName = "Tickets_Tickets"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6175),
+                            IsDelete = false,
+                            ParentId = 5,
+                            Title = "بستن تیکت",
+                            UniqeName = "CloseTicket_Tickets"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6176),
+                            IsDelete = false,
+                            ParentId = 5,
+                            Title = "جزئیات تیکت",
+                            UniqeName = "AddTicketMessage_Tickets"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6177),
+                            IsDelete = false,
+                            ParentId = 5,
+                            Title = "پاسخ به تیکت",
+                            UniqeName = "SendMessage_Tickets"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6178),
+                            IsDelete = false,
+                            ParentId = 5,
+                            Title = "باز کردن تیکت",
+                            UniqeName = "AddTicket_Tickets"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6179),
+                            IsDelete = false,
+                            Title = "مدیریت کاربران",
+                            UniqeName = "Users_Management"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6179),
+                            IsDelete = false,
+                            ParentId = 11,
+                            Title = "کاربران",
+                            UniqeName = "Users_Users"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6180),
+                            IsDelete = false,
+                            ParentId = 11,
+                            Title = "افزودن کاربران",
+                            UniqeName = "AddUser_Users"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6181),
+                            IsDelete = false,
+                            ParentId = 11,
+                            Title = "حذف کاربر",
+                            UniqeName = "RemoveUser_Users"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6182),
+                            IsDelete = false,
+                            ParentId = 11,
+                            Title = "ویرایش کاربر",
+                            UniqeName = "EditUser_Users"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6183),
+                            IsDelete = false,
+                            Title = "مدیریت محصولات",
+                            UniqeName = "Products_Management"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6183),
+                            IsDelete = false,
+                            ParentId = 16,
+                            Title = "محصولات",
+                            UniqeName = "Products_Products"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6184),
+                            IsDelete = false,
+                            ParentId = 16,
+                            Title = "افزودن محصول",
+                            UniqeName = "AddProduct_Products"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6185),
+                            IsDelete = false,
+                            ParentId = 16,
+                            Title = "ویرایش محصول",
+                            UniqeName = "EditProduct_Products"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6186),
+                            IsDelete = false,
+                            ParentId = 16,
+                            Title = "حذف محصول",
+                            UniqeName = "DeleteProduct_Products"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6187),
+                            IsDelete = false,
+                            Title = "دسته بندی ها",
+                            UniqeName = "Categories_Products"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6188),
+                            IsDelete = false,
+                            ParentId = 21,
+                            Title = "افزودن دسته بندی",
+                            UniqeName = "AddCategory_Products"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6189),
+                            IsDelete = false,
+                            ParentId = 21,
+                            Title = "ویرایش دسته بندی",
+                            UniqeName = "EditCategory_Products"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6189),
+                            IsDelete = false,
+                            ParentId = 21,
+                            Title = "حذف دسته بندی",
+                            UniqeName = "RemoveCategory_Products"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6190),
+                            IsDelete = false,
+                            Title = "زنگ ها",
+                            UniqeName = "Colors_Products"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6191),
+                            IsDelete = false,
+                            ParentId = 25,
+                            Title = "افزودن رنگ",
+                            UniqeName = "AddColor_Priducts"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6192),
+                            IsDelete = false,
+                            ParentId = 25,
+                            Title = "ویرایش رنگ",
+                            UniqeName = "EditColor_Products"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6193),
+                            IsDelete = false,
+                            ParentId = 25,
+                            Title = "حذف رنگ",
+                            UniqeName = "DeleteColor_Products"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6195),
+                            IsDelete = false,
+                            Title = "عکس محصولات",
+                            UniqeName = "Gallery_Products"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6195),
+                            IsDelete = false,
+                            ParentId = 29,
+                            Title = "افزودن تصویر",
+                            UniqeName = "AddImage_Products"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6196),
+                            IsDelete = false,
+                            ParentId = 29,
+                            Title = "حذف تصویر",
+                            UniqeName = "RemoveImage_Products"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6197),
+                            IsDelete = false,
+                            Title = "تخفیف ها",
+                            UniqeName = "Discounts_Products"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6198),
+                            IsDelete = false,
+                            ParentId = 32,
+                            Title = "افزودن تخفیف",
+                            UniqeName = "AddDiscount_Products"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6199),
+                            IsDelete = false,
+                            ParentId = 32,
+                            Title = "ویرایش تخفیف",
+                            UniqeName = "EditDiscount_Products"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6199),
+                            IsDelete = false,
+                            ParentId = 32,
+                            Title = "حذف تخفیف",
+                            UniqeName = "RemoveDiscount_Products"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(6200),
+                            IsDelete = false,
+                            Title = "صفحه اصلی ادمین",
+                            UniqeName = "Admin_Index"
+                        });
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Authentication.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(7378),
+                            IsDelete = false,
+                            Name = "Admin"
+                        });
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Authentication.RolesPermissions", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RolesPermissions");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Authentication.UsersRoles", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UsersRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 132, DateTimeKind.Local).AddTicks(100),
+                            IsDelete = false,
+                            RoleId = 1,
+                            UserId = 1
+                        });
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -141,8 +585,8 @@ namespace BN_Project.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Price")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -366,14 +810,14 @@ namespace BN_Project.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressId")
+                    b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Create")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Discount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int?>("DiscountId")
+                        .HasColumnType("int");
 
                     b.Property<long>("FinalPrice")
                         .HasColumnType("bigint");
@@ -384,6 +828,9 @@ namespace BN_Project.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<int>("TotalPrice")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -391,9 +838,43 @@ namespace BN_Project.Data.Migrations
 
                     b.HasIndex("AddressId");
 
+                    b.HasIndex("DiscountId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.OrderBasket.PurchesHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Authority")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Create")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RefId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("PurchesHistories");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.OrderDetail", b =>
@@ -416,8 +897,8 @@ namespace BN_Project.Data.Migrations
                     b.Property<DateTime>("ExpireTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("FinalPrice")
-                        .HasColumnType("bigint");
+                    b.Property<int>("FinalPrice")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
@@ -425,8 +906,8 @@ namespace BN_Project.Data.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<long>("Price")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -470,8 +951,8 @@ namespace BN_Project.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Price")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -654,6 +1135,19 @@ namespace BN_Project.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ActivationCode = "951a5c745b884a02ba2c11d8b8838f8e",
+                            Create = new DateTime(2023, 9, 2, 17, 27, 44, 131, DateTimeKind.Local).AddTicks(8469),
+                            Email = "admin@gmail.com",
+                            IsActive = true,
+                            IsDelete = false,
+                            Name = "admin",
+                            Password = "A4-4D-2B-22-FB-2E-12-9C-92-12-46-3F-69-80-80-57"
+                        });
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Address", b =>
@@ -665,6 +1159,53 @@ namespace BN_Project.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("UserEntity");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Authentication.Permission", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.Authentication.Permission", "MotherPermission")
+                        .WithMany("Permissions")
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("MotherPermission");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Authentication.RolesPermissions", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.Authentication.Permission", "Permission")
+                        .WithMany("RolesPermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BN_Project.Domain.Entities.Authentication.Role", "Role")
+                        .WithMany("RolesPermissions")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Authentication.UsersRoles", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.Authentication.Role", "Role")
+                        .WithMany("UsersRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BN_Project.Domain.Entities.UserEntity", "User")
+                        .WithMany("UsersRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Category", b =>
@@ -763,9 +1304,11 @@ namespace BN_Project.Data.Migrations
                 {
                     b.HasOne("BN_Project.Domain.Entities.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("BN_Project.Domain.Entities.Discount", "Discount")
+                        .WithMany("Orders")
+                        .HasForeignKey("DiscountId");
 
                     b.HasOne("BN_Project.Domain.Entities.UserEntity", "User")
                         .WithMany("Orders")
@@ -775,7 +1318,20 @@ namespace BN_Project.Data.Migrations
 
                     b.Navigation("Address");
 
+                    b.Navigation("Discount");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.OrderBasket.PurchesHistory", b =>
+                {
+                    b.HasOne("BN_Project.Domain.Entities.Order", "Order")
+                        .WithMany("PurchesHistories")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.OrderDetail", b =>
@@ -857,6 +1413,20 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("UserEntity");
                 });
 
+            modelBuilder.Entity("BN_Project.Domain.Entities.Authentication.Permission", b =>
+                {
+                    b.Navigation("Permissions");
+
+                    b.Navigation("RolesPermissions");
+                });
+
+            modelBuilder.Entity("BN_Project.Domain.Entities.Authentication.Role", b =>
+                {
+                    b.Navigation("RolesPermissions");
+
+                    b.Navigation("UsersRoles");
+                });
+
             modelBuilder.Entity("BN_Project.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Products");
@@ -881,11 +1451,15 @@ namespace BN_Project.Data.Migrations
             modelBuilder.Entity("BN_Project.Domain.Entities.Discount", b =>
                 {
                     b.Navigation("DiscountProduct");
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Order", b =>
                 {
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("PurchesHistories");
                 });
 
             modelBuilder.Entity("BN_Project.Domain.Entities.Product", b =>
@@ -914,6 +1488,8 @@ namespace BN_Project.Data.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("UsersRoles");
                 });
 #pragma warning restore 612, 618
         }

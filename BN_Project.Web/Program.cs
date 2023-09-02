@@ -13,7 +13,7 @@ builder.Services.AddControllersWithViews();
 
 RegisterServices(services);
 
-services.AddHostedService<QuartzHostedService>();  
+services.AddHostedService<QuartzHostedService>();
 
 #region Authentication
 

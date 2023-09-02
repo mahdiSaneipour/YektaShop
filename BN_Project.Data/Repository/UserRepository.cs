@@ -14,6 +14,18 @@ namespace BN_Project.Data.Repository
         {
             _context = context;
         }
+
+        public async Task RemoveRole(int roleId, int userId)
+        {
+            var role = await _context.UsersRoles.SingleAsync(n => n.RoleId == roleId && n.UserId == userId);
+            _context.Remove(role);
+        }
+
+        public async Task<List<int>> GetUserRoles(int userId)
+        {
+            return await _context.UsersRoles.Where(n => n.UserId == userId).Select(n => n.RoleId).ToListAsync();
+        }
+
         public async Task<bool> IsEmailExist(string email)
         {
             return await _context.Users.Where(n => n.Email == email).AnyAsync() == true;

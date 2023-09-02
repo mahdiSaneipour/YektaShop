@@ -337,21 +337,16 @@ namespace BN_Project.Core.Services.Implementations
         public async Task<BaseResponse> EditUsers(EditUserViewModel user)
         {
             var result = new BaseResponse();
+            var usersRoles = await _userRepository.GetUserRoles(user.Id);
 
-            //if (_userRepository.IsEmailExist(user.Email).Result)
-            //{
-            //    result.Status = Response.Status.Status.AlreadyHave;
-            //    result.Message = "کاربری با این ایمیل موجود است";
-
-            //    return result;
-            //}
-            //else if (_userRepository.IsPhoneNumberExist(user.PhoneNumber).Result)
-            //{
-            //    result.Status = Response.Status.Status.AlreadyHavePhoneNumber;
-            //    result.Message = "کاربری با این شماره موبایل موجود است";
-
-            //    return result;
-            //}
+            if (usersRoles != null && usersRoles.Count() != 0)
+            {
+                foreach (var roleId in usersRoles)
+                {
+                    await _userRepository.RemoveRole(roleId, user.Id);
+                }
+                await _userRepository.SaveChanges();
+            }
 
             var item = await _accountRepository.GetSingle(n => n.Id == user.Id);
             try
@@ -373,6 +368,19 @@ namespace BN_Project.Core.Services.Implementations
             item.Email = user.Email;
             item.Name = user.Name;
 
+            if (user.SelectedRoles != null && user.SelectedRoles.Count() != 0)
+            {
+                item.UsersRoles = new List<UsersRoles>();
+                foreach (var role in user.SelectedRoles)
+                {
+                    item.UsersRoles.Add(new UsersRoles
+                    {
+                        UserId = item.Id,
+                        RoleId = role
+                    });
+                }
+            }
+
 
             _accountRepository.Update(item);
             await _accountRepository.SaveChanges();
@@ -386,14 +394,21 @@ namespace BN_Project.Core.Services.Implementations
         public async Task<EditUserViewModel> GetUserById(int Id)
         {
             var item = await _userRepository.GetSingle(n => n.Id == Id);
+            List<int> SelectedRoles = await _userRepository.GetUserRoles(Id);
             EditUserViewModel EditUserVM = new EditUserViewModel()
             {
                 Id = Id,
                 Avatar = item.Avatar,
                 Name = item.Name,
                 Email = item.Email,
-                PhoneNumber = item.PhoneNumber
+                PhoneNumber = item.PhoneNumber,
+                Roles = await GetRolesForUser()
             };
+
+            if (SelectedRoles != null && SelectedRoles.Count() != 0)
+            {
+                EditUserVM.SelectedRoles = SelectedRoles;
+            }
 
             return EditUserVM;
         }
