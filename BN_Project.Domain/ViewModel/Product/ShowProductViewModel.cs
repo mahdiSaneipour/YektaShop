@@ -23,5 +23,9 @@ namespace BN_Project.Domain.ViewModel.Product
         public List<string> Images { get; set; }
 
         public int Count { get; set; }
+
+        public decimal AverageRate { get; set; }
+
+        public int RateCount { get; set; }
     }
 }

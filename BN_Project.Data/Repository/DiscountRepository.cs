@@ -14,6 +14,14 @@ namespace BN_Project.Data.Repository
             _context = context;
         }
 
+        public async Task<Discount> GetDiscountByDiscountCodeWithIncludeProducts(string discount)
+        {
+            return await _context.Discounts.Where(d => d.Code == discount 
+            && d.StartDate < DateTime.Now && DateTime.Now < d.ExpireDate)
+                .Include(d => d.DiscountProduct).ThenInclude(dp => dp.Product)
+                .ThenInclude(p => p.Colors).FirstOrDefaultAsync();
+        }
+
         public async Task<Discount> GetDiscountWithProducts(int Id)
         {
             return await _context.Discounts.Where(n => n.Id == Id)
@@ -27,9 +35,16 @@ namespace BN_Project.Data.Repository
             return _context.Discounts.FirstOrDefaultAsync(d => d.Id == discountId).Result.Percent;
         }
 
-        public async Task<bool> IsDiscountAvailable(int discountId)
+        public async Task<List<int>> GetPublicDiscountsPercentList()
         {
-            var discount = await _context.Discounts.FirstOrDefaultAsync(d => d.Id == discountId);
+            return await _context.Discounts.Where(d => d.DiscountProduct == null && d.Code == null
+                && d.StartDate <= DateTime.Now && DateTime.Now >= d.ExpireDate)
+                .Select(d => d.Percent).ToListAsync();
+        }
+
+        public async Task<bool> IsDiscountAvailableForPublicProduct(int discountId)
+        {
+            var discount = await _context.Discounts.FirstOrDefaultAsync(d => d.Id == discountId && d.Code == null);
 
             if (discount == null)
             {
@@ -42,6 +57,11 @@ namespace BN_Project.Data.Repository
             }
 
             return false;
+        }
+
+        public async Task<bool> IsDiscountCodeValid(string discount)
+        {
+            return await _context.Discounts.AnyAsync(d => d.Code == discount);
         }
     }
 }

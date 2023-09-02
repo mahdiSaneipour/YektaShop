@@ -12,5 +12,10 @@ namespace BN_Project.Domain.IRepository
         public Task<Order> GetBasketOrderWithIncludeOrderDetailsAndProductAndDiscountAndColorByUserId(int userId);
 
         public Task<Order> GetOrderWithIncludeOrderDetail(int orderId);
+
+        public Task<int> GetBasketIdByUserId(int userId);
+
+        public Task<Order> GetBasketByIdByIncludes(int basketId);
+
     }
 }

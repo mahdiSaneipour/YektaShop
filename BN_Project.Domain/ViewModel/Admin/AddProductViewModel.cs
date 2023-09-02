@@ -31,6 +31,6 @@ namespace BN_Project.Domain.ViewModel.Admin
 
         [Display(Name = "قیمت محصول")]
         [Required(ErrorMessage = "{0} نمیتواند خالی باشد")]
-        public long Price { get; set; }
+        public int Price { get; set; }
     }
 }

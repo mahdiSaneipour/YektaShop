@@ -19,28 +19,28 @@ namespace BN_Project.Core.Tools
             return Guid.NewGuid().ToString().Replace("-", "");
         }
 
-        public static long PercentagePrice(long price, decimal discount)
+        public static int PercentagePrice(int price, decimal discount)
         {
-            long result = (long)(price - ((price / 100) * discount));
+            int result = (int) (price - ((price / 100) * discount));
             return result;
         }
 
-        public static long DiscountPrice(long price, decimal discount)
+        public static int DiscountPrice(int price, decimal discount)
         {
-            long result = (long)((price / 100) * discount);
+            int result = (int) ((price / 100) * discount);
             return result;
         }
 
-        public static decimal HowManyPercent(long price, long finalPrice)
+        public static decimal HowManyPercent(int price, int finalPrice)
         {
             decimal result = price - finalPrice;
             result = (result / price) * 100;
-            return Math.Round(result, 1);
+            return result;
         }
 
-        public static long GetMainPriceFromDiscount(long finalPrice, decimal discount)
+        public static int GetMainPriceFromDiscount(int finalPrice, decimal discount)
         {
-            long result = (long)((finalPrice * 100) / (100 - discount));
+            int result = (int)((finalPrice * 100) / (100 - discount));
 
             return result;
         }
@@ -109,7 +109,7 @@ namespace BN_Project.Core.Tools
                             .GetName();
         }
 
-        public static decimal CalculateAvrage(this List<int> values)
+        public static decimal CalculateAverage(this List<int> values)
         {
             decimal count = values.Count;
             decimal total = values.Sum();
@@ -117,7 +117,7 @@ namespace BN_Project.Core.Tools
 
             return Math.Round(result, 1);
         }
-        public static decimal CalculateAvragePercent(this decimal value)
+        public static decimal CalculateAveragePercent(this decimal value)
         {
             decimal result = (value * 100) / 5;
             return Math.Round(result, 1);

@@ -17,18 +17,21 @@ namespace BN_Project.Core.Services.Implementations
         private readonly IColorRepository _colorRepository;
         private readonly IGalleryRepository _galleryRepository;
         private readonly IDiscountRepository _discountRepository;
+        private readonly ICommentServices _commentServices;
 
         public ProductServices(IProductRepository productRepository,
             ICategoryRepository categoryRepository,
             IGalleryRepository galleryRepository,
             IColorRepository colorRepository,
-            IDiscountRepository discountRepository)
+            IDiscountRepository discountRepository,
+            ICommentServices commentServices)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _galleryRepository = galleryRepository;
             _colorRepository = colorRepository;
             _discountRepository = discountRepository;
+            _commentServices = commentServices;
         }
 
         #region Products
@@ -172,15 +175,36 @@ namespace BN_Project.Core.Services.Implementations
             {
                 List<ListProductViewModel> data = new List<ListProductViewModel>();
 
+
                 foreach (var product in products)
                 {
+                    var color = product.Colors.FirstOrDefault(c => c.IsDefault);
+
+                    if(color == null)
+                    {
+                        return result;
+                    }
+
+                    int percent = 0;
+
+                    if(await AnyDiscountByColorId(color.Id))
+                    {
+                        percent = await GetDiscountPercentByColorId(color.Id);
+                    }
+
+                    var comment = await _commentServices.GetAverageRatingForProduct(product.Id);
+
                     data.Add(new ListProductViewModel
                     {
                         Colors = await _colorRepository.GetHexColorsByProductId(product.Id),
                         ProductId = product.Id,
-                        Price = product.Price,
                         Image = product.Image,
                         Title = product.Name,
+                        DiscountPercent = percent,
+                        Price = Tools.Tools.PercentagePrice(color.Price, percent),
+                        TotalPrice = color.Price,
+                        AverageRate = comment.Rate,
+                        RateCount = comment.Count
                     });
                 }
 
@@ -225,6 +249,7 @@ namespace BN_Project.Core.Services.Implementations
             }
             else
             {
+                var comment = await _commentServices.GetAverageRatingForProduct(productId);
 
                 ShowProductViewModel data = new ShowProductViewModel()
                 {
@@ -232,11 +257,13 @@ namespace BN_Project.Core.Services.Implementations
                     Features = product.Features,
                     Image = product.Image,
                     Title = product.Name,
-                    Price = product.Price,
-                    Categories = categories,
                     ProductId = product.Id,
+                    Categories = categories,
+                    RateCount = comment.Count,
+                    AverageRate = comment.Rate,
                     Colors = product.Colors.ToList(),
-                    Count = product.Colors.Sum(c => c.Count),
+                    Price = product.Colors.FirstOrDefault(c => c.IsDefault).Price,
+                    Count = product.Colors.FirstOrDefault(c => c.IsDefault).Count,
                     Images = product.Images.Select(c => c.ImageName).ToList(),
 
                 };
@@ -621,6 +648,14 @@ namespace BN_Project.Core.Services.Implementations
                     await _colorRepository.SaveChanges();
                 }
 
+            } else
+            {
+                var defColor = await _colorRepository.GetSingle(n => n.ProductId == productId);
+
+                if (defColor == null)
+                {
+                    addColor.IsDefault = true;
+                }
             }
 
             Color color = new Color()
@@ -783,17 +818,17 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<long> GetPriceByColorId(int colorId)
+        public async Task<int> GetPriceByColorId(int colorId)
         {
             return await _colorRepository.GetColorPriceByColorId(colorId);
         }
 
-        public async Task<long> GetCountByColorId(int colorId)
+        public async Task<int> GetCountByColorId(int colorId)
         {
             return await _colorRepository.GetColorCountByColorId(colorId);
         }
 
-        public async Task<BaseResponse> ChangeColorCount(int colorId, int count, bool action)
+        public async Task<BaseResponse> ChangeColorCount(int colorId, int count)
         {
             BaseResponse result = new BaseResponse();
 
@@ -807,13 +842,7 @@ namespace BN_Project.Core.Services.Implementations
                 return result;
             }
 
-            if (action)
-            {
-                color.Count = color.Count + count;
-            } else
-            {
-                color.Count = color.Count - count;
-            }
+            color.Count = color.Count + count;
 
             _colorRepository.Update(color);
             await _colorRepository.SaveChanges();
@@ -986,10 +1015,10 @@ namespace BN_Project.Core.Services.Implementations
             return true;
         }
 
-        public async Task<long> GetPriceWithDiscountByColorId(int colorId)
+        public async Task<int> GetPriceWithDiscountByColorId(int colorId)
         {
             int discount = await GetDiscountPercentByColorId(colorId);
-            long basePrice = await _colorRepository.GetColorPriceByColorId(colorId);
+            int basePrice = await _colorRepository.GetColorPriceByColorId(colorId);
 
             var price = Tools.Tools.PercentagePrice(basePrice, discount);
 
@@ -998,7 +1027,13 @@ namespace BN_Project.Core.Services.Implementations
 
         public async Task<bool> AnyDiscountByColorId(int colorId)
         {
-            var product = await _colorRepository.GetProductByColorIdWithIncluseDiscounts(colorId);
+            if(await _discountRepository.IsThereAny(d => d.DiscountProduct == null && d.Code == null
+                && d.StartDate <= DateTime.Now && DateTime.Now >= d.ExpireDate))
+            {
+                return true;
+            }
+
+            var product = await _colorRepository.GetProductByColorIdWithIncludeDiscounts(colorId);
 
             bool result = false;
 
@@ -1016,7 +1051,7 @@ namespace BN_Project.Core.Services.Implementations
 
             foreach (var discountId in discounts)
             {
-                if (await _discountRepository.IsDiscountAvailable(discountId))
+                if (await _discountRepository.IsDiscountAvailableForPublicProduct(discountId))
                 {
                     result = true;
                     break;
@@ -1032,7 +1067,7 @@ namespace BN_Project.Core.Services.Implementations
 
             if (await AnyDiscountByColorId(colorId))
             {
-                var product = await _colorRepository.GetProductByColorIdWithIncluseDiscounts(colorId);
+                var product = await _colorRepository.GetProductByColorIdWithIncludeDiscounts(colorId);
 
                 if (product == null)
                 {
@@ -1044,11 +1079,13 @@ namespace BN_Project.Core.Services.Implementations
 
                 foreach(var discountId in discountsId)
                 {
-                    if (await _discountRepository.IsDiscountAvailable(discountId))
+                    if (await _discountRepository.IsDiscountAvailableForPublicProduct(discountId))
                     {
                         percents.Add(await _discountRepository.GetPercentByDiscountId(discountId));
                     }
                 }
+
+                percents.AddRange(await _discountRepository.GetPublicDiscountsPercentList());
 
                 percent = percents.Max();
             }
@@ -1058,6 +1095,16 @@ namespace BN_Project.Core.Services.Implementations
             }
 
             return percent;
+        }
+
+        public async Task<bool> IsDiscountCodeValid(string discount)
+        {
+            return await _discountRepository.IsDiscountCodeValid(discount);
+        }
+
+        public async Task<Discount> GetDiscountByDiscountCodeWithIncludeProducts(string discount)
+        {
+            return await _discountRepository.GetDiscountByDiscountCodeWithIncludeProducts(discount);
         }
 
         #endregion

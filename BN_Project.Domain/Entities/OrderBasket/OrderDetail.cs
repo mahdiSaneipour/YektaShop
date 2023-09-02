@@ -7,9 +7,9 @@ namespace BN_Project.Domain.Entities
     {
         public int Count { get; set; }
 
-        public long Price { get; set; }
+        public int Price { get; set; }
 
-        public long FinalPrice { get; set; }
+        public int FinalPrice { get; set; }
 
         public int ColorId { get; set; }
 

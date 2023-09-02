@@ -17,6 +17,8 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             _productService = productService;
         }
+
+        [Route("Admin")]
         [PermissionCheker("Admin_Index")]
         public IActionResult Index()
         {

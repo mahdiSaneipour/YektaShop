@@ -12,13 +12,18 @@ namespace BN_Project.Domain.Entities
 
         public OrderStatus Status { get; set; }
 
-        public decimal Discount { get; set; }
+        public int TotalPrice { get; set; }
 
         public ICollection<OrderDetail> OrderDetails { get; set; }
 
         public int UserId { get; set; }
 
+        public int AddressId { get; set; }
+
+        public int? DiscountId { get; set; }
+
         #region Relations
+
         [ForeignKey(nameof(UserId))]
         public UserEntity User { get; set; }
 
@@ -26,5 +31,8 @@ namespace BN_Project.Domain.Entities
         public Address? Address { get; set; }
         public ICollection<PurchesHistory> PurchesHistories { get; set; }
         #endregion
+
+        [ForeignKey(nameof(DiscountId))]
+        public Discount? Discount { get; set; }
     }
 }

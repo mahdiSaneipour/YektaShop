@@ -1,3 +1,4 @@
+using BN_Project.Core.Jobs;
 using BN_Project.Data.Context;
 using BN_Project.IoC;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -9,7 +10,10 @@ var services = builder.Services;
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
+
 RegisterServices(services);
+
+services.AddHostedService<QuartzHostedService>();  
 
 #region Authentication
 

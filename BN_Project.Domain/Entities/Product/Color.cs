@@ -11,7 +11,7 @@ namespace BN_Project.Domain.Entities
 
         public int Count { get; set; }
 
-        public long Price { get; set; }
+        public int Price { get; set; }
 
         public bool IsDefault { get; set; }
 
