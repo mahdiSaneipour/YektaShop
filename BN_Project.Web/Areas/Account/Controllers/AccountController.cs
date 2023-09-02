@@ -77,8 +77,9 @@ namespace BN_Project.Web.Areas.Account.Controllers
                 var claims = new List<Claim>()
                 {
                     new Claim (ClaimTypes.NameIdentifier, result.Data.Id.ToString()),
-                    /*new Claim (ClaimTypes.Name, result.Data.Name)*/
-                };
+                    new Claim(ClaimTypes.Email, result.Data.Email),
+                /*new Claim (ClaimTypes.Name, result.Data.Name)*/
+            };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);

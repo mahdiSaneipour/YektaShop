@@ -21,13 +21,13 @@ namespace BN_Project.Core.Tools
 
         public static long PercentagePrice(long price, decimal discount)
         {
-            long result = (long) (price - ((price / 100) * discount));
+            long result = (long)(price - ((price / 100) * discount));
             return result;
         }
 
         public static long DiscountPrice(long price, decimal discount)
         {
-            long result = (long) ((price / 100) * discount);
+            long result = (long)((price / 100) * discount);
             return result;
         }
 
@@ -53,6 +53,24 @@ namespace BN_Project.Core.Tools
                 pc.GetDayOfMonth(value);
 
             return date;
+        }
+
+        public static DateTime GetStartOfMonth()
+        {
+            PersianCalendar pc = new PersianCalendar();
+            int year = pc.GetYear(DateTime.Now);
+            int month = pc.GetMonth(DateTime.Now);
+
+            return new DateTime(year, month, 1, pc);
+        }
+
+        public static DateTime GetEndOfMonth()
+        {
+            PersianCalendar pc = new PersianCalendar();
+            int year = pc.GetYear(DateTime.Now);
+            int month = pc.GetMonth(DateTime.Now) + 1;
+
+            return new DateTime(year, month, 1, pc);
         }
 
         public static DateTime ToMiladi(this DateTime value)

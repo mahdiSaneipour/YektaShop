@@ -17,9 +17,9 @@ namespace BN_Project.Data.Repository
             _context = context;
         }
 
-        public async Task<List<CommentRatingsViewModel>> GetAllRatingPoints()
+        public async Task<List<CommentRatingsViewModel>> GetAllRatingPoints(int productId)
         {
-            return await _context.Comments.Where(n => n.IsConfirmed == true && n.User.IsDelete == false).Select(n => new CommentRatingsViewModel
+            return await _context.Comments.Where(n => n.IsConfirmed == true && n.User.IsDelete == false && n.ProductId == productId).Select(n => new CommentRatingsViewModel
             {
                 BuildQuality = n.BuildQuality,
                 DesignAndAppearance = n.DesignAndAppearance,

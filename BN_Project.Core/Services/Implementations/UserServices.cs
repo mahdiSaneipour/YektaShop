@@ -3,10 +3,14 @@ using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Core.Tools;
 using BN_Project.Domain.Entities;
+using BN_Project.Domain.Entities.Authentication;
+using BN_Project.Domain.Entities.OrderBasket;
+using BN_Project.Domain.Enum.Order;
 using BN_Project.Domain.Enum.Ticket;
 using BN_Project.Domain.IRepository;
 using BN_Project.Domain.ViewModel.Account;
 using BN_Project.Domain.ViewModel.Admin;
+using BN_Project.Domain.ViewModel.Product;
 using BN_Project.Domain.ViewModel.UserProfile;
 using BN_Project.Domain.ViewModel.UserProfile.Address;
 using BN_Project.Domain.ViewModel.UserProfile.Payment;
@@ -21,21 +25,28 @@ namespace BN_Project.Core.Services.Implementations
         private readonly ITicketRepository _ticketRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IRolesRepository _roleRepository;
 
         public UserServices(
             IAccountRepository accountRepository,
             IUserRepository userRepository,
             ITicketRepository ticketRepository,
             IAddressRepository addressRepository,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IOrderRepository orderRepositroy,
+            IRolesRepository roleRepository)
         {
             _accountRepository = accountRepository;
             _userRepository = userRepository;
             _ticketRepository = ticketRepository;
             _addressRepository = addressRepository;
             _httpContextAccessor = httpContextAccessor;
+            _orderRepository = orderRepositroy;
+            _roleRepository = roleRepository;
         }
 
+        #region Login, Register, Add, Edit, Delete Users 
         public async Task<Response.DataResponse.DataResponse<UserEntity>> CreateUser(RegisterUserViewModel register)
         {
             Response.DataResponse.DataResponse<UserEntity> result = new Response.DataResponse.DataResponse<UserEntity>();
@@ -290,6 +301,30 @@ namespace BN_Project.Core.Services.Implementations
                 IsActive = true
             };
 
+            if (addUser.SelectedRoles != null && addUser.SelectedRoles.Count() != 0)
+            {
+                user.UsersRoles = new List<UsersRoles>();
+                foreach (var item in addUser.SelectedRoles)
+                {
+                    user.UsersRoles.Add(new UsersRoles
+                    {
+                        RoleId = item
+                    });
+                }
+
+            }
+
+            user.UsersRoles = new List<UsersRoles>();
+
+            if (addUser.SelectedRoles != null)
+                foreach (var item in addUser.SelectedRoles)
+                {
+                    user.UsersRoles.Add(new UsersRoles
+                    {
+                        RoleId = item
+                    });
+                }
+
             await _userRepository.Insert(user);
             await _accountRepository.SaveChanges();
 
@@ -450,6 +485,7 @@ namespace BN_Project.Core.Services.Implementations
                 return false;
             }
         }
+        #endregion
 
         #region Tickets
         public async Task<List<TicketViewModel>> GetAllTickets()
@@ -564,6 +600,77 @@ namespace BN_Project.Core.Services.Implementations
 
             await _addressRepository.SaveChanges();
         }
+
+        public async Task<PaymentRequestViewModel> GetPaymentAddress(int addressId)
+        {
+            var address = await _addressRepository.GetSingle(n => n.Id == addressId);
+
+            int userId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.Claims.FirstOrDefault().Value);
+            var order = await _orderRepository.GetSingle(n => n.Status == 0 && n.UserId == userId);
+            order.AddressId = addressId;
+            _orderRepository.Update(order);
+            await _orderRepository.SaveChanges();
+
+            PaymentRequestViewModel pay = new PaymentRequestViewModel()
+            {
+                Description = "خرید از فروشگاه اینترنتی یکتا کالا",
+                PhoneNumber = address.PhoneNumber,
+                Price = (int)order.FinalPrice,
+                MerchentId = SD.ZarinPallCode
+            };
+
+            return pay;
+        }
+
+        public async Task<PaymentVerifyViewModel> GetVerifyInfo(int userId)
+        {
+            var order = await _orderRepository.GetSingle(n => n.Status == 0 && n.UserId == userId);
+            PaymentVerifyViewModel verify = new PaymentVerifyViewModel()
+            {
+                MerchantId = SD.ZarinPallCode,
+                OrderId = order.Id,
+                Price = (int)order.FinalPrice
+            };
+
+            return verify;
+        }
+
+        public async Task PaymentVerify(int userId, string authority, string refId)
+        {
+            Order order = await _orderRepository.GetSingle(n => n.UserId == userId && n.Status == 0);
+            order.PurchesHistories = new List<PurchesHistory>();
+            order.PurchesHistories.Add(new PurchesHistory
+            {
+                Authority = authority,
+                RefId = refId,
+                OrderId = order.Id
+            });
+            order.Status = OrderStatus.Processing;
+
+            _orderRepository.Update(order);
+            await _orderRepository.SaveChanges();
+        }
+
+        #endregion
+
+        #region Authentication
+        public async Task<bool> CheckUserPermissions(int userId, string permission)
+        {
+            return await _userRepository.IsUserHavePermission(userId, permission);
+        }
+        #endregion
+
+        public async Task<List<RolesForPickViewModel>> GetRolesForUser()
+        {
+            List<RolesForPickViewModel> roles = new List<RolesForPickViewModel>();
+            var items = await _roleRepository.GetAll(n => n.IsDelete == false);
+            roles.AddRange(items.Select(n => new RolesForPickViewModel
+            {
+                Id = n.Id,
+                Name = n.Name
+            }).ToList());
+
+            return roles;
+        }
     }
-    #endregion
 }

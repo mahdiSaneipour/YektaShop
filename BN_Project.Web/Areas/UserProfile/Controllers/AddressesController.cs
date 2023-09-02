@@ -29,6 +29,7 @@ namespace BN_Project.Web.Areas.UserProfile.Controllers
             return View(addresses);
         }
 
+
         [Route("AddAddress")]
         public IActionResult AddAddress()
         {

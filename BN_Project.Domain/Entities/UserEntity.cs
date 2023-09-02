@@ -1,4 +1,5 @@
-﻿using BN_Project.Domain.Entities.Common;
+﻿using BN_Project.Domain.Entities.Authentication;
+using BN_Project.Domain.Entities.Common;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BN_Project.Domain.Entities
@@ -22,6 +23,6 @@ namespace BN_Project.Domain.Entities
         [InverseProperty("User")]
         public List<Order> Orders { get; set; }
         public ICollection<Comment.Comment> Comments { get; set; }
-
+        public ICollection<UsersRoles> UsersRoles { get; set; }
     }
 }

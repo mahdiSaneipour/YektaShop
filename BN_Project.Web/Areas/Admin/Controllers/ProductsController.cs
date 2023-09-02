@@ -1,13 +1,13 @@
-﻿using BN_Project.Core.Response.Status;
+﻿using BN_Project.Core.Attributes;
+using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Core.Tools;
 using BN_Project.Domain.ViewModel.Admin;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BN_Project.Web.Areas.Admin.Controllers
 {
-    [Authorize]
+    [PermissionCheker("Products_Management")]
     [Area("Admin")]
     [Route("[Controller]")]
     public class ProductsController : Controller
@@ -17,7 +17,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             _productService = productService;
         }
-
+        [PermissionCheker("Admin_Index")]
         public IActionResult Index()
         {
             return View();
@@ -25,6 +25,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
         #region Products
 
+        [PermissionCheker("Products_Products")]
         [Route("Products")]
         public async Task<IActionResult> Products()
         {
@@ -37,7 +38,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Index");
         }
-
+        [PermissionCheker("AddProduct_Products")]
         [Route("AddProduct")]
         public async Task<IActionResult> AddProduct()
         {
@@ -50,7 +51,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return View();
         }
-
+        [PermissionCheker("AddProduct_Products")]
         [HttpPost]
         [Route("AddProduct")]
         public async Task<IActionResult> AddProduct(AddProductViewModel addProduct)
@@ -90,7 +91,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Products");
         }
-
+        [PermissionCheker("EditProduct_Products")]
         [Route("EditProduct")]
         public async Task<IActionResult> EditProduct(int productId)
         {
@@ -119,7 +120,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return View(model);
         }
-
+        [PermissionCheker("EditProduct_Products")]
         [HttpPost]
         [Route("EditProduct")]
         public async Task<IActionResult> EditProduct(EditProductViewModel editProduct)
@@ -139,8 +140,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return View(editProduct);
         }
-
-
+        [PermissionCheker("DeleteProduct_Products")]
         [Route("DeleteProduct/{productId}")]
         public async Task<IActionResult> DeleteProduct(int productId)
         {
@@ -152,14 +152,14 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         #endregion
 
         #region Categories
-
+        [PermissionCheker("Categories_Products")]
         [Route("Categories")]
         public async Task<IActionResult> Categories()
         {
             var items = await _productService.GetAllCategories();
             return View(items);
         }
-
+        [PermissionCheker("AddCategory_Products")]
         [Route("AddCategory")]
         public async Task<IActionResult> AddCategory()
         {
@@ -169,7 +169,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             };
             return View(AddCategory);
         }
-
+        [PermissionCheker("AddCategory_Products")]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("AddCategory")]
         public async Task<IActionResult> AddCategory(AddCategoriesViewModel category)
@@ -191,7 +191,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 return View(AddCategory);
             }
         }
-
+        [PermissionCheker("RemoveCategory_Products")]
         [Route("RemoveCategory")]
         public async Task<IActionResult> RemoveCategory(int categoryId)
         {
@@ -201,15 +201,15 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Categories));
             return NotFound();
         }
-
+        [PermissionCheker("EditCategory_Products")]
         [Route("EditCategory")]
         public async Task<IActionResult> EditCategory(int categoryId)
         {
             var item = await _productService.GetCategoryById(categoryId);
-          
+
             return View(item);
         }
-
+        [PermissionCheker("EditCategory_Products")]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("EditCategory")]
         public async Task<IActionResult> EditCategory(EditCategoryViewModel category)
@@ -231,7 +231,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         #endregion
 
         #region Colors
-
+        [PermissionCheker("Colors_Products")]
         [Route("Colors")]
         public async Task<IActionResult> Colors(int pageId = 1)
         {
@@ -244,7 +244,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
+        [PermissionCheker("AddColor_Priducts")]
         [Route("AddColor")]
         public async Task<IActionResult> AddColor()
         {
@@ -257,7 +257,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Products));
         }
-
+        [PermissionCheker("AddColor_Priducts")]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("AddColor")]
         public async Task<IActionResult> AddColor(AddColorViewModel addColor)
@@ -275,7 +275,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return View();
         }
-
+        [PermissionCheker("EditColor_Products")]
         [Route("EditColor")]
         public async Task<IActionResult> EditColor(int colorId)
         {
@@ -295,7 +295,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Colors));
         }
-
+        [PermissionCheker("EditColor_Products")]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("EditColor")]
         public async Task<IActionResult> EditColor(EditColorViewModel color)
@@ -331,7 +331,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Colors));
         }
-
+        [PermissionCheker("DeleteColor_Products")]
         [Route("DeleteColorById")]
         public async Task<IActionResult> DeleteColorById(int colorId)
         {
@@ -342,7 +342,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         #endregion
 
         #region Galleries
-
+        [PermissionCheker("Gallery_Products")]
         [Route("Gallery")]
         public async Task<IActionResult> Gallery(int Id)
         {
@@ -353,7 +353,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return View(gallery);
         }
-
+        [PermissionCheker("AddImage_Products")]
         [Route("AddImage")]
         public IActionResult AddImage(int imageId)
         {
@@ -363,7 +363,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             };
             return View(addGallery);
         }
-
+        [PermissionCheker("AddImage_Products")]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("AddImage")]
         public async Task<IActionResult> AddImage(AddGalleryViewModel gallery)
@@ -375,7 +375,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Gallery), new { Id = gallery.ProductId });
         }
-
+        [PermissionCheker("RemoveImage_Products")]
         [Route("RemoveImage")]
         public async Task<IActionResult> RemoveImage(int Id)
         {
@@ -388,14 +388,14 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         #endregion
 
         #region Discount
-
+        [PermissionCheker("Discounts_Products")]
         [Route("Discounts")]
         public async Task<IActionResult> Discounts()
         {
             var items = await _productService.GetAllDiscounts();
             return View(items);
         }
-
+        [PermissionCheker("AddDiscount_Products")]
         [Route("AddDiscount")]
         public async Task<IActionResult> AddDiscount()
         {
@@ -403,7 +403,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             AddDiscount.Products = await _productService.GetAllProductsForDiscount();
             return View(AddDiscount);
         }
-
+        [PermissionCheker("AddDiscount_Products")]
         [HttpPost]
         [Route("AddDiscount")]
         public async Task<IActionResult> AddDiscount(AddDiscountViewModel discount)
@@ -421,7 +421,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 return View(discount);
             }
         }
-
+        [PermissionCheker("RemoveDiscount_Products")]
         [Route("RemoveDiscount")]
         public async Task<IActionResult> RemoveDiscount(int Id)
         {
@@ -436,7 +436,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 return NotFound();
             }
         }
-
+        [PermissionCheker("Discounts_Products")]
         [Route("ViewProductsForDiscount")]
         public async Task<IActionResult> ViewProductsForDiscount(int Id)
         {
@@ -447,7 +447,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return View("ReturnProductsForDiscount", products);
         }
-
+        [PermissionCheker("EditDiscount_Productsk")]
         [Route("EditDiscount")]
         public async Task<IActionResult> EditDiscount(int Id)
         {
@@ -457,7 +457,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             item.Products = await _productService.GetAllProductsForDiscount();
             return View(item);
         }
-
+        [PermissionCheker("EditDiscount_Products")]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("EditDiscount")]
         public async Task<IActionResult> EditDiscount(EditDiscountViewModel editDiscount)

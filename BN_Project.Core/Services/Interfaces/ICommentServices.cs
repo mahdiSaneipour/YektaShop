@@ -6,8 +6,8 @@ namespace BN_Project.Core.Services.Interfaces
     {
         public Task<AddCommentViewModel> FillProductInformation(int ProductId);
         public Task<bool> InsertComment(AddCommentViewModel comment, int userId);
-        public Task<AvrageRatingViewModel> GetAllRatingPoints();
-        public Task<List<ShowCommentsForUsersViewModel>> GetAllCommentsForUsers();
+        public Task<AvrageRatingViewModel> GetAllRatingPoints(int productId);
+        public Task<List<ShowCommentsForUsersViewModel>> GetAllCommentsForUsers(int productId);
         public Task<bool> LikeComment(int commentId, int userId);
         public Task<bool> DisLikeComment(int commentId, int userId);
         public Task<List<ShowCommentsForAdminViewModel>> GetAllCommentsForAdmin();

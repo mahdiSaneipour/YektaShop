@@ -1,11 +1,11 @@
-﻿using BN_Project.Core.Services.Interfaces;
+﻿using BN_Project.Core.Attributes;
+using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.ViewModel.UserProfile;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BN_Project.Web.Areas.Admin.Controllers
 {
-    [Authorize]
+    [PermissionCheker("Tickets_Management")]
     [Area("Admin")]
     [Route("[Controller]")]
     public class TicketsController : Controller
@@ -27,13 +27,14 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         }
 
         #region Tickets
+        [PermissionCheker("Tickets_Tickets")]
         [Route("Tickets")]
         public async Task<IActionResult> Tickets()
         {
             var items = await _userServicess.GetAllTickets();
             return View(items);
         }
-
+        [PermissionCheker("CloseTicket_Tickets")]
         [Route("CloseTicket")]
         public async Task<IActionResult> CloseTicket(int Id)
         {
@@ -46,7 +47,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 return NotFound();
             }
         }
-
+        [PermissionCheker("AddTicketMessage_Tickets")]
         [Route("AddTicketMessages")]
         public async Task<IActionResult> AddTicketMessages(int Id)
         {
@@ -58,8 +59,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             item.AddMessage.SenderId = GetCurrentUserId();
             return View(item);
         }
-
-
+        [PermissionCheker("SendMessage_Tickets")]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("SendMessage")]
         public async Task<IActionResult> SendMessage(TicketMessagesViewModel Message)
@@ -74,7 +74,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             }
 
         }
-
+        [PermissionCheker("AddTicket_Tickets")]
         [Route("AddTicket")]
         public async Task<IActionResult> AddTicket(int Id)
         {
@@ -86,7 +86,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             addTicket.SenderId = GetCurrentUserId();
             return View(addTicket);
         }
-
+        [PermissionCheker("AddTicket_Tickets")]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("AddTicket")]
         public async Task<IActionResult> AddTicket(AddTicketViewModel ticket)

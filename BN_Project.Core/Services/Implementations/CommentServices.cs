@@ -44,10 +44,10 @@ namespace BN_Project.Core.Services.Implementations
             return comment;
         }
 
-        public async Task<List<ShowCommentsForUsersViewModel>> GetAllCommentsForUsers()
+        public async Task<List<ShowCommentsForUsersViewModel>> GetAllCommentsForUsers(int productId)
         {
             List<ShowCommentsForUsersViewModel> comments = new List<ShowCommentsForUsersViewModel>();
-            var commentList = await _commentRepository.GetCommentsWithRelations(n => n.IsConfirmed == true);
+            var commentList = await _commentRepository.GetCommentsWithRelations(n => n.IsConfirmed == true && n.ProductId == productId);
             int userId = 0;
             if (_httpContextAccessor.HttpContext.User.Claims.Any())
                 userId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.Claims.FirstOrDefault().Value);
@@ -81,10 +81,10 @@ namespace BN_Project.Core.Services.Implementations
             return comments;
         }
 
-        public async Task<AvrageRatingViewModel> GetAllRatingPoints()
+        public async Task<AvrageRatingViewModel> GetAllRatingPoints(int productId)
         {
             AvrageRatingViewModel avragePoints = new AvrageRatingViewModel();
-            var Points = await _commentRepository.GetAllRatingPoints();
+            var Points = await _commentRepository.GetAllRatingPoints(productId);
             if (Points.Count() != 0)
             {
                 avragePoints.TotalComments = Points.Count();

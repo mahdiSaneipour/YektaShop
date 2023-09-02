@@ -23,6 +23,7 @@ namespace BN_Project.Web.Areas.Ticket.Controllers
         }
 
         #region Ticket
+
         [Route("Tickets")]
         public async Task<IActionResult> Tickets()
         {

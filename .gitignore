@@ -366,3 +366,4 @@ FodyWeavers.xsd
 
 /BN_Project.Web/wwwroot/images/products/normal
 /BN_Project.Web/wwwroot/images/products/thumb
+/BN_Project.Data/Migrations/20230823124546_InitialDB.cs

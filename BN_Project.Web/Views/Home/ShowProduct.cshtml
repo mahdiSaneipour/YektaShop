@@ -278,7 +278,7 @@
                     </div>
                     <div class="product-seller--add-to-cart">
                         <a id="add-to-basket" asp-area="UserProfile" asp-controller="UserOrder"
-                        asp-action="AddProductToBasket" asp-route-colorId="@Model.Colors.FirstOrDefault(c => c.IsDefault).Id" class="btn btn-primary w-100" data-toast data-toast-type="success"
+                           asp-action="AddProductToBasket" asp-route-colorId="@Model.Colors.FirstOrDefault(c => c.IsDefault).Id" class="btn btn-primary w-100" data-toast data-toast-type="success"
                            data-toast-color="green" data-toast-position="topRight"
                            data-toast-icon="ri-check-fill" data-toast-title="موفق!"
                            data-toast-message="به سبد اضافه شد!">
@@ -1237,7 +1237,7 @@
                     <div class="col-xl-3 col-lg-4 col-md-5 mb-3">
                         <div class="ui-sticky ui-sticky-top pt-5 z-index-0">
                             <!-- start of comments-sidebar -->
-                            @await Component.InvokeAsync("CommentsRating")
+                            @await Component.InvokeAsync("CommentsRating",Model.ProductId)
                             <a class="btn btn-block btn-outline-primary" asp-action="AddComment" asp-controller="Comment" asp-area="UserProfile" asp-route-Id="@Model.ProductId">
                                 افزودن
                                 دیدگاه
@@ -1261,7 +1261,7 @@
                         <!-- end of filter-comments -->
                         <!-- start of comments -->
                         <div id="commentSection">
-                            @await Component.InvokeAsync("Comments")
+                            @await Component.InvokeAsync("Comments", Model.ProductId)
                         </div>
                         <!-- end of comments -->
                     </div>

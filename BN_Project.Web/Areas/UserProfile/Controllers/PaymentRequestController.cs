@@ -1,7 +1,9 @@
 ﻿using BN_Project.Core.Services.Interfaces;
-using BN_Project.Domain.ViewModel.UserProfile;
+using BN_Project.Core.Tools;
+using BN_Project.Domain.ViewModel.UserProfile.Payment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using ZarinPal;
 
 namespace BN_Project.Web.Areas.Profile.Controllers
@@ -24,7 +26,6 @@ namespace BN_Project.Web.Areas.Profile.Controllers
             result = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
             return result;
         }
-
         [Route("PickAddress")]
         public async Task<IActionResult> PickAddress()
         {
@@ -35,10 +36,10 @@ namespace BN_Project.Web.Areas.Profile.Controllers
 
         [Route("Pay")]
         public async Task<IActionResult> Pay(int AddressId)
-        
-        
         {
-            PaymentRequestViewModel pay = new PaymentRequestViewModel();
+            var pay = await _userServices.GetPaymentAddress(AddressId);
+            pay.Email = User.FindFirstValue(ClaimTypes.Email);
+            pay.RedirectAddress = "https://localhost:44309/PaymentRequest/Verify";
 
             System.Net.ServicePointManager.Expect100Continue = false;
             PaymentGatewayImplementationServicePortTypeClient zp = new PaymentGatewayImplementationServicePortTypeClient();
@@ -60,10 +61,12 @@ namespace BN_Project.Web.Areas.Profile.Controllers
             }
         }
 
+        [Route("Verify")]
         public async Task<IActionResult> Verify(string Authority, string Status)
         {
-            string MerchantId = "";
-            int Amount = 200;
+            int userId = Convert.ToInt32(User.Claims.FirstOrDefault().Value);
+            var payInfo = await _userServices.GetVerifyInfo(userId);
+            string MerchantId = SD.ZarinPallCode;
             if (Status is "OK")
             {
                 System.Net.ServicePointManager.Expect100Continue = false;
@@ -71,12 +74,36 @@ namespace BN_Project.Web.Areas.Profile.Controllers
 
                 PaymentVerificationResponse State = await zp.PaymentVerificationAsync(MerchantId,
                     Authority,
-                    Amount);
-                return View(State);
+                    payInfo.Price);
+
+                if (State.Body.Status == 100)
+                {
+                    PaymentResultViewModel result = new PaymentResultViewModel()
+                    {
+                        RefId = State.Body.RefID.ToString(),
+                        Time = DateTime.Now.ConvertToShamsi(),
+                        Date = DateTime.Now.ToString("HH:mm:ss")
+                    };
+
+                    await _userServices.PaymentVerify(userId, Authority, State.Body.RefID.ToString());
+
+                    return View("PaymentSucced", result);
+                }
+                else
+                {
+                    PaymentResultViewModel result = new PaymentResultViewModel()
+                    {
+                        RefId = State.Body.RefID.ToString(),
+                        Time = DateTime.Now.ConvertToShamsi(),
+                        Date = DateTime.Now.ToString("HH:mm:ss")
+                    };
+                    return View("PaymentFailed", result);
+                }
             }
             else
             {
-                return NotFound();
+                PaymentResultViewModel result = new PaymentResultViewModel();
+                return View("PaymentFailed", result);
             }
         }
     }

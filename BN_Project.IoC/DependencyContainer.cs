@@ -32,15 +32,16 @@ namespace BN_Project.IoC
             services.AddScoped<ICommentStrengthRepository, CommentStrengthRepository>();
             services.AddScoped<ICommentWeakPointsRepository, CommentWeakPointsRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IRolesRepository, RoleRepository>();
 
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IViewRenderService, RenderViewToString>();
             services.AddScoped<ITicketServices, TicketServices>();
             services.AddScoped<ICommentServices, CommentServices>();
+            services.AddScoped<IOrderServices, OrderServices>();
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<IOrderServices, OrderServices>();
         }
     }
 }
