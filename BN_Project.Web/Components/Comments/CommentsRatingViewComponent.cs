@@ -11,9 +11,9 @@ namespace BN_Project.Web.Components.Comments
             _commentServices = commentServices;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(int productId)
         {
-            var rate = await _commentServices.GetAllRatingPoints();
+            var rate = await _commentServices.GetAllRatingPoints(productId);
             return View("CommentsRating", rate);
         }
     }

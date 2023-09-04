@@ -61,10 +61,22 @@ namespace BN_Project.Core.Tools
             return date;
         }
 
-        public static int GetPersianMonth(this DateTime value)
+        public static DateTime GetStartOfMonth()
         {
             PersianCalendar pc = new PersianCalendar();
-            return pc.GetMonth(value);
+            int year = pc.GetYear(DateTime.Now);
+            int month = pc.GetMonth(DateTime.Now);
+
+            return new DateTime(year, month, 1, pc);
+        }
+
+        public static DateTime GetEndOfMonth()
+        {
+            PersianCalendar pc = new PersianCalendar();
+            int year = pc.GetYear(DateTime.Now);
+            int month = pc.GetMonth(DateTime.Now) + 1;
+
+            return new DateTime(year, month, 1, pc);
         }
 
         public static DateTime ToMiladi(this DateTime value)

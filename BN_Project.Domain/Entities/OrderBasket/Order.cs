@@ -1,4 +1,5 @@
 ﻿using BN_Project.Domain.Entities.Common;
+using BN_Project.Domain.Entities.OrderBasket;
 using BN_Project.Domain.Enum.Order;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,7 +7,7 @@ namespace BN_Project.Domain.Entities
 {
     public class Order : BaseEntity
     {
-        public int FinalPrice { get; set; }
+        public long FinalPrice { get; set; }
 
         public OrderStatus Status { get; set; }
 
@@ -29,6 +30,8 @@ namespace BN_Project.Domain.Entities
 
         [ForeignKey(nameof(AddressId))]
         public Address? Address { get; set; }
+        public ICollection<PurchesHistory> PurchesHistories { get; set; }
+        #endregion
 
         [ForeignKey(nameof(DiscountId))]
         public Discount? Discount { get; set; }

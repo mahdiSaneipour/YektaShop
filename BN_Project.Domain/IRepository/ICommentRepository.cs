@@ -9,7 +9,6 @@ namespace BN_Project.Domain.IRepository
         public Task<List<Comment>> GetCommentsWithRelations(Expression<Func<Comment, bool>> where = null);
 
         public Task<Comment> GetCommentWithRelations(Expression<Func<Comment, bool>> where);
-
-        public Task<List<CommentRatingsViewModel>> GetAllRatingPoints();
+        public Task<List<CommentRatingsViewModel>> GetAllRatingPoints(int productId);
     }
 }

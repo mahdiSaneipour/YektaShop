@@ -45,10 +45,10 @@ namespace BN_Project.Core.Services.Implementations
             return comment;
         }
 
-        public async Task<List<ShowCommentsForUsersViewModel>> GetAllCommentsForUsers()
+        public async Task<List<ShowCommentsForUsersViewModel>> GetAllCommentsForUsers(int productId)
         {
             List<ShowCommentsForUsersViewModel> comments = new List<ShowCommentsForUsersViewModel>();
-            var commentList = await _commentRepository.GetCommentsWithRelations(n => n.IsConfirmed == true);
+            var commentList = await _commentRepository.GetCommentsWithRelations(n => n.IsConfirmed == true && n.ProductId == productId);
             int userId = 0;
             if (_httpContextAccessor.HttpContext.User.Claims.Any())
                 userId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.Claims.FirstOrDefault().Value);
@@ -77,37 +77,35 @@ namespace BN_Project.Core.Services.Implementations
                 }
                 comments.Add(comment);
             }
-
-
             return comments;
         }
 
-        public async Task<AevrageRatingViewModel> GetAllRatingPoints()
+        public async Task<AverageRatingViewModel> GetAllRatingPoints(int productId)
         {
-            AevrageRatingViewModel AveragePoints = new AevrageRatingViewModel();
-            var Points = await _commentRepository.GetAllRatingPoints();
+            AverageRatingViewModel averagePoints = new AverageRatingViewModel();
+            var Points = await _commentRepository.GetAllRatingPoints(productId);
             if (Points.Count() != 0)
             {
-                AveragePoints.TotalComments = Points.Count();
-                AveragePoints.BuildQualityRate = Points.Select(n => n.BuildQuality).ToList().CalculateAverage();
-                AveragePoints.ValueOfPurchesRate = Points.Select(n => n.ValueForMoneyComparedToTHePrice).ToList().CalculateAverage();
-                AveragePoints.InnovationRate = Points.Select(n => n.Innovation).ToList().CalculateAverage();
-                AveragePoints.FacilityRate = Points.Select(n => n.FeaturesAndCapabilities).ToList().CalculateAverage();
-                AveragePoints.EaseOfUseRate = Points.Select(n => n.EaseOfUse).ToList().CalculateAverage();
-                AveragePoints.ApperentRate = Points.Select(n => n.DesignAndAppearance).ToList().CalculateAverage();
-                AveragePoints.totalAverageRate = Math.Round((AveragePoints.BuildQualityRate + AveragePoints.ValueOfPurchesRate + AveragePoints.InnovationRate + AveragePoints.FacilityRate +
-                AveragePoints.EaseOfUseRate + AveragePoints.ApperentRate) / 6, 1);
+                averagePoints.TotalComments = Points.Count();
+                averagePoints.BuildQualityRate = Points.Select(n => n.BuildQuality).ToList().CalculateAverage();
+                averagePoints.ValueOfPurchesRate = Points.Select(n => n.ValueForMoneyComparedToTHePrice).ToList().CalculateAverage();
+                averagePoints.InnovationRate = Points.Select(n => n.Innovation).ToList().CalculateAverage();
+                averagePoints.FacilityRate = Points.Select(n => n.FeaturesAndCapabilities).ToList().CalculateAverage();
+                averagePoints.EaseOfUseRate = Points.Select(n => n.EaseOfUse).ToList().CalculateAverage();
+                averagePoints.ApperentRate = Points.Select(n => n.DesignAndAppearance).ToList().CalculateAverage();
+                averagePoints.totalAverageRate = Math.Round((averagePoints.BuildQualityRate + averagePoints.ValueOfPurchesRate + averagePoints.InnovationRate + averagePoints.FacilityRate +
+                averagePoints.EaseOfUseRate + averagePoints.ApperentRate) / 6, 1);
 
-                AveragePoints.BuildQualityPercent = AveragePoints.BuildQualityRate.CalculateAveragePercent();
-                AveragePoints.ValueOfPurchesPercent = AveragePoints.ValueOfPurchesRate.CalculateAveragePercent();
-                AveragePoints.InnovationPercent = AveragePoints.InnovationRate.CalculateAveragePercent();
-                AveragePoints.FacilityPercent = AveragePoints.FacilityRate.CalculateAveragePercent();
-                AveragePoints.EaseOfUsePercent = AveragePoints.EaseOfUseRate.CalculateAveragePercent();
-                AveragePoints.ApperentPercent = AveragePoints.ApperentRate.CalculateAveragePercent();
-                AveragePoints.totalAveragePercent = AveragePoints.totalAverageRate.CalculateAveragePercent();
+                averagePoints.BuildQualityPercent = averagePoints.BuildQualityRate.CalculateAveragePercent();
+                averagePoints.ValueOfPurchesPercent = averagePoints.ValueOfPurchesRate.CalculateAveragePercent();
+                averagePoints.InnovationPercent = averagePoints.InnovationRate.CalculateAveragePercent();
+                averagePoints.FacilityPercent = averagePoints.FacilityRate.CalculateAveragePercent();
+                averagePoints.EaseOfUsePercent = averagePoints.EaseOfUseRate.CalculateAveragePercent();
+                averagePoints.ApperentPercent = averagePoints.ApperentRate.CalculateAveragePercent();
+                averagePoints.totalAveragePercent = averagePoints.totalAverageRate.CalculateAveragePercent();
 
             }
-            return AveragePoints;
+            return averagePoints;
         }
 
         public async Task<bool> InsertComment(AddCommentViewModel comment, int userId)

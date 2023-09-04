@@ -1,10 +1,10 @@
-﻿using BN_Project.Core.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+﻿using BN_Project.Core.Attributes;
+using BN_Project.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BN_Project.Web.Areas.Admin.Controllers
 {
-    [Authorize]
+    [PermissionCheker("Comments_Management")]
     [Area("Admin")]
     [Route("[Controller]")]
 
@@ -15,7 +15,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
         {
             _commentServices = commentServices;
         }
-
+        [PermissionCheker("Comments_Comments")]
         [Route("Comments")]
         public async Task<IActionResult> Comments()
         {
@@ -23,7 +23,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return View(comments);
         }
 
-
+        [PermissionCheker("ConfirmComment_Comment")]
         [Route("ConfirmComment")]
         public async Task<IActionResult> ConfirmComment(int Id)
         {
@@ -31,6 +31,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Comments));
         }
 
+        [PermissionCheker("CloseComment_Comment")]
         public async Task<IActionResult> CloseComment(int Id)
         {
             await _commentServices.CloseComment(Id);

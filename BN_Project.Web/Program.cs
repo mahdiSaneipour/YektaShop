@@ -13,7 +13,7 @@ builder.Services.AddControllersWithViews();
 
 RegisterServices(services);
 
-services.AddHostedService<QuartzHostedService>();  
+services.AddHostedService<QuartzHostedService>();
 
 #region Authentication
 
@@ -26,7 +26,8 @@ builder.Services.AddAuthentication(option =>
 {
     option.LoginPath = "/Account/Account/Login";
     option.LogoutPath = "/Account/Account/Logout";
-    option.ExpireTimeSpan = TimeSpan.FromMinutes(43200);
+    option.AccessDeniedPath = "/AccessDenied/Index";
+    option.ExpireTimeSpan = TimeSpan.FromDays(30);
 });
 
 #endregion

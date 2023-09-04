@@ -1,17 +1,16 @@
 ﻿using BN_Project.Domain.Entities;
+using BN_Project.Domain.Entities.Authentication;
 using BN_Project.Domain.Entities.Comment;
+using BN_Project.Domain.Entities.OrderBasket;
+using BN_Project.Domain.IRepository;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BN_Project.Data.Context
 {
     public class BNContext : DbContext
     {
-        public BNContext(DbContextOptions<BNContext> options) : base(options)
+        public BNContext(DbContextOptions<BNContext> options)
+            : base(options)
         {
 
         }
@@ -33,9 +32,16 @@ namespace BN_Project.Data.Context
         public DbSet<WeakPoint> WeakPoints { get; set; }
         public DbSet<Impression> Impressions { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<PurchesHistory> PurchesHistories { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UsersRoles> UsersRoles { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<RolesPermissions> RolesPermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(BNContext).Assembly);
+
             modelBuilder.Entity<UserEntity>().HasQueryFilter(u => !u.IsDelete);
             modelBuilder.Entity<Category>().HasQueryFilter(u => !u.IsDelete);
             modelBuilder.Entity<Product>().HasQueryFilter(u => !u.IsDelete);

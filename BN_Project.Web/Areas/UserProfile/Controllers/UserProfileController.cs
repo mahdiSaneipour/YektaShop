@@ -1,7 +1,5 @@
 ﻿using BN_Project.Core.Response.DataResponse;
-using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
-using BN_Project.Domain.Enum.Order;
 using BN_Project.Domain.ViewModel.UserProfile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

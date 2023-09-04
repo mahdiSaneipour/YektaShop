@@ -1,4 +1,5 @@
-﻿using BN_Project.Core.Response.Status;
+﻿using BN_Project.Core.Attributes;
+using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.ViewModel.Admin;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +18,7 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             _userServices = userServices;
         }
         #region Users
-
+        [PermissionCheker("Users_Users")]
         [Route("Users")]
         public async Task<IActionResult> Users(int pageId = 1)
         {
@@ -30,20 +31,25 @@ namespace BN_Project.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Index");
         }
-
+        [PermissionCheker("AddUser_Users")]
         [Route("AddUser")]
         public async Task<IActionResult> AddUser()
         {
-            return View();
+            AddUserViewModel addUser = new AddUserViewModel()
+            {
+                Roles = await _userServices.GetRolesForUser()
+            };
+            return View(addUser);
         }
-
+        [PermissionCheker("AddUser_Users")]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("AddUser")]
         public async Task<IActionResult> AddUser(AddUserViewModel addUser)
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                addUser.Roles = await _userServices.GetRolesForUser();
+                return View(addUser);
             }
 
             var result = await _userServices.AddUserFromAdmin(addUser);
@@ -52,11 +58,13 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             {
                 case Status.AlreadyHave:
                     ModelState.AddModelError("Email", result.Message);
-                    return View();
+                    addUser.Roles = await _userServices.GetRolesForUser();
+                    return View(addUser);
 
                 case Status.AlreadyHavePhoneNumber:
                     ModelState.AddModelError("PhoneNumber", result.Message);
-                    return View();
+                    addUser.Roles = await _userServices.GetRolesForUser();
+                    return View(addUser);
             }
 
             if (result.Status == Status.Success)
@@ -66,10 +74,11 @@ namespace BN_Project.Web.Areas.Admin.Controllers
             else
             {
                 ModelState.AddModelError("Email", "خطایی در سیستم رخ داده لطفا بعدا امتحان کنید");
-                return View();
+                addUser.Roles = await _userServices.GetRolesForUser();
+                return View(addUser);
             }
         }
-
+        [PermissionCheker("RemoveUser_Users")]
         [Route("RemoveUser")]
         public async Task<IActionResult> RemoveUser(int userId)
         {
@@ -82,21 +91,21 @@ namespace BN_Project.Web.Areas.Admin.Controllers
                 return NotFound();
             }
         }
-
+        [PermissionCheker("EditUser_Users")]
         [Route("EditUser")]
         public async Task<IActionResult> EditUser(int userId)
         {
-            var item = await _userServices.GetUserById(userId);
+            EditUserViewModel item = await _userServices.GetUserById(userId);
             return View(item);
         }
-
+        [PermissionCheker("EditUser_Users")]
         [HttpPost, ValidateAntiForgeryToken]
         [Route("EditUser")]
         public async Task<IActionResult> EditUser(EditUserViewModel user)
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(user);
             }
 
             var result = await _userServices.EditUsers(user);

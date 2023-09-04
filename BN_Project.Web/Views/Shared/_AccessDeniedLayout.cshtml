@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <partial name="_Meta" />
+    <partial name="_CSS" />
+    <title>YektaKala | home v1</title>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <main class="page-content p-5">
+            @RenderBody();
+        </main>
+    </div>
+
+    <partial name="_JS" />
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,11 +1,8 @@
 ﻿using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.Enum.Order;
-using BN_Project.Domain.ViewModel.UserProfile;
-using BN_Project.Domain.ViewModel.UserProfile.Order;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Protocols.WsFed;
 
 namespace BN_Project.Web.Areas.UserProfile.Controllers
 {

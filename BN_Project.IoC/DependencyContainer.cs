@@ -1,5 +1,4 @@
-﻿
-using BN_Project.Core.Jobs;
+﻿using BN_Project.Core.Jobs;
 using BN_Project.Core.Services.Implementations;
 using BN_Project.Core.Services.Interfaces;
 using BN_Project.Data.Repository;
@@ -8,9 +7,9 @@ using EP.Core.Tools.RenderViewToString;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
-using Quartz;
 
 namespace BN_Project.IoC
 {
@@ -36,6 +35,7 @@ namespace BN_Project.IoC
             services.AddScoped<ICommentStrengthRepository, CommentStrengthRepository>();
             services.AddScoped<ICommentWeakPointsRepository, CommentWeakPointsRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IRolesRepository, RoleRepository>();
 
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IProductServices, ProductServices>();
