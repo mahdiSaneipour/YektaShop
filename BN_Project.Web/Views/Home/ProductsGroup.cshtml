@@ -1,6 +1,7 @@
 ﻿@model List<ListProductViewModel>;
 @{
     ViewData["Title"] = "محصولات بر اساس دسته بندی";
+    var categoryId = ViewData["categoryId"];
 }
 
 <ul class="nav nav-pills nav-tabs align-items-center justify-content-center mb-4" id="sort-tab" role="tablist">
@@ -8,7 +9,10 @@
         <button class="nav-link active" id="most-visited-tab" data-bs-toggle="tab" data-bs-target="#most-visited" type="button" role="tab" aria-controls="most-visited" aria-selected="true">پربازدید ترین</button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="best-selling-tab" data-bs-toggle="tab" data-bs-target="#best-selling" type="button" role="tab" aria-controls="best-selling" aria-selected="false">پرفروش ترین</button>
+        <a asp-controller="Home" asp-action="ProductsGroup"
+           asp-route-categoryId="@categoryId" asp-route-orderBy="@OrderByEnum.Bestselling">
+            <button class="nav-link" id="best-selling-tab" data-bs-toggle="tab" data-bs-target="#best-selling" type="button" role="tab" aria-controls="best-selling" aria-selected="false">پرفروش ترین</button>
+        </a>
     </li>
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="most-popular-tab" data-bs-toggle="tab" data-bs-target="#most-popular" type="button" role="tab" aria-controls="most-popular" aria-selected="false">محبوب ترین</button>

@@ -1,6 +1,7 @@
 ﻿using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
 using BN_Project.Domain.Enum.Order;
+using BN_Project.Domain.ViewModel.Admin;
 using BN_Project.Domain.ViewModel.UserProfile.Order;
 
 namespace BN_Project.Core.Services.Interfaces
@@ -28,5 +29,11 @@ namespace BN_Project.Core.Services.Interfaces
         public Task<BaseResponse> ApplyDiscount(string discount);
 
         public Task CheckOrderDetailsInBasket();
+
+        public Task<DataResponse<List<ChartDataViewModel>>> GetChartDataForMostSellsInPast10Days();
+
+        public Task<DataResponse<List<ChartDataViewModel>>> GetChartDataForMostSellsThisMonth();
+
+        public Task<DataResponse<List<ChartDataViewModel>>> GetChartDataForMost5PopularProduct();
     }
 }

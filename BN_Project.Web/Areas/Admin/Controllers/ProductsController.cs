@@ -13,14 +13,21 @@ namespace BN_Project.Web.Areas.Admin.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductServices _productService;
-        public ProductsController(IProductServices productService)
+        private readonly IOrderServices _orderService;
+
+        public ProductsController(IProductServices productService, IOrderServices orderService)
         {
             _productService = productService;
+            _orderService = orderService;
         }
 
         [Route("Admin")]
         public IActionResult Index()
         {
+            ViewData["ChartPast10Days"] = _orderService.GetChartDataForMostSellsInPast10Days().Result.Data;
+            ViewData["ChartThisMonth"] = _orderService.GetChartDataForMostSellsThisMonth().Result.Data;
+            ViewData["Chart5Popular"] = _orderService.GetChartDataForMost5PopularProduct().Result.Data;
+
             return View();
         }
 

@@ -5,6 +5,7 @@ using BN_Project.Core.Services.Interfaces;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.Enum.Order;
 using BN_Project.Domain.IRepository;
+using BN_Project.Domain.ViewModel.Admin;
 using BN_Project.Domain.ViewModel.UserProfile.Order;
 using Microsoft.AspNetCore.Http;
 using System.Drawing;
@@ -487,6 +488,45 @@ namespace BN_Project.Core.Services.Implementations
                     await _orderDetailRepository.SaveChanges();
                 }
             }
+        }
+
+        public async Task<DataResponse<List<ChartDataViewModel>>> GetChartDataForMostSellsInPast10Days()
+        {
+            DataResponse<List<ChartDataViewModel>> result = new DataResponse<List<ChartDataViewModel>>();
+
+            var data = await _orderRepository.GetChartDataForMostSellsInPast10Days();
+
+            result.Data = data;
+            result.Status = Status.Success;
+            result.Message = "آمار با موفقیت استخراج شد";
+
+            return result;
+        }
+
+        public async Task<DataResponse<List<ChartDataViewModel>>> GetChartDataForMostSellsThisMonth()
+        {
+            DataResponse<List<ChartDataViewModel>> result = new DataResponse<List<ChartDataViewModel>>();
+
+            var data = await _orderRepository.GetChartDataForMostSellsThisMonth();
+
+            result.Data = data;
+            result.Status = Status.Success;
+            result.Message = "آمار با موفقیت استخراج شد";
+
+            return result;
+        }
+
+        public async Task<DataResponse<List<ChartDataViewModel>>> GetChartDataForMost5PopularProduct()
+        {
+            DataResponse<List<ChartDataViewModel>> result = new DataResponse<List<ChartDataViewModel>>();
+
+            var data = await _orderRepository.GetChartDataForMost5PopularProduct();
+
+            result.Data = data;
+            result.Status = Status.Success;
+            result.Message = "آمار با موفقیت استخراج شد";
+
+            return result;
         }
     }
 }

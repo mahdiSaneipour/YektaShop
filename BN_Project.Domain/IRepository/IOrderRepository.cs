@@ -1,5 +1,6 @@
 ﻿using BN_Project.Domain.Entities;
 using BN_Project.Domain.Enum.Order;
+using BN_Project.Domain.ViewModel.Admin;
 
 namespace BN_Project.Domain.IRepository
 {
@@ -16,6 +17,12 @@ namespace BN_Project.Domain.IRepository
         public Task<int> GetBasketIdByUserId(int userId);
 
         public Task<Order> GetBasketByIdByIncludes(int basketId);
+
+        public Task<List<ChartDataViewModel>> GetChartDataForMostSellsInPast10Days();
+
+        public Task<List<ChartDataViewModel>> GetChartDataForMostSellsThisMonth();
+
+        public Task<List<ChartDataViewModel>> GetChartDataForMost5PopularProduct();
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using BN_Project.Core.Response;
+﻿using BN_Project.Core.Enums.Admin;
+using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
 using BN_Project.Core.Response.Status;
 using BN_Project.Core.Services.Interfaces;
@@ -18,13 +19,15 @@ namespace BN_Project.Core.Services.Implementations
         private readonly IGalleryRepository _galleryRepository;
         private readonly IDiscountRepository _discountRepository;
         private readonly ICommentServices _commentServices;
+        private readonly IOrderDetailRepository _orderDetailRepository;
 
         public ProductServices(IProductRepository productRepository,
             ICategoryRepository categoryRepository,
             IGalleryRepository galleryRepository,
             IColorRepository colorRepository,
             IDiscountRepository discountRepository,
-            ICommentServices commentServices)
+            ICommentServices commentServices,
+            IOrderDetailRepository orderDetailRepository)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
@@ -32,6 +35,7 @@ namespace BN_Project.Core.Services.Implementations
             _colorRepository = colorRepository;
             _discountRepository = discountRepository;
             _commentServices = commentServices;
+            _orderDetailRepository = orderDetailRepository;
         }
 
         #region Products
@@ -165,7 +169,7 @@ namespace BN_Project.Core.Services.Implementations
             return result;
         }
 
-        public async Task<DataResponse<List<ListProductViewModel>>> GetProductsListShowByCategoryId(int categoryId)
+        public async Task<DataResponse<List<ListProductViewModel>>> GetProductsListShowByCategoryId(int categoryId, OrderByEnum orderBy)
         {
             DataResponse<List<ListProductViewModel>> result = new DataResponse<List<ListProductViewModel>>();
 
@@ -173,6 +177,16 @@ namespace BN_Project.Core.Services.Implementations
 
             if (products != null)
             {
+                switch(orderBy)
+                {
+                    case OrderByEnum.Bestselling:
+                        var test = await _orderDetailRepository.GetAllOrdersWithIncluse();
+                        var t2 = test.OrderByDescending(x => x.Count).Select(x => x.Color.ProductId).Distinct().ToList();
+
+
+                        break;
+                }
+
                 List<ListProductViewModel> data = new List<ListProductViewModel>();
 
 

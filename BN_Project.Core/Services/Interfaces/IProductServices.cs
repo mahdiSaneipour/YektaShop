@@ -1,4 +1,5 @@
-﻿using BN_Project.Core.Response;
+﻿using BN_Project.Core.Enums.Admin;
+using BN_Project.Core.Response;
 using BN_Project.Core.Response.DataResponse;
 using BN_Project.Domain.Entities;
 using BN_Project.Domain.ViewModel.Admin;
@@ -13,7 +14,7 @@ namespace BN_Project.Core.Services.Interfaces
 
         public Task<DataResponse<IReadOnlyList<ProductListViewModel>>> GetProducts(int pageId = 1);
 
-        public Task<DataResponse<List<ListProductViewModel>>> GetProductsListShowByCategoryId(int categoryId);
+        public Task<DataResponse<List<ListProductViewModel>>> GetProductsListShowByCategoryId(int categoryId, OrderByEnum orderBy);
 
         public Task<BaseResponse> AddProduct(AddProductViewModel addProduct);
 

@@ -40,7 +40,7 @@ namespace BN_Project.Web.Areas.UserProfile.Controllers
             }
             else if (result.Status == Status.NotFound)
             {
-                return View(result);
+                return View(result.Data.FirstOrDefault());
             }
 
             return RedirectToAction("Profile");

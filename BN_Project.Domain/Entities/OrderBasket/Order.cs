@@ -16,9 +16,11 @@ namespace BN_Project.Domain.Entities
 
         public int UserId { get; set; }
 
-        public int AddressId { get; set; }
+        public int? AddressId { get; set; }
 
         public int? DiscountId { get; set; }
+
+        public DateTime? PaymentDate { get; set; }
 
         #region Relations
 
@@ -26,10 +28,10 @@ namespace BN_Project.Domain.Entities
         public UserEntity User { get; set; }
 
         [ForeignKey(nameof(AddressId))]
-        public Address Address { get; set; }
-        #endregion
+        public Address? Address { get; set; }
 
         [ForeignKey(nameof(DiscountId))]
         public Discount? Discount { get; set; }
+        #endregion
     }
 }

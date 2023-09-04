@@ -89,4 +89,26 @@ a {
 #submit-discount {
     width: 100%;
 }
+
+.box-chart {
+    height: 100%;
+    width: 50%;
+    box-sizing: border-box;
+}
+
+.chart-title-box {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.chart-title {
+    color: green;
+    width: auto;
+    height: auto;
+    font-size: 18px;
+}
 /*# sourceMappingURL=custom.css.map */

@@ -31,10 +31,16 @@ namespace BN_Project.Core.Tools
             return result;
         }
 
-        public static decimal HowManyPercent(int price, int finalPrice)
+        public static decimal HowManyPercent(decimal price, decimal finalPrice)
         {
             decimal result = price - finalPrice;
             result = (result / price) * 100;
+            return result;
+        }
+
+        public static decimal HowManyPercentOfMain(decimal total, decimal number)
+        {
+            decimal result = (number / total) * 100;
             return result;
         }
 
@@ -55,10 +61,34 @@ namespace BN_Project.Core.Tools
             return date;
         }
 
+        public static int GetPersianMonth(this DateTime value)
+        {
+            PersianCalendar pc = new PersianCalendar();
+            return pc.GetMonth(value);
+        }
+
         public static DateTime ToMiladi(this DateTime value)
         {
             PersianCalendar pc = new PersianCalendar();
             return new DateTime(value.Year, value.Month, value.Day, pc);
+        }
+
+        public static DateTime GetStartOfMonth()
+        {
+            PersianCalendar pc = new PersianCalendar();
+            int year = pc.GetYear(DateTime.Now);
+            int month = pc.GetMonth(DateTime.Now);
+
+            return new DateTime(year, month, 1, pc);
+        }
+
+        public static DateTime GetEndOfMonth()
+        {
+            PersianCalendar pc = new PersianCalendar();
+            int year = pc.GetYear(DateTime.Now);
+            int month = pc.GetMonth(DateTime.Now) + 1;
+
+            return new DateTime(year, month, 1, pc);
         }
 
         public static string EncodePasswordMd5(this string pass) //Encrypt using MD5   

@@ -31,9 +31,11 @@ namespace BN_Project.Web.Controllers
 
         [HttpGet]
         [Route("ProductsGroup/{categoryId}/{orderBy?}")]
-        public async Task<IActionResult> ProductsGroup(int categoryId, OrderByEnum? orderBy = OrderByEnum.Newest)
+        public async Task<IActionResult> ProductsGroup(int categoryId, OrderByEnum orderBy = OrderByEnum.Newest)
         {
-            var result = await _productServices.GetProductsListShowByCategoryId(categoryId);
+            var result = await _productServices.GetProductsListShowByCategoryId(categoryId, orderBy);
+
+            ViewData["categoryId"] = categoryId;
 
             if (result.Status == Status.Success)
             {

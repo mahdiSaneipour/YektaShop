@@ -49,8 +49,8 @@ namespace BN_Project.IoC
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 
-            services.AddSingleton<CheckOrderDetails>();
-            services.AddSingleton(new JobSchedule(jobType: typeof(CheckOrderDetails), cronExpression: "* 0/5 * * * ?"));
+/*            services.AddSingleton<CheckOrderDetails>();
+            services.AddSingleton(new JobSchedule(jobType: typeof(CheckOrderDetails), cronExpression: "* 0/5 * * * ?"));*/
         }
     }
 }
